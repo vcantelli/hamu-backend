@@ -25,6 +25,7 @@ const apiRoutes = express.Router();
 require('./server/routes/index')(app);
 require('./server/routes/api')(apiRoutes);
 app.use('/api', apiRoutes);
+app.use(express.static('public'));
 
 module.exports = app;
 
