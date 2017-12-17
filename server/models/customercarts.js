@@ -7,9 +7,7 @@ module.exports = function(sequelize, DataTypes) {
   CustomerCarts.associate = models => {
     CustomerCarts.belongsTo(models.Customers);
     
-    CustomerCarts.belongsTo(models.Inventions);   
-    
-    Customers.hasMany(models.CustomerCartsHasInventions, {
+    CustomerCarts.hasMany(models.CustomerCartsHasInventions, {
       as: 'CustomerCartsHasInventions'
     });     
   }

@@ -1,23 +1,23 @@
 {
     "development": {
-      "username": "evnts_dev",
-      "password": null,
-      "database": "evnts_buy_dev",
-      "host": "127.0.0.1",
+      "username": "root",
+      "password": "kisy",
+      "database": "evnts",
+      "host": "localhost",
       "dialect": "mysql"
     },
     "test": {
       "username": "root",
       "password": null,
-      "database": "evnts_buy_test",
-      "host": "127.0.0.1",
+      "database": "evnts",
+      "host": "localhost",
       "dialect": "mysql"
     },
     "production": {
       "username": "root",
       "password": null,
-      "database": "evnts_buy_production",
-      "host": "127.0.0.1",
+      "database": "evnts",
+      "host": "localhost",
       "dialect": "mysql"
     }
 }

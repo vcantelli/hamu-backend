@@ -1,8 +1,8 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
-  var InventionsImages = sequelize.define('InventionsImages', {
+  var InventionImages = sequelize.define('InventionImages', {
     image: DataTypes.STRING
   });
   
-  return InventionsImages;
+  return InventionImages;
 };
