@@ -7,5 +7,6 @@ module.exports = (apiRoutes) => {
   
   apiRoutes.post('/invention/create', inventionsController.create);  
   apiRoutes.get('/invention/list', inventionsController.list); 
+  apiRoutes.get('/categories/list', inventionsController.categories); 
 
 }

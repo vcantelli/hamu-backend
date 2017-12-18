@@ -8,8 +8,23 @@ class Invention extends Component {
                 <h2 style={style.header}>
                     <a style={style.title} href="#">{this.props.inventionDetails.name}</a>
                 </h2>
-                <span className="detail">{this.props.inventionDetails.zipcode}</span><br/>
-                <span className="detail">{this.props.inventionDetails.comments} comments</span>
+                <div className="row">
+                    <div className="col-md-4">
+                        <span className="detail">Description</span><br/>
+                        <span className="detail">Category</span><br/>
+                        <span className="detail">Price</span><br/>
+                        <span className="detail">Discount</span><br/>
+                        <span className="detail">Quantity</span><br/>
+                    </div>
+                    
+                    <div className="col-md-8">
+                        <span className="detail">{this.props.inventionDetails.description}</span><br/>
+                        <span className="detail"> {this.props.inventionDetails.categoryName}</span><br/>
+                        <span className="detail"> R$ {this.props.inventionDetails.price}</span><br/>
+                        <span className="detail"> R$ {this.props.inventionDetails.discountPrice}</span><br/>
+                        <span className="detail"> {this.props.inventionDetails.quantity}</span><br/>
+                    </div>
+                </div>
             </div>                       
         )
     }
