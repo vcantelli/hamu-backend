@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import Inventions from './Inventions'
-import Details from './Details'
+import Inventions from '../containers/Inventions'
+import Details from '../containers/Details'
 
 class Home extends Component{
     render(){

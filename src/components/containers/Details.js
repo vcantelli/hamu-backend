@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Detail from './Detail'
+import Detail from '../presentation/Detail'
 import styles from './styles'
 
 class Details extends Component {
@@ -21,7 +21,7 @@ class Details extends Component {
         const style = styles.detail;
         const detailList = this.state.list.map((detail, i) => {
             return (
-                <li><Detail att={detail}/></li>
+                <li key={i}><Detail att={detail}/></li>
             )
         })
 

@@ -9,9 +9,14 @@ module.exports = function(sequelize, DataTypes) {
   });
   
   Inventions.associate = models => {
-    Inventions.belongsTo(models.InventionImages);
+    Inventions.hasMany(models.InventionImages, {
+        as: 'InventionImages'
+    });    
     
-    Inventions.belongsTo(models.Categories);
+    Inventions.belongsTo(models.Categories, {
+      foreignKey: 'CategoryId',
+      as: 'Categories'
+  });
   }
 
   return Inventions;

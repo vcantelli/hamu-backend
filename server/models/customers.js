@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
   Customers.associate = models => {
     
     Customers.hasMany(models.CustomerAddresses, {
-        as: 'Orders'
+        as: 'CustomerAddresses'
     });    
 
     Customers.hasMany(models.Orders, {

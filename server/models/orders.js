@@ -8,13 +8,13 @@ module.exports = function(sequelize, DataTypes) {
   Orders.associate = models => {
     Orders.belongsTo(models.Statuses);
     
-    Orders.belongsTo(models.DeliveryType);
+    Orders.belongsTo(models.DeliveryTypes);
     
     Orders.belongsTo(models.CustomerAddresses);
     
     Orders.belongsTo(models.Costumes);
     
-    Customers.hasMany(models.OrdersHasInventions, {
+    Orders.hasMany(models.OrdersHasInventions, {
         as: 'OrdersHasInventions'
     });    
     
