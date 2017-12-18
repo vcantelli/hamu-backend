@@ -35,20 +35,31 @@ module.exports = {
   list (req, res) {      
     const categoryName = req.body.categoryName;
     if(categoryName){
-        return Inventions
-        .findAll({
+        return Categories
+        .find({
             where:{
                 name: categoryName
-            },
-            include: [{
+            }
+        })
+        .then(category => {
+            Inventions
+            .findAll({
+                where: {
+                    CategoryId: category.dataValues.id
+                },
+              include: [{
                 model: Categories,
                 as: 'Categories',
                 attributes: ['name']
-            }]
+              }]
+            })
+            .then(customers => 
+                res.status(201).send(customers)
+            )
+            .catch(err => 
+                res.status(500).send(err)
+            );
         })
-        .then(customers => 
-            res.status(201).send(customers)
-        )
         .catch(err => 
             res.status(500).send(err)
         );
