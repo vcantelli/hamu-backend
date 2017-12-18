@@ -14,6 +14,9 @@ module.exports = {
       transactionId: {
         type: Sequelize.STRING
       },
+      isLootBox: {
+        type: Sequelize.BOOLEAN
+      },
       StatusId: {
         type: Sequelize.INTEGER,
         allowNull: false,
