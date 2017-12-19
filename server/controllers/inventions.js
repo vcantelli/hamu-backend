@@ -54,6 +54,42 @@ module.exports = {
         res.status(500).send(err)
     );
   },  
+  
+  edit (req, res) {
+    Inventions.find({
+        where: {
+            id: req.body.InventionId
+        }
+    })
+    .then(invention => {    
+        invention.updateAttributes({            
+            name: req.body.name,
+            description: req.body.description,
+            quantity: req.body.quantity,
+            price: req.body.price,
+            discountPrice: req.body.discountPrice,
+            CategoryId: req.body.categoryId
+        });    
+        res.status(200).send(invention);
+    })
+    .catch(err => {
+        res.status(500).send(err);
+    });
+  },
+  
+  destroy (req, res) {
+    Inventions.destroy({
+        where: {
+            id: req.body.InventionId
+        }
+    })
+    .then(invention => {    
+        res.status(200).send();
+    })
+    .catch(err => {
+        res.status(500).send(err);
+    });
+  },
 
   categories (req, res) {
     return Categories
