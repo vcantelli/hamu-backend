@@ -1895,6 +1895,8 @@ var Invention = function (_Component) {
         key: 'render',
         value: function render() {
             var style = _styles2.default.invention;
+            var imgsrc = void 0;
+            if (this.props.inventionDetails.InventionImages) if (this.props.inventionDetails.InventionImages.length > 0) if (this.props.inventionDetails.InventionImages[0]) imgsrc = this.props.inventionDetails.InventionImages[0].image;
             return _react2.default.createElement(
                 'div',
                 { style: style.container },
@@ -1942,6 +1944,12 @@ var Invention = function (_Component) {
                             { className: 'detail' },
                             'Quantity'
                         ),
+                        _react2.default.createElement('br', null),
+                        _react2.default.createElement(
+                            'span',
+                            { className: 'detail' },
+                            'Imagem'
+                        ),
                         _react2.default.createElement('br', null)
                     ),
                     _react2.default.createElement(
@@ -1979,6 +1987,14 @@ var Invention = function (_Component) {
                             { className: 'detail' },
                             ' ',
                             this.props.inventionDetails.quantity
+                        ),
+                        _react2.default.createElement('br', null),
+                        _react2.default.createElement(
+                            'span',
+                            { className: 'detail' },
+                            ' ',
+                            _react2.default.createElement('img', { src: imgsrc }),
+                            ' '
                         ),
                         _react2.default.createElement('br', null)
                     )
@@ -20582,7 +20598,6 @@ var Home = function (_Component) {
                     alert("ERROR: " + err.message);
                     return;
                 }
-                console.log(results);
                 var newInventionList = Object.assign([], _this3.state.list);
                 newInventionList.push(results);
 
@@ -20690,11 +20705,9 @@ var Inventions = function (_Component) {
                     return;
                 }
 
+                //Seta o id do combobox default
                 var changeCategoryId = Object.assign({}, _this2.state.invention);
                 changeCategoryId.categoryId = results[0].id;
-                _this2.setState({
-                    invention: changeCategoryId
-                });
 
                 _this2.setState({
                     categories: results,
@@ -20705,7 +20718,6 @@ var Inventions = function (_Component) {
     }, {
         key: "updateInvention",
         value: function updateInvention(event) {
-            console.log(event.target.id + "==" + event.target.value);
             if (event.target.id == "quantity") if (!(Math.floor(event.target.value) == event.target.value)) return;
             var inventionUpdt = Object.assign({}, this.state.invention);
             inventionUpdt[event.target.id] = event.target.value;

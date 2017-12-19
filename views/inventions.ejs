@@ -15,6 +15,7 @@
                 <th>Quantity</th>
                 <th>Price</th>
                 <th>DiscountPrice</th>
+                <th>Image</th>
             </tr>
                         
             <% if(data.length){ 
@@ -28,6 +29,15 @@
                 <td><%=data[i].quantity%></td>
                 <td><%=data[i].price%></td>
                 <td><%=data[i].discountPrice%></td>
+                <%if (data[i].InventionImages) { %>                    
+                    <%if (data[i].InventionImages.length > 0) { %>
+                        <td><img src=<%=data[i].InventionImages[0].dataValues.image%> /></td>
+                    <% } else {%>
+                        <td> No images</td>
+                    <% } %>
+                <% } else {%>
+                    <td> No images</td>
+                <% } %>
             </tr>
         <% }
         

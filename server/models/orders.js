@@ -2,7 +2,8 @@
 module.exports = function(sequelize, DataTypes) {
   var Orders = sequelize.define('Orders', {
     totalPrice: DataTypes.DOUBLE,    
-    transactionId: DataTypes.STRING
+    transactionId: DataTypes.STRING,
+    isLootBox: DataTypes.BOOLEAN
   });
   
   Orders.associate = models => {

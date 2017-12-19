@@ -29,11 +29,9 @@ class Inventions extends Component {
                 return
             }
     
+            //Seta o id do combobox default
             let changeCategoryId = Object.assign({}, this.state.invention);
             changeCategoryId.categoryId = results[0].id;
-            this.setState({
-                invention: changeCategoryId
-            })
 
             this.setState({
                 categories: results,
@@ -43,7 +41,6 @@ class Inventions extends Component {
     }
 
     updateInvention(event){     
-        console.log(event.target.id + "==" + event.target.value)
         if(event.target.id == "quantity")        
             if(!(Math.floor(event.target.value) == event.target.value))            
                 return      
@@ -102,10 +99,8 @@ class Inventions extends Component {
                 <input id ="quantity" onChange={this.updateInvention.bind(this)} className="form-control" type="number"step={1} min={0} placeholder="Quantity"></input>
                 <br/>
                 <CurrencyInput id ="price" onChange={this.updateInvention.bind(this)} className="form-control" placeholder="Price" />
-                {/* <input id ="price" onChange={this.updateInvention.bind(this)} className="form-control" type="number" step="any" placeholder="Price" pattern="(\d{3})([\.])(\d{2})"></input> */}
                 <br/>
                 <CurrencyInput id ="discountPrice" onChange={this.updateInvention.bind(this)} className="form-control" type="number" placeholder="Discount"/>
-                {/* <input id ="discountPrice" onChange={this.updateInvention.bind(this)} className="form-control" type="number" step="any" placeholder="Discount"></input> */}
                 <br/>
                 <select value={this.state.invention.categoryId} onChange={this.updateCategory.bind(this)} className="form-control">
                    {listCategories}

@@ -18,7 +18,7 @@ class Home extends Component{
                 alert("ERROR: " + err.message)
                 return
             }
-
+           
             results.map((inventions) => {
                 inventions.categoryName = inventions.Categories.name
             })
@@ -35,7 +35,6 @@ class Home extends Component{
                 alert("ERROR: " + err.message)
                 return
             }
-            console.log(results)
             let newInventionList = Object.assign([], this.state.list);
             newInventionList.push(results);    
             

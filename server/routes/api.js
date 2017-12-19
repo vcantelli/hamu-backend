@@ -1,5 +1,6 @@
 
 const inventionsController = require('../controllers').inventions;
+const crawlerController = require('../controllers').crawler;
 
 module.exports = (apiRoutes) => {
   
@@ -8,5 +9,6 @@ module.exports = (apiRoutes) => {
   apiRoutes.post('/invention/create', inventionsController.create);  
   apiRoutes.get('/invention/list', inventionsController.list); 
   apiRoutes.get('/categories/list', inventionsController.categories); 
+  apiRoutes.get('/crawler', crawlerController.crawler); 
 
 }
