@@ -1,7 +1,5 @@
-const inventions = require('./inventions');
-const crawler = require('./crawler');
+const vendors = require('./vendors');
 
 module.exports = {
-    inventions,
-    crawler
+    vendors
 }

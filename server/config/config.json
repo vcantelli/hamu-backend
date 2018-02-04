@@ -1,9 +1,9 @@
 {
     "development": {
-      "username": "root",
-      "password": "cadomeew",
-      "database": "evnts",
-      "host": "localhost",
+      "username": "cyezaqab_vcant",
+      "password": "Y@y94rywvx",
+      "database": "cyezaqab_HCbD",
+      "host": "hamu.com.br",
       "dialect": "mysql"
     },
     "test": {
