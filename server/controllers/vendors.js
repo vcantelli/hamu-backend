@@ -1,141 +1,285 @@
-const ced_csmarketplace_vendor_products = require('../models').ced_csmarketplace_vendor_products;
-const ced_csmarketplace_vendor_shop = require('../models').ced_csmarketplace_vendor_shop;
-var Sequelize = require('sequelize');
-var MagentoAPI = require('magento');
-var md5 = require('md5');
+const cedCsmarketplaceVendorProducts = require('../models').ced_csmarketplace_vendor_products
+const cedCsmarketplaceVendorShop = require('../models').ced_csmarketplace_vendor_shop
+const cedCsmarketplaceVendor = require('../models').ced_csmarketplace_vendor
+const cedCsmarketplaceVendorDatetime = require('../models').ced_csmarketplace_vendor_datetime
+const cedCsmarketplaceVendorInt = require('../models').ced_csmarketplace_vendor_int
+const cedCsmarketplaceVendorVarchar = require('../models').ced_csmarketplace_vendor_varchar
+var MagentoAPI = require('magento')
+var md5 = require('md5')
+var customerEntity = require('../models').customer_entity
 
 var magento = new MagentoAPI({
-    host: 'www.hamu.com.br',
-    port: 80,
-    path: '/api/xmlrpc/',
-    login: 'admgeral',
-    pass: 'paineldeacesso2017'
-  });
+  host: 'www.hamu.com.br',
+  port: 80,
+  path: '/api/xmlrpc/',
+  login: 'admgeral',
+  pass: 'paineldeacesso2017'
+})
 
 module.exports = {
   create (req, res) {
-    return ced_csmarketplace_vendor_shop.create({
-      vendor_id: 1,
-      shop_disable: 0
-    })
-    .then(shop => 
-      res.status(200).send(shop)
-    )
-    .catch(err => 
-        res.status(500).send(err)
-    );
+    if (req.body.email && req.body.firstname &&
+      req.body.lastname && req.body.password &&
+      req.body.company_name && req.body.company_address && req.body.company_cnpj) {
+      var newCustomer = {
+        email: req.body.email,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        password: req.body.password,
+        website_id: 1,
+        store_id: 1,
+        group_id: 1
+      }
+      let vendorId = 0
+      magento.login(function (err, sessId) {
+        if (err) return res.status(500).send(err)
+        magento.customer.create({
+          customerData: newCustomer
+        },
+        function (err, customerInfo) {
+          if (err) return res.status(500).send(err)
+          cedCsmarketplaceVendor.create({
+            entity_type_id: 9,
+            attribute_set_id: 0,
+            increment_id: '',
+            store_id: 0,
+            created_at: new Date(),
+            updated_at: new Date(),
+            is_active: 1,
+            website_id: 1
+          })
+          .then(vendor => {
+            vendorId = vendor.null
+            return cedCsmarketplaceVendorDatetime.create({
+              entity_type_id: 9,
+              attribute_id: 133,
+              store_id: 0,
+              entity_id: vendorId,
+              value: new Date()
+            })
+          })
+          .then(() => {
+            return cedCsmarketplaceVendorInt.create({
+              entity_type_id: 9,
+              attribute_id: 132,
+              store_id: 0,
+              entity_id: vendorId,
+              value: customerInfo
+            })
+          })
+          .then(() => {
+            return cedCsmarketplaceVendorInt.create({
+              entity_type_id: 9,
+              attribute_id: 140,
+              store_id: 0,
+              entity_id: vendorId,
+              value: 1
+            })
+          })
+          .then(() => {
+            return cedCsmarketplaceVendorVarchar.create({
+              entity_type_id: 9,
+              attribute_id: 137,
+              store_id: 0,
+              entity_id: vendorId,
+              value: req.body.company_name
+            })
+          })
+          .then(() => {
+            return cedCsmarketplaceVendorVarchar.create({
+              entity_type_id: 9,
+              attribute_id: 134,
+              store_id: 0,
+              entity_id: vendorId,
+              value: (req.body.company_name).toLowerCase().replace(/\s/g, '')
+            })
+          })
+          .then(() => {
+            return cedCsmarketplaceVendorVarchar.create({
+              entity_type_id: 9,
+              attribute_id: 135,
+              store_id: 0,
+              entity_id: vendorId,
+              value: 'approved'
+            })
+          })
+          .then(() => {
+            return cedCsmarketplaceVendorVarchar.create({
+              entity_type_id: 9,
+              attribute_id: 136,
+              store_id: 0,
+              entity_id: vendorId,
+              value: 'general'
+            })
+          })
+          .then(() => {
+            return cedCsmarketplaceVendorVarchar.create({
+              entity_type_id: 9,
+              attribute_id: 139,
+              store_id: 0,
+              entity_id: vendorId,
+              value: req.body.firstname + ' ' + req.body.lastname
+            })
+          })
+          .then(() => {
+            return cedCsmarketplaceVendorVarchar.create({
+              entity_type_id: 9,
+              attribute_id: 144,
+              store_id: 0,
+              entity_id: vendorId,
+              value: req.body.company_name
+            })
+          })
+          .then(() => {
+            return cedCsmarketplaceVendorVarchar.create({
+              entity_type_id: 9,
+              attribute_id: 148,
+              store_id: 0,
+              entity_id: vendorId,
+              value: req.body.company_address
+            })
+          })
+          .then(() => {
+            return cedCsmarketplaceVendorVarchar.create({
+              entity_type_id: 9,
+              attribute_id: 161,
+              store_id: 0,
+              entity_id: vendorId,
+              value: req.body.company_cnpj
+            })
+          })
+          .then(() => {
+            if (req.body.facebookId) {
+              return cedCsmarketplaceVendorVarchar.create({
+                entity_type_id: 9,
+                attribute_id: 153,
+                store_id: 0,
+                entity_id: vendorId,
+                value: req.body.facebookId
+              })
+            }
+          })
+          .then(() => {
+            return res.status(200).send(customerInfo)
+          })
+          .catch(err => {
+            return res.status(500).send(err)
+          })
+        })
+      })
+    }
   },
 
-  list (req, res) {   
-    return ced_csmarketplace_vendor_products
+  list (req, res) {
+    return cedCsmarketplaceVendorProducts
     .findAll()
     .then(customers =>
-        res.status(200).send(customers)               
+        res.status(200).send(customers)
     )
-    .catch(err => 
+    .catch(err =>
         res.status(500).send(err)
-    );
-  },  
-  
+    )
+  },
+
   edit (req, res) {
-    ced_csmarketplace_vendor_shop.find({
-        where: {
-            id: 1
-        }
+    cedCsmarketplaceVendorShop.find({
+      where: {
+        id: 1
+      }
     })
-    .then(shop => {    
-      shop.updateAttributes({            
-          shop_disable: 1
-        });    
-        res.status(200).send(shop);
+    .then(shop => {
+      shop.updateAttributes({
+        shop_disable: 1
+      })
+      res.status(200).send(shop)
     })
     .catch(err => {
-        res.status(500).send(err);
-    });
+      res.status(500).send(err)
+    })
   },
-  
+
   destroy (req, res) {
-    ced_csmarketplace_vendor_shop.destroy({
-        where: {
-            id: 1
-        }
+    cedCsmarketplaceVendorShop.destroy({
+      where: {
+        id: 1
+      }
     })
-    .then(shop => {    
-        res.status(200).send();
+    .then(shop => {
+      res.status(200).send()
     })
     .catch(err => {
-        res.status(500).send(err);
-    });
-  },
-
-  checkPassword (req, res) {      
-    magento.login(function(err, sessId) {
-        if (err) 
-            res.status(500).send(err);
-        
-        magento.customer.info({
-            customerId: req.body.customerId
-        }, 
-        function(err, customer){
-            if(err)
-                res.status(500).send(err);
-            return res.status(200).send(checkPasswordHash(req.body.password, customer.password_hash));
-        });
+      res.status(500).send(err)
     })
   },
-  
-  addImage (req, res) {      
-    magento.login(function(err, sessId) {
-        if (err) 
-            res.status(500).send(err);        
-        
-        magento.catalogProductAttributeMedia.list({
-            product: req.body.productId,
-        },  
-        function(err, product){
-            if (err) 
-                res.status(500).send(err);  
 
-            var new_image = 
-            {
-                file:
-                {
-                    content: req.body.imageBase64,
-                    mime: 'image/jpeg',
-                    name: req.body.imageName
-                },
-                label: '',
-                position: product.lenght,
-                types: [],
-                exclude: '0'
-            }
-
-            magento.catalogProductAttributeMedia.create({
-                product: req.body.productId,
-                data: new_image,
-            },  function(err, image){
-                if (err) 
-                    res.status(500).send(err);  
-                console.log(image)
-                res.status(200).send(image);  
-            });
-        });        
+  checkPassword (req, res) {
+    if (!(req.query.email && req.query.password)) return res.status(200).send(false)
+    customerEntity.find({
+      where: {
+        email: req.query.email
+      }
+    }).then(customer => {
+      if (customer) {
+        magento.login(function (err, sessId) {
+          if (err) return res.status(500).send(err)
+          magento.customer.info({
+            customerId: customer.dataValues.entity_id
+          },
+          function (err, customerInfo) {
+            if (err) return res.status(500).send(err)
+            return res.status(200).send(checkPasswordHash(req.query.password, customerInfo.password_hash))
+          })
+        })
+      } else {
+        res.status(200).send(false)
+      }
+    }).catch(err => {
+      return res.status(400).send(err)
     })
   },
-};
 
-function checkPasswordHash(password, hash){
-    var hash_split = hash.split(":")
+  addImage (req, res) {
+    magento.login(function (err, sessId) {
+      if (err) res.status(500).send(err)
+      magento.catalogProductAttributeMedia.list({
+        product: req.body.productId
+      },
+      function (err, product) {
+        if (err) res.status(500).send(err)
+        var newImage = {
+          file: {
+            content: req.body.imageBase64,
+            mime: 'image/jpeg',
+            name: req.body.imageName
+          },
+          label: '',
+          position: product.lenght,
+          types: [],
+          exclude: '0'
+        }
+        magento.catalogProductAttributeMedia.create({
+          product: req.body.productId,
+          data: newImage
+        },
+        function (err, image) {
+          if (err) res.status(500).send(err)
+          console.log(image)
+          res.status(200).send(image)
+        })
+      })
+    })
+  }
+}
 
-    if(hash_split[0] == md5(hash_split[1] + password))
-        return true
-    else
-        return false
+function checkPasswordHash (password, hash) {
+  var hashSplit = hash.split(':')
+  if (hashSplit[0] === md5(hashSplit[1] + password)) return true
+  else return false
 }
 
 // magento.login(function(err, sessId) {
 //     if (err) {
-//       // deal with error 
+//       // deal with error
 //       return;
 //     }
 //     var passwordHash = '45690e2bdeb92e845cdc3080e497a0ef:X5q6mZkXVPQZKKbLl2Fi30LuV8wZD59q'
@@ -145,10 +289,10 @@ function checkPasswordHash(password, hash){
 //     // magento.catalogProduct.info({
 //     //     id: 163
 //     // }, function(err, product){
-//     //     console.log("err"+err) 
+//     //     console.log("err"+err)
 //     //     console.log(product)
 //     // })
-//     var new_image = 
+//     var new_image =
 //     {
 //         file:
 //         {
@@ -164,7 +308,7 @@ function checkPasswordHash(password, hash){
 //     // magento.catalogProductAttributeMedia.list({
 //     //     product:    163,
 //     //   },  function(err, product){
-//     //     console.log("err"+err) 
+//     //     console.log("err"+err)
 //     //     console.log(product)
 //     // });
 
@@ -172,15 +316,14 @@ function checkPasswordHash(password, hash){
 //         email: 'v.cantelli@hotmail.com',
 //         password: 'y94rywvx'
 //       }, function(err, product){
-//         console.log("err"+err) 
+//         console.log("err"+err)
 //         console.log(product)
 //     });
-
 
 //     // magento.customer.info({
 //     //     customerId: 34
 //     //   }, function(err, product){
-//     //     console.log("err"+err) 
+//     //     console.log("err"+err)
 //     //     console.log(product)
 //     // });
 
@@ -188,13 +331,13 @@ function checkPasswordHash(password, hash){
 //     //     product: 163,
 //     //     data: new_image,
 //     //   },  function(err, product){
-//     //     console.log("err"+err) 
+//     //     console.log("err"+err)
 //     //     console.log(product)
 //     // });
-//     // magento.catalogProduct.list(function(err,product) 
+//     // magento.catalogProduct.list(function(err,product)
 //     // {
-//     //     console.log("err"+err) 
+//     //     console.log("err"+err)
 //     //     console.log(product)
 //     // })
-//     // use magento 
-//   });
+//     // use magento
+//   })
