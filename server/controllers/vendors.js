@@ -202,6 +202,60 @@ module.exports = {
     })
   },
 
+  createProduct (req, res) {
+    let newProduct = {
+      category_ids: [ 102, 104 ],
+      website_ids: [ 1 ],
+      name: req.query.name,
+      description: req.query.description,
+      short_description: req.query.shortDescription,
+      weight: req.query.weight,
+      status: '1',
+      url_key: req.query.urlKey,
+      url_path: req.query.urlPath,
+      visibility: '4',
+      price: req.query.price,
+      tax_class_id: 1,
+      meta_title: req.query.metaTitle,
+      meta_keyword: req.query.metaKeyword,
+      meta_description: req.query.metaDescription
+    }
+
+    magento.login(function (err, sessId) {
+      if (err) return res.status(500).send(err)
+      magento.catalogProduct.create({
+        type: 'simple',
+        set: 4,
+        sku: req.query.sku,
+        data: newProduct
+      }, function (err, product) {
+        if (err) return res.status(500).send(err)
+        cedCsmarketplaceVendorProducts.create({
+          vendor_id: req.query.vendorId,
+          product_id: product,
+          type: 'simple',
+          price: req.query.price,
+          special_price: 0,
+          name: req.query.name,
+          description: req.query.description,
+          short_description: req.query.shortDescription,
+          sku: req.query.sku,
+          weight: req.query.weight,
+          check_status: 1,
+          qty: req.query.quantity,
+          is_in_stock: 1,
+          website_ids: '1',
+          is_multiseller: 0,
+          parent_id: 0
+        })
+          .then(vendorProduct => {
+            return res.status(200).send(vendorProduct)
+          })
+          .catch(err => res.status(500).send(err))
+      })
+    })
+  },
+
   edit (req, res) {
     cedCsmarketplaceVendorShop.find({
       where: {
