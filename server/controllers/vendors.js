@@ -206,19 +206,19 @@ module.exports = {
     let newProduct = {
       category_ids: [ 102, 104 ],
       website_ids: [ 1 ],
-      name: req.query.name,
-      description: req.query.description,
-      short_description: req.query.shortDescription,
-      weight: req.query.weight,
+      name: req.body.name,
+      description: req.body.description,
+      short_description: req.body.shortDescription,
+      weight: req.body.weight,
       status: '1',
-      url_key: req.query.urlKey,
-      url_path: req.query.urlPath,
+      url_key: req.body.urlKey,
+      url_path: req.body.urlPath,
       visibility: '4',
-      price: req.query.price,
+      price: req.body.price,
       tax_class_id: 1,
-      meta_title: req.query.metaTitle,
-      meta_keyword: req.query.metaKeyword,
-      meta_description: req.query.metaDescription
+      meta_title: req.body.metaTitle,
+      meta_keyword: req.body.metaKeyword,
+      meta_description: req.body.metaDescription
     }
 
     magento.login(function (err, sessId) {
@@ -226,30 +226,54 @@ module.exports = {
       magento.catalogProduct.create({
         type: 'simple',
         set: 4,
-        sku: req.query.sku,
+        sku: req.body.sku,
         data: newProduct
       }, function (err, product) {
         if (err) return res.status(500).send(err)
         cedCsmarketplaceVendorProducts.create({
-          vendor_id: req.query.vendorId,
+          vendor_id: req.body.vendorId,
           product_id: product,
           type: 'simple',
-          price: req.query.price,
+          price: req.body.price,
           special_price: 0,
-          name: req.query.name,
-          description: req.query.description,
-          short_description: req.query.shortDescription,
-          sku: req.query.sku,
-          weight: req.query.weight,
+          name: req.body.name,
+          description: req.body.description,
+          short_description: req.body.shortDescription,
+          sku: req.body.sku,
+          weight: req.body.weight,
           check_status: 1,
-          qty: req.query.quantity,
+          qty: req.body.quantity,
           is_in_stock: 1,
           website_ids: '1',
           is_multiseller: 0,
           parent_id: 0
         })
           .then(vendorProduct => {
-            return res.status(200).send(vendorProduct)
+            magento.catalogProductAttributeMedia.list({
+              product: vendorProduct.dataValues.product_id
+            },
+            function (err, product) {
+              if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+              var newImage = {
+                file: {
+                  content: req.body.imageBase64,
+                  mime: 'image/jpeg',
+                  name: req.body.imageName
+                },
+                label: '',
+                position: product.lenght,
+                types: [],
+                exclude: '0'
+              }
+              magento.catalogProductAttributeMedia.create({
+                product: vendorProduct.dataValues.product_id,
+                data: newImage
+              },
+              function (err, image) {
+                if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+              })
+            })
           })
           .catch(err => res.status(500).send(err))
       })
@@ -302,11 +326,20 @@ module.exports = {
           },
           function (err, customerInfo) {
             if (err && !checkPasswordHash(req.query.password, customerInfo.password_hash)) return res.status(500).send(err)
-            return res.status(200).send(customer.dataValues.entity_id)
+            cedCsmarketplaceVendorInt.find({
+              where: {
+                attribute_id: 132,
+                value: customer.dataValues.entity_id
+              }
+            }).then(vendor => {
+              return res.status(200).send(vendor.dataValues.entity_id.toString())
+            }).catch(err => {
+              return res.status(400).send(err)
+            })
           })
         })
       } else {
-        res.status(200).send(false)
+        return res.status(200).send('0')
       }
     }).catch(err => {
       return res.status(400).send(err)
