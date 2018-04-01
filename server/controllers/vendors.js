@@ -204,7 +204,7 @@ module.exports = {
 
   createProduct (req, res) {
     let newProduct = {
-      category_ids: [ 102, 104 ],
+      category_ids: [req.body.categoria],
       website_ids: [ 1 ],
       name: req.body.name,
       description: req.body.description,
@@ -274,6 +274,70 @@ module.exports = {
                 return res.status(200).send(vendorProduct.dataValues.product_id.toString())
               })
             })
+          })
+          .catch(err => res.status(500).send(err))
+      })
+    })
+  },
+
+  getProduct (req, res) {
+    magento.login(function (err, sessId) {
+      if (err) return res.status(500).send(err)
+      magento.catalogProduct.info({
+        id: req.query.productId
+      }, function (err, product) {
+        if (err) return res.status(500).send(err)
+        cedCsmarketplaceVendorProducts.find({
+          where: {
+            product_id: req.query.productId
+          }
+        })
+          .then(vendorProduct => {
+            var newProduct = {
+              product_id: Number(product.product_id),
+              price: Number(product.price),
+              special_price: Number(product.special_price),
+              name: product.name,
+              description: product.description,
+              sku: product.sku,
+              qty: vendorProduct.dataValues.qty
+            }
+            console.log(newProduct)
+            res.status(200).send(newProduct)
+          })
+          .catch(err => res.status(500).send(err))
+      })
+    })
+  },
+
+  editProduct (req, res) {
+    let editProduct = {
+      category_ids: [req.body.categoria],
+      price: req.body.price,
+      name: req.body.name,
+      description: req.body.description,
+      short_description: req.body.shortDescription
+    }
+    magento.login(function (err, sessId) {
+      if (err) return res.status(500).send(err)
+      magento.catalogProduct.update({
+        id: req.body.productId,
+        data: editProduct
+      }, function (err, product) {
+        if (err) return res.status(500).send(err)
+        cedCsmarketplaceVendorProducts.update(
+          {
+            price: req.body.price,
+            name: req.body.name,
+            description: req.body.description,
+            short_description: req.body.shortDescription,
+            qty: req.body.quantity
+          },
+          { where: {
+            product_id: req.body.productId
+          }})
+          .then(vendorProduct => {
+            res.status(200).send(true)
           })
           .catch(err => res.status(500).send(err))
       })
