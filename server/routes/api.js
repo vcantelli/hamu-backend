@@ -10,4 +10,6 @@ module.exports = (apiRoutes) => {
   apiRoutes.get('/vendors/checkPassword', vendorsController.checkPassword)
   apiRoutes.get('/vendors/addImage', vendorsController.addImage)
   apiRoutes.post('/vendors/createProduct', vendorsController.createProduct)
+  apiRoutes.get('/vendors/getProduct', vendorsController.getProduct)
+  apiRoutes.post('/vendors/editProduct', vendorsController.editProduct)
 }
