@@ -271,7 +271,43 @@ module.exports = {
               },
               function (err, image) {
                 if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
-                return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                var newImage2 = {
+                  file: {
+                    content: req.body.image2Base64,
+                    mime: 'image/jpeg',
+                    name: req.body.image2Name
+                  },
+                  label: '',
+                  position: product.lenght,
+                  types: [],
+                  exclude: '0'
+                }
+                magento.catalogProductAttributeMedia.create({
+                  product: vendorProduct.dataValues.product_id,
+                  data: newImage2
+                },
+                function (err, image) {
+                  if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                  var newImage3 = {
+                    file: {
+                      content: req.body.image3Base64,
+                      mime: 'image/jpeg',
+                      name: req.body.image3Name
+                    },
+                    label: '',
+                    position: product.lenght,
+                    types: [],
+                    exclude: '0'
+                  }
+                  magento.catalogProductAttributeMedia.create({
+                    product: vendorProduct.dataValues.product_id,
+                    data: newImage3
+                  },
+                  function (err, image) {
+                    if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                    return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                  })
+                })
               })
             })
           })
@@ -402,6 +438,26 @@ module.exports = {
             })
           })
         })
+      } else {
+        return res.status(200).send('0')
+      }
+    }).catch(err => {
+      return res.status(400).send(err)
+    })
+  },
+
+  checkFacebookId (req, res) {
+    if (!req.query.facebookId) return res.status(200).send(false)
+    cedCsmarketplaceVendorVarchar.find({
+      where: {
+        attribute_id: 153,
+        entity_type_id: 9,
+        store_id: 0,
+        value: req.query.facebookId
+      }
+    }).then(customer => {
+      if (customer) {
+        res.status(200).send(customer.dataValues.entity_id.toString())
       } else {
         return res.status(200).send('0')
       }
