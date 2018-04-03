@@ -14,10 +14,10 @@
       "dialect": "mysql"
     },
     "production": {
-      "username": "root",
-      "password": null,
-      "database": "evnts",
-      "host": "localhost",
+      "username": "cyezaqab_vcant",
+      "password": "Y@y94rywvx",
+      "database": "cyezaqab_HCbD",
+      "host": "hamu.com.br",
       "dialect": "mysql"
     }
 }

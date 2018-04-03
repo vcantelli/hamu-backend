@@ -12,4 +12,5 @@ module.exports = (apiRoutes) => {
   apiRoutes.post('/vendors/createProduct', vendorsController.createProduct)
   apiRoutes.get('/vendors/getProduct', vendorsController.getProduct)
   apiRoutes.post('/vendors/editProduct', vendorsController.editProduct)
+  apiRoutes.get('/vendors/checkFacebookId', vendorsController.checkFacebookId)
 }
