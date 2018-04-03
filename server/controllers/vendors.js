@@ -261,7 +261,7 @@ module.exports = {
                   name: req.body.imageName
                 },
                 label: '',
-                position: product.lenght,
+                position: 0,
                 types: ['base', 'small', 'thumbnail', 'swatch'],
                 exclude: '0'
               }
@@ -279,7 +279,7 @@ module.exports = {
                       name: req.body.image2Name
                     },
                     label: '',
-                    position: product.lenght,
+                    position: 1,
                     types: [],
                     exclude: '0'
                   }
@@ -297,7 +297,7 @@ module.exports = {
                           name: req.body.image3Name
                         },
                         label: '',
-                        position: product.lenght,
+                        position: 2,
                         types: [],
                         exclude: '0'
                       }
