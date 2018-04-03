@@ -262,7 +262,7 @@ module.exports = {
                 },
                 label: '',
                 position: product.lenght,
-                types: [],
+                types: ['base', 'small', 'thumbnail', 'swatch'],
                 exclude: '0'
               }
               magento.catalogProductAttributeMedia.create({
@@ -271,7 +271,51 @@ module.exports = {
               },
               function (err, image) {
                 if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
-                return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                if (req.body.image2Base64) {
+                  var newImage2 = {
+                    file: {
+                      content: req.body.image2Base64,
+                      mime: 'image/jpeg',
+                      name: req.body.image2Name
+                    },
+                    label: '',
+                    position: product.lenght,
+                    types: [],
+                    exclude: '0'
+                  }
+                  magento.catalogProductAttributeMedia.create({
+                    product: vendorProduct.dataValues.product_id,
+                    data: newImage2
+                  },
+                  function (err, image2) {
+                    if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                    if (req.body.image3Base64) {
+                      var newImage3 = {
+                        file: {
+                          content: req.body.image3Base64,
+                          mime: 'image/jpeg',
+                          name: req.body.image3Name
+                        },
+                        label: '',
+                        position: product.lenght,
+                        types: [],
+                        exclude: '0'
+                      }
+                      magento.catalogProductAttributeMedia.create({
+                        product: vendorProduct.dataValues.product_id,
+                        data: newImage3
+                      },
+                      function (err, image3) {
+                        if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                        return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                      })
+                    } else {
+                      return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                    }
+                  })
+                } else {
+                  return res.status(200).send(vendorProduct.dataValues.product_id.toString())
+                }
               })
             })
           })
