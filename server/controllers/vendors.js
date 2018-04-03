@@ -262,7 +262,7 @@ module.exports = {
                 },
                 label: '',
                 position: 0,
-                types: ['base', 'small', 'thumbnail', 'swatch'],
+                types: ['image', 'small_image', 'thumbnail'],
                 exclude: '0'
               }
               magento.catalogProductAttributeMedia.create({
