@@ -343,6 +343,7 @@ module.exports = {
               special_price: Number(product.special_price),
               name: product.name,
               description: product.description,
+              shortDescription: product.short_description,
               sku: product.sku,
               qty: vendorProduct.dataValues.qty
             }
