@@ -1,5 +1,6 @@
 
 const vendorsController = require('../controllers').vendors
+const pagarmeController = require('../controllers').pagarme
 
 module.exports = (apiRoutes) => {
   apiRoutes.get('/', (req, res) => res.send('API v1'))
@@ -13,4 +14,10 @@ module.exports = (apiRoutes) => {
   apiRoutes.get('/vendors/getProduct', vendorsController.getProduct)
   apiRoutes.post('/vendors/editProduct', vendorsController.editProduct)
   apiRoutes.get('/vendors/checkFacebookId', vendorsController.checkFacebookId)
+
+  apiRoutes.get('/pagarme/createTransaction', pagarmeController.createTransaction)
+  apiRoutes.get('/pagarme/getTransaction', pagarmeController.getTransaction)
+  apiRoutes.get('/pagarme/refundTransaction', pagarmeController.refundTransaction)
+  apiRoutes.get('/pagarme/getTransactionEvents', pagarmeController.getTransactionEvents)
+  apiRoutes.get('/pagarme/getTransactionGatewayOperations', pagarmeController.getTransactionGatewayOperations)
 }
