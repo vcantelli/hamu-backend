@@ -148,7 +148,7 @@ module.exports = {
                 value: req.body.company_cnpj
               })
             })
-            .then(() => {
+            .then(newVendorType => {
               if (req.body.facebookId) {
                 return cedCsmarketplaceVendorVarchar.create({
                   entity_type_id: 9,
@@ -157,10 +157,12 @@ module.exports = {
                   entity_id: vendorId,
                   value: req.body.facebookId
                 })
+              } else {
+                return newVendorType
               }
             })
             .then(() => {
-              return res.status(200).send(vendorId)
+              return res.status(200).send(vendorId.toString())
             })
             .catch(err => {
               return res.status(500).send(err)
