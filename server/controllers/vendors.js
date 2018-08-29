@@ -206,7 +206,7 @@ module.exports = {
 
   createProduct (req, res) {
     let newProduct = {
-      category_ids: [req.body.categoria],
+      category_ids: [req.body.categoria, req.body.bairro],
       website_ids: [ 1 ],
       name: req.body.name,
       description: req.body.description,
