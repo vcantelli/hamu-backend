@@ -2,7 +2,7 @@
 const vendorsController = require('../controllers').vendors
 const url = require('url')
 const fixieUrl = url.parse('http://fixie:ZZksOn1Ml8Qcm8x@velodrome.usefixie.com:80')
-const requestUrl = url.parse('https://hamu.herokuapp.com')
+const requestUrl = url.parse('https://hamu.herokuapp.com/api/vendors/checkPassword')
 
 module.exports = (apiRoutes) => {
   apiRoutes.get({
@@ -13,15 +13,13 @@ module.exports = (apiRoutes) => {
         Host: requestUrl.host,
         'Proxy-Authorization': `Basic ${new Buffer(fixieUrl.auth).toString('base64')}`,
       }
-  }, res => {
-    console.log(`Got response: ${res.statusCode}`)
-  })
+  }, vendorsController.checkPassword)
   apiRoutes.get('/', (req, res) => res.send('API v1'))
   apiRoutes.get('/vendors/list', vendorsController.list)
   apiRoutes.post('/vendors/create', vendorsController.create)
   apiRoutes.post('/vendors/edit', vendorsController.edit)
   apiRoutes.post('/vendors/destroy', vendorsController.destroy)
-  apiRoutes.get('/vendors/checkPassword', vendorsController.checkPassword)
+  // apiRoutes.get('/vendors/checkPassword', vendorsController.checkPassword)
   apiRoutes.get('/vendors/addImage', vendorsController.addImage)
   apiRoutes.post('/vendors/createProduct', vendorsController.createProduct)
   apiRoutes.get('/vendors/getProduct', vendorsController.getProduct)
