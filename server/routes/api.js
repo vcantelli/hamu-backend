@@ -2,7 +2,7 @@
 const vendorsController = require('../controllers').vendors
 const url = require('url')
 const fixieUrl = url.parse('http://fixie:ZZksOn1Ml8Qcm8x@velodrome.usefixie.com:80')
-const requestUrl = url.parse('https://hamu.herokuapp.com/api/vendors/checkPassword')
+const requestUrl = url.parse('/vendors/checkPassword')
 
 module.exports = (apiRoutes) => {
   apiRoutes.get({
