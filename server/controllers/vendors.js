@@ -9,7 +9,7 @@ var md5 = require('md5')
 var customerEntity = require('../models').customer_entity
 
 var magento = new MagentoAPI({
-  host: 'www.hamu.com.br',
+  host: '204.155.156.39',
   port: 80,
   path: '/api/xmlrpc/',
   login: 'admgeral',
