@@ -9,7 +9,7 @@ var md5 = require('md5')
 var customerEntity = require('../models').customer_entity
 
 var magento = new MagentoAPI({
-  host: 'www.hamu.com.br',
+  host: '204.155.156.39',
   port: 80,
   path: '/api/xmlrpc/',
   login: 'admgeral',
@@ -19,7 +19,7 @@ var magento = new MagentoAPI({
 module.exports = {
   create (req, res) {
     if (req.body.email && req.body.firstname &&
-      req.body.lastname && req.body.password &&
+      req.body.lastname && req.body.password && req.body.fantasy_name &&
       req.body.company_name && req.body.company_address && req.body.company_cnpj) {
       var newCustomer = {
         email: req.body.email,
@@ -127,7 +127,7 @@ module.exports = {
                 attribute_id: 144,
                 store_id: 0,
                 entity_id: vendorId,
-                value: req.body.company_name
+                value: req.body.fantasy_name
               })
             })
             .then(() => {
