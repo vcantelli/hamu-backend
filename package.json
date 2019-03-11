@@ -23,7 +23,7 @@
     "express-fileupload": "^0.3.0",
     "express-session": "^1.15.6",
     "http": "0.0.0",
-    "magento": "0.0.4",
+    "magento-api": "^0.3.3",
     "md5": "^2.2.1",
     "mocha": "^4.0.1",
     "morgan": "^1.9.0",

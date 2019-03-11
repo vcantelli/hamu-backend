@@ -4,13 +4,13 @@ const cedCsmarketplaceVendor = require('../models').ced_csmarketplace_vendor
 const cedCsmarketplaceVendorDatetime = require('../models').ced_csmarketplace_vendor_datetime
 const cedCsmarketplaceVendorInt = require('../models').ced_csmarketplace_vendor_int
 const cedCsmarketplaceVendorVarchar = require('../models').ced_csmarketplace_vendor_varchar
-var MagentoAPI = require('magento')
+var MagentoAPI = require('magento-api')
 var md5 = require('md5')
 var customerEntity = require('../models').customer_entity
 
 var magento = new MagentoAPI({
   host: 'www.hamu.com.br',
-  port: 80,
+  port: 443,
   path: '/api/xmlrpc/',
   login: 'admgeral',
   pass: 'paineldeacesso2017'
