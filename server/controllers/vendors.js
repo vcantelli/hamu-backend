@@ -361,7 +361,7 @@ module.exports = {
 
   editProduct (req, res) {
     let editProduct = {
-      category_ids: [req.body.categoria],
+      category_ids: [req.body.categoria, req.body.bairro],
       price: req.body.price,
       name: req.body.name,
       description: req.body.description,
