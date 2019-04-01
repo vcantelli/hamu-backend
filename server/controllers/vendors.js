@@ -194,8 +194,9 @@ module.exports = {
               })
             })))
             .then(productsList => {
-              console.log(productsList)
-              res.status(200).send(productsList)
+              var newList = productsList.filter(item => !!item)
+              console.log(newList)
+              res.status(200).send(newList)
             })
             .catch(err =>
               res.status(500).send(err)
