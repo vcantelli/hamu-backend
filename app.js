@@ -1,8 +1,8 @@
-var express = require('express')
-var app = express()
-var cookieParser = require('cookie-parser')
-var bodyParser = require('body-parser')
-var morgan = require('morgan')
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const express = require('express')
+const morgan = require('morgan')
+const app = express()
 
 const http = require('http').Server(app)
 const port = process.env.PORT || 8080
@@ -10,7 +10,7 @@ const port = process.env.PORT || 8080
 // const fixieUrl = url.parse('http://fixie:ZZksOn1Ml8Qcm8x@velodrome.usefixie.com:80')
 // const requestUrl = url.parse('https://hamu.herokuapp.com')
 
-app.use(bodyParser.json({limit: '50mb'}))
+app.use(bodyParser.json({ limit: '50mb' }))
 app.use(morgan('dev')) // log every request to the console
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))

@@ -1,5 +1,5 @@
-const vendors = require('./vendors');
+const vendors = require('./vendors')
 
 module.exports = {
-    vendors
+  vendors
 }
