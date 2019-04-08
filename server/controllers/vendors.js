@@ -20,7 +20,7 @@ module.exports = {
   create (req, res) {
     if (req.body.email && req.body.firstname &&
       req.body.lastname && req.body.password && req.body.fantasy_name &&
-      req.body.company_name && req.body.company_address && req.body.company_cnpj) {
+      req.body.company_name && req.body.company_address && req.body.company_cnpj && req.body.telephone) {
       var newCustomer = {
         email: req.body.email,
         firstname: req.body.firstname,
@@ -83,6 +83,15 @@ module.exports = {
                 store_id: 0,
                 entity_id: vendorId,
                 value: req.body.company_name
+              })
+            })
+            .then(() => {
+              return cedCsmarketplaceVendorVarchar.create({
+                entity_type_id: 9,
+                attribute_id: 149,
+                store_id: 0,
+                entity_id: vendorId,
+                value: req.body.telephone.replace(',', '').replace('.', '')
               })
             })
             .then(() => {
