@@ -192,36 +192,38 @@ module.exports = {
     })
   },
 
-  editProduct (req, res) {
+  editProduct ({ body }, response) {
     let editProduct = {
-      category_ids: [req.body.categoria, req.body.bairro],
-      price: req.body.price,
-      name: req.body.name,
-      description: req.body.description,
-      short_description: req.body.shortDescription
+      category_ids: [body.categoria, body.bairro],
+      price: body.price,
+      name: body.name,
+      description: body.description,
+      short_description: body.shortDescription
     }
-    magento.login(function (err, sessId) {
-      if (err) return res.status(500).send(err)
+    magento.login(function (error, _sessionId) {
+      if (error) return response.status(500).send(errorSanitizer(error))
       magento.catalogProduct.update({
-        id: req.body.productId,
+        id: body.productId,
         data: editProduct
-      }, function (err, product) {
-        if (err) return res.status(500).send(err)
+      }, function (error) {
+        if (error) return response.status(500).send(errorSanitizer(error))
         cedCsmarketplaceVendorProducts.update(
           {
-            price: req.body.price,
-            name: req.body.name,
-            description: req.body.description,
-            short_description: req.body.shortDescription,
-            qty: req.body.quantity
-          },
-          { where: {
-            product_id: req.body.productId
-          }})
-          .then(vendorProduct => {
-            res.status(200).send(true)
-          })
-          .catch(err => res.status(500).send(err))
+            price: body.price,
+            name: body.name,
+            description: body.description,
+            short_description: body.shortDescription,
+            qty: body.quantity
+          }, {
+            where: {
+              product_id: body.productId
+            }
+          }
+        ).then(() => {
+          response.status(200).send(true)
+        }).catch(error => {
+          response.status(500).send(errorSanitizer(error))
+        })
       })
     })
   },
