@@ -1,1 +1,3 @@
-module.exports = { ...(require('./vendors')) }
+module.exports = {
+  vendorsController: { ...(require('./vendors')) }
+}

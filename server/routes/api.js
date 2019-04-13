@@ -10,7 +10,7 @@ const {
   getProduct,
   editProduct,
   checkFacebookId
-} = require('../controllers')
+} = require('../controllers').vendorsController
 const routes = express.Router()
 
 routes.get('/', (_requisicao, resposta) => { resposta.send('API v1') })
