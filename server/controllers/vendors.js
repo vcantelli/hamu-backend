@@ -7,14 +7,7 @@ const cedCsmarketplaceVendorVarchar = require('../models').ced_csmarketplace_ven
 var MagentoAPI = require('magento-api')
 var md5 = require('md5')
 var customerEntity = require('../models').customer_entity
-
-var magento = new MagentoAPI({
-  host: 'www.hamu.com.br',
-  port: 443,
-  path: '/api/xmlrpc/',
-  login: 'admgeral',
-  pass: 'paineldeacesso2017'
-})
+const magento = new MagentoAPI(require('../config/magento'))
 
 module.exports = {
   create (req, res) {
