@@ -209,35 +209,33 @@ module.exports = {
     })
   },
 
-  getProduct (req, res) {
-    magento.login(function (err, sessId) {
-      if (err) return res.status(500).send(err)
+  getProduct ({ query }, response) {
+    magento.login(function (error, _sessionId) {
+      if (error) return response.status(500).send(error)
       magento.catalogProduct.info({
-        id: req.query.productId
-      }, function (err, product) {
-        if (err) return res.status(500).send(err)
+        id: query.productId
+      }, function (error, product) {
+        if (error) return response.status(500).send(error)
         cedCsmarketplaceVendorProducts.find({
           where: {
-            product_id: req.query.productId
+            product_id: query.productId
           }
-        })
-          .then(vendorProduct => {
-            var newProduct = {
-              product_id: Number(product.product_id),
-              price: Number(product.price),
-              special_price: Number(product.special_price),
-              name: product.name,
-              description: product.description,
-              shortDescription: product.short_description,
-              sku: product.sku,
-              qty: vendorProduct.dataValues.qty,
-              category: product.category_ids[0],
-              neighbourhood: product.category_ids[1]
-            }
-            console.log(newProduct)
-            res.status(200).send(newProduct)
-          })
-          .catch(err => res.status(500).send(err))
+        }).then(vendorProduct => {
+          const newProduct = {
+            product_id: Number(product.product_id),
+            price: Number(product.price),
+            special_price: Number(product.special_price),
+            name: product.name,
+            description: product.description,
+            shortDescription: product.short_description,
+            sku: product.sku,
+            qty: vendorProduct.dataValues.qty,
+            category: product.category_ids[0],
+            neighbourhood: product.category_ids[1]
+          }
+          console.log(newProduct)
+          response.status(200).send(newProduct)
+        }).catch(error => { response.status(500).send(error) })
       })
     })
   },
