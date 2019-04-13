@@ -25,9 +25,9 @@ module.exports = {
       }
       let vendorId = 0
       magento.login(function (error, _sessionId) {
-        if (error) return response.status(500).send({ error: error.message || error })
+        if (error) return response.status(500).send(errorSanitizer(error))
         magento.customer.create({ customerData }, function (error, customerInfo) {
-          if (error) return response.status(500).send({ message: error.message || error })
+          if (error) return response.status(500).send(errorSanitizer(error))
           cedCsmarketplaceVendor.create({
             entity_type_id: 9,
             attribute_set_id: 0,
@@ -57,16 +57,16 @@ module.exports = {
           }).then(() => {
             response.status(200).send(vendorId.toString())
           }).catch(error => {
-            response.status(500).send({ message: error.message || error })
+            response.status(500).send(errorSanitizer(error))
           })
         })
       })
-    } else response.status(400).send({ message: 'There are mandatory fields missing' })
+    } else response.status(400).send(errorSanitizer({ name: 'Missing fields', message: 'There are mandatory fields missing' }))
   },
 
   list ({ query }, response) {
     magento.login(function (error, _sessionId) {
-      if (error) return response.status(500).send(error)
+      if (error) return response.status(500).send(errorSanitizer(error))
       return cedCsmarketplaceVendorProducts.findAll({
         where: { vendor_id: query.vendorId }
       }).then(products => {
@@ -83,7 +83,7 @@ module.exports = {
         var newList = productsList.filter(item => !!item)
         console.log(newList)
         response.status(200).send(newList)
-      }).catch(error => response.status(500).send(error))
+      }).catch(error => response.status(500).send(errorSanitizer(error)))
     })
   },
 
@@ -211,11 +211,11 @@ module.exports = {
 
   getProduct ({ query }, response) {
     magento.login(function (error, _sessionId) {
-      if (error) return response.status(500).send(error)
+      if (error) return response.status(500).send(errorSanitizer(error))
       magento.catalogProduct.info({
         id: query.productId
       }, function (error, product) {
-        if (error) return response.status(500).send(error)
+        if (error) return response.status(500).send(errorSanitizer(error))
         cedCsmarketplaceVendorProducts.find({
           where: {
             product_id: query.productId
@@ -235,7 +235,7 @@ module.exports = {
           }
           console.log(newProduct)
           response.status(200).send(newProduct)
-        }).catch(error => { response.status(500).send(error) })
+        }).catch(error => { response.status(500).send(errorSanitizer(error)) })
       })
     })
   },
@@ -415,6 +415,13 @@ function customerDataIsComplete (data) {
 
 function generateEntity (entity_type_id, attribute_id, store_id, entity_id, value) {
   return { entity_type_id, attribute_id, store_id, entity_id, value }
+}
+
+function errorSanitizer (error) {
+  return {
+    name: error.name || error,
+    message: error.message || error
+  }
 }
 
 // magento.login(function (err, sessId) {
