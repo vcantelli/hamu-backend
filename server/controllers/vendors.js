@@ -83,7 +83,9 @@ module.exports = {
         var newList = productsList.filter(item => !!item)
         console.log(newList)
         response.status(200).send(newList)
-      }).catch(error => response.status(500).send(errorSanitizer(error)))
+      }).catch(error => {
+        response.status(500).send(errorSanitizer(error))
+      })
     })
   },
 
@@ -150,7 +152,9 @@ module.exports = {
           return Promise.all(images.map((img, i) => createProductImage(img[0], img[1], productId, i, magento)))
         }).then(() => {
           response.status(200).send(productId.toString())
-        }).catch(error => { response.status(500).send(errorSanitizer(error)) })
+        }).catch(error => {
+          response.status(500).send(errorSanitizer(error))
+        })
       })
     })
   },
@@ -181,7 +185,9 @@ module.exports = {
           }
           console.log(newProduct)
           response.status(200).send(newProduct)
-        }).catch(error => { response.status(500).send(errorSanitizer(error)) })
+        }).catch(error => {
+          response.status(500).send(errorSanitizer(error))
+        })
       })
     })
   },
