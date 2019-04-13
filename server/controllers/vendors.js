@@ -87,124 +87,70 @@ module.exports = {
     })
   },
 
-  createProduct (req, res) {
+  createProduct ({ body }, response) {
+    let productId
     let newProduct = {
-      category_ids: [req.body.categoria, req.body.bairro],
+      category_ids: [body.categoria, body.bairro],
       website_ids: [ 1 ],
-      name: req.body.name,
-      description: req.body.description,
-      short_description: req.body.shortDescription,
-      weight: req.body.weight,
+      name: body.name,
+      description: body.description,
+      short_description: body.shortDescription,
+      weight: body.weight,
       status: '1',
-      url_key: req.body.urlKey,
-      url_path: req.body.urlPath,
+      url_key: body.urlKey,
+      url_path: body.urlPath,
       visibility: '4',
-      price: req.body.price,
+      price: body.price,
       tax_class_id: 1,
-      meta_title: req.body.metaTitle,
-      meta_keyword: req.body.metaKeyword,
-      meta_description: req.body.metaDescription
+      meta_title: body.metaTitle,
+      meta_keyword: body.metaKeyword,
+      meta_description: body.metaDescription
     }
 
-    magento.login(function (err, sessId) {
-      if (err) return res.status(500).send(err)
+    magento.login(function (error, _sessionId) {
+      if (error) return response.status(500).send(errorSanitizer(error))
       magento.catalogProduct.create({
         type: 'simple',
         set: 4,
-        sku: req.body.sku,
+        sku: body.sku,
         data: newProduct
-      }, function (err, product) {
-        if (err) return res.status(500).send(err)
+      }, function (error, product) {
+        if (error) return response.status(500).send(errorSanitizer(error))
         cedCsmarketplaceVendorProducts.create({
-          vendor_id: req.body.vendorId,
+          vendor_id: body.vendorId,
           product_id: product,
           type: 'simple',
-          price: req.body.price,
+          price: body.price,
           special_price: 0,
-          name: req.body.name,
-          description: req.body.description,
-          short_description: req.body.shortDescription,
-          sku: req.body.sku,
-          weight: req.body.weight,
+          name: body.name,
+          description: body.description,
+          short_description: body.shortDescription,
+          sku: body.sku,
+          weight: body.weight,
           check_status: 1,
-          qty: req.body.quantity,
+          qty: body.quantity,
           is_in_stock: 1,
           website_ids: '1',
           is_multiseller: 0,
           parent_id: 0
-        })
-          .then(vendorProduct => {
+        }).then(result => {
+          productId = result.dataValues.product_id
+          return new Promise(resolve => {
             magento.catalogProductAttributeMedia.list({
-              product: vendorProduct.dataValues.product_id
-            },
-            function (err, product) {
-              if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
-              var newImage = {
-                file: {
-                  content: req.body.imageBase64,
-                  mime: 'image/jpeg',
-                  name: req.body.imageName
-                },
-                label: '',
-                position: 0,
-                types: ['image', 'small_image', 'thumbnail'],
-                exclude: '0'
-              }
-              magento.catalogProductAttributeMedia.create({
-                product: vendorProduct.dataValues.product_id,
-                data: newImage
-              },
-              function (err, image) {
-                if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
-                if (req.body.image2Base64) {
-                  var newImage2 = {
-                    file: {
-                      content: req.body.image2Base64,
-                      mime: 'image/jpeg',
-                      name: req.body.image2Name
-                    },
-                    label: '',
-                    position: 1,
-                    types: [],
-                    exclude: '0'
-                  }
-                  magento.catalogProductAttributeMedia.create({
-                    product: vendorProduct.dataValues.product_id,
-                    data: newImage2
-                  },
-                  function (err, image2) {
-                    if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
-                    if (req.body.image3Base64) {
-                      var newImage3 = {
-                        file: {
-                          content: req.body.image3Base64,
-                          mime: 'image/jpeg',
-                          name: req.body.image3Name
-                        },
-                        label: '',
-                        position: 2,
-                        types: [],
-                        exclude: '0'
-                      }
-                      magento.catalogProductAttributeMedia.create({
-                        product: vendorProduct.dataValues.product_id,
-                        data: newImage3
-                      },
-                      function (err, image3) {
-                        if (err) return res.status(200).send(vendorProduct.dataValues.product_id.toString())
-                        return res.status(200).send(vendorProduct.dataValues.product_id.toString())
-                      })
-                    } else {
-                      return res.status(200).send(vendorProduct.dataValues.product_id.toString())
-                    }
-                  })
-                } else {
-                  return res.status(200).send(vendorProduct.dataValues.product_id.toString())
-                }
-              })
-            })
+              product: productId
+            }, resolve)
           })
-          .catch(err => res.status(500).send(err))
+        }).then(error => {
+          if (error) return Promise.resolve()
+          const images = [
+            [body.imageBase64, body.imageName],
+            [body.image2Base64, body.image2Name],
+            [body.image3Base64, body.image3Name]
+          ]
+          return Promise.all(images.map((img, i) => createProductImage(img[0], img[1], productId, i, magento)))
+        }).then(() => {
+          response.status(200).send(productId.toString())
+        }).catch(error => { response.status(500).send(errorSanitizer(error)) })
       })
     })
   },
@@ -415,6 +361,30 @@ function customerDataIsComplete (data) {
 
 function generateEntity (entity_type_id, attribute_id, store_id, entity_id, value) {
   return { entity_type_id, attribute_id, store_id, entity_id, value }
+}
+
+function createProductImage (content, name, productId, position, magento) {
+  if (!content) return Promise.resolve()
+  return new Promise(function (resolve) {
+    var newImage = {
+      file: {
+        content,
+        mime: 'image/jpeg',
+        name
+      },
+      label: '',
+      position,
+      types: position === 0 ? ['image', 'small_image', 'thumbnail'] : [],
+      exclude: '0'
+    }
+    magento.catalogProductAttributeMedia.create({
+      product: productId,
+      data: newImage
+    }, function (error) {
+      if (error) console.error(error)
+      resolve()
+    })
+  })
 }
 
 function errorSanitizer (error) {
