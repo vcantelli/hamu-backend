@@ -1,15 +1,28 @@
-const vendorsController = require('../controllers').vendors
+const express = require('express')
+const {
+  list,
+  create,
+  edit,
+  destroy,
+  checkPassword,
+  addImage,
+  createProduct,
+  getProduct,
+  editProduct,
+  checkFacebookId
+} = require('../controllers')
+const routes = express.Router()
 
-module.exports = (apiRoutes) => {
-  apiRoutes.get('/', (_requisicao, resposta) => resposta.send('API v1'))
-  apiRoutes.get('/vendors/list', vendorsController.list)
-  apiRoutes.post('/vendors/create', vendorsController.create)
-  apiRoutes.post('/vendors/edit', vendorsController.edit)
-  apiRoutes.post('/vendors/destroy', vendorsController.destroy)
-  apiRoutes.get('/vendors/checkPassword', vendorsController.checkPassword)
-  apiRoutes.get('/vendors/addImage', vendorsController.addImage)
-  apiRoutes.post('/vendors/createProduct', vendorsController.createProduct)
-  apiRoutes.get('/vendors/getProduct', vendorsController.getProduct)
-  apiRoutes.post('/vendors/editProduct', vendorsController.editProduct)
-  apiRoutes.get('/vendors/checkFacebookId', vendorsController.checkFacebookId)
-}
+routes.get('/', (_requisicao, resposta) => { resposta.send('API v1') })
+routes.get('/vendors/list', list)
+routes.post('/vendors/create', create)
+routes.post('/vendors/edit', edit)
+routes.post('/vendors/destroy', destroy)
+routes.get('/vendors/checkPassword', checkPassword)
+routes.get('/vendors/addImage', addImage)
+routes.post('/vendors/createProduct', createProduct)
+routes.get('/vendors/getProduct', getProduct)
+routes.post('/vendors/editProduct', editProduct)
+routes.get('/vendors/checkFacebookId', checkFacebookId)
+
+module.exports = routes

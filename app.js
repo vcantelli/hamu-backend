@@ -30,9 +30,7 @@ app.set('view engine', 'ejs')
 app.set('views', 'views/')
 app.set('models', 'models/')
 
-const apiRoutes = express.Router()
-require('./server/routes/api')(apiRoutes)
-app.use('/api', apiRoutes)
+app.use('/api', require('./server/routes/api'))
 app.use(express.static('public'))
 
 module.exports = app
