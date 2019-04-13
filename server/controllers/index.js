@@ -1,5 +1,1 @@
-const vendors = require('./vendors')
-
-module.exports = {
-  vendors
-}
+module.exports = { ...(require('./vendors')) }

@@ -4,9 +4,9 @@ const cedCsmarketplaceVendor = require('../models').ced_csmarketplace_vendor
 const cedCsmarketplaceVendorDatetime = require('../models').ced_csmarketplace_vendor_datetime
 const cedCsmarketplaceVendorInt = require('../models').ced_csmarketplace_vendor_int
 const cedCsmarketplaceVendorVarchar = require('../models').ced_csmarketplace_vendor_varchar
-var MagentoAPI = require('magento-api')
-var md5 = require('md5')
-var customerEntity = require('../models').customer_entity
+const MagentoAPI = require('magento-api')
+const md5 = require('md5')
+const customerEntity = require('../models').customer_entity
 const magento = new MagentoAPI(require('../config/magento'))
 
 module.exports = {
