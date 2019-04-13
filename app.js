@@ -5,7 +5,6 @@ const morgan = require('morgan')
 const app = express()
 
 const http = require('http').Server(app)
-const port = process.env.PORT || 8080
 // const url = require('url')
 // const fixieUrl = url.parse('http://fixie:ZZksOn1Ml8Qcm8x@velodrome.usefixie.com:80')
 // const requestUrl = url.parse('https://hamu.herokuapp.com')
@@ -41,5 +40,6 @@ app.use(express.static('public'))
 module.exports = app
 
 /* LAUNCH */
-http.listen(port)
-console.log('Witchcraft happening at port: ' + port)
+http.listen(process.env.PORT || 8080, function () {
+  console.log('Witchcraft happening at port', this.address().port)
+})
