@@ -37,9 +37,9 @@ require('./server/routes/api')(apiRoutes)
 app.use('/api', apiRoutes)
 app.use(express.static('public'))
 
-module.exports = app
-
 /* LAUNCH */
 http.listen(process.env.PORT || 8080, function () {
   console.log('Witchcraft happening at port', this.address().port)
 })
+
+module.exports = http
