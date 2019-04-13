@@ -64,36 +64,26 @@ module.exports = {
     } else response.status(400).send({ message: 'There are mandatory fields missing' })
   },
 
-  list (req, res) {
-    magento.login(function (err, sessId) {
-      if (err) return res.status(500).send(err)
-      return cedCsmarketplaceVendorProducts
-        .findAll({
-          where: {
-            vendor_id: req.query.vendorId
-          }
-        })
-        .then(products => {
-          return Promise.all(products.map(({dataValues}) =>
-            new Promise(function (resolve, reject) {
-              magento.catalogProductAttributeMedia.list({
-                product: dataValues.product_id
-              }, function (err, product) {
-                if (err) return resolve()
-                let formatProduct = dataValues
-                formatProduct.Media = product
-                return resolve(formatProduct)
-              })
-            })))
-            .then(productsList => {
-              var newList = productsList.filter(item => !!item)
-              console.log(newList)
-              res.status(200).send(newList)
+  list ({ query }, response) {
+    magento.login(function (error, _sessionId) {
+      if (error) return response.status(500).send(error)
+      return cedCsmarketplaceVendorProducts.findAll({
+        where: { vendor_id: query.vendorId }
+      }).then(products => {
+        return Promise.all(products.map(({ dataValues }) => {
+          return new Promise((resolve, _reject) => {
+            magento.catalogProductAttributeMedia.list({
+              product: dataValues.product_id
+            }, function (_error, product) {
+              resolve({ ...dataValues, Media: product || null })
             })
-            .catch(err =>
-              res.status(500).send(err)
-            )
-        })
+          })
+        }))
+      }).then(productsList => {
+        var newList = productsList.filter(item => !!item)
+        console.log(newList)
+        response.status(200).send(newList)
+      }).catch(error => response.status(500).send(error))
     })
   },
 
