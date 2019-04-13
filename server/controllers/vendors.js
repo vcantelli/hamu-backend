@@ -229,7 +229,7 @@ module.exports = {
             description: product.description,
             shortDescription: product.short_description,
             sku: product.sku,
-            qty: vendorProduct.dataValues.qty,
+            qty: vendorProduct && vendorProduct.dataValues.qty,
             category: product.category_ids[0],
             neighbourhood: product.category_ids[1]
           }
