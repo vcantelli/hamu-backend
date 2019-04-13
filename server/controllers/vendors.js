@@ -1,9 +1,11 @@
-const cedCsmarketplaceVendorProducts = require('../models').ced_csmarketplace_vendor_products
-const cedCsmarketplaceVendorShop = require('../models').ced_csmarketplace_vendor_shop
-const cedCsmarketplaceVendor = require('../models').ced_csmarketplace_vendor
-const cedCsmarketplaceVendorDatetime = require('../models').ced_csmarketplace_vendor_datetime
-const cedCsmarketplaceVendorInt = require('../models').ced_csmarketplace_vendor_int
-const cedCsmarketplaceVendorVarchar = require('../models').ced_csmarketplace_vendor_varchar
+const {
+  cedCsmarketplaceVendorProducts,
+  cedCsmarketplaceVendorShop,
+  cedCsmarketplaceVendor,
+  cedCsmarketplaceVendorDatetime,
+  cedCsmarketplaceVendorInt,
+  cedCsmarketplaceVendorVarchar
+} = require('../models')
 const MagentoAPI = require('magento-api')
 const md5 = require('md5')
 const customerEntity = require('../models').customer_entity
