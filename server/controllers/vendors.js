@@ -314,33 +314,24 @@ module.exports = {
     })
   },
 
-  addImage (req, res) {
-    magento.login(function (err, sessId) {
-      if (err) res.status(500).send(err)
+  addImage ({ body }, response) {
+    magento.login(function (error, _sessionId) {
+      if (error) response.status(500).send(errorSanitizer(error))
       magento.catalogProductAttributeMedia.list({
-        product: req.body.productId
+        product: body.productId
       },
-      function (err, product) {
-        if (err) res.status(500).send(err)
-        var newImage = {
-          file: {
-            content: req.body.imageBase64,
-            mime: 'image/jpeg',
-            name: req.body.imageName
-          },
-          label: '',
-          position: product.lenght,
-          types: [],
-          exclude: '0'
-        }
-        magento.catalogProductAttributeMedia.create({
-          product: req.body.productId,
-          data: newImage
-        },
-        function (err, image) {
-          if (err) res.status(500).send(err)
+      function (error, product) {
+        if (error) response.status(500).send(errorSanitizer(error))
+        createProductImage(
+          body.imageBase64,
+          body.imageName,
+          body.productId,
+          product.lenght,
+          magento
+        ).then((error, image) => {
+          if (error) response.status(500).send(errorSanitizer(error))
           console.log(image)
-          res.status(200).send(image)
+          response.status(200).send(image)
         })
       })
     })
