@@ -293,23 +293,20 @@ module.exports = {
     })
   },
 
-  checkFacebookId (req, res) {
-    if (!req.query.facebookId) return res.status(200).send(false)
+  checkFacebookId ({ query }, response) {
+    if (!query.facebookId) return response.status(200).send(false)
     cedCsmarketplaceVendorVarchar.find({
       where: {
         attribute_id: 153,
         entity_type_id: 9,
         store_id: 0,
-        value: req.query.facebookId
+        value: query.facebookId
       }
     }).then(customer => {
-      if (customer) {
-        res.status(200).send(customer.dataValues.entity_id.toString())
-      } else {
-        return res.status(200).send('0')
-      }
+      if (customer) response.status(200).send(customer.dataValues.entity_id.toString())
+      else return response.status(200).send('0')
     }).catch(err => {
-      return res.status(400).send(err)
+      return response.status(400).send(err)
     })
   },
 
