@@ -93,7 +93,7 @@ module.exports = {
     let productId
     let newProduct = {
       category_ids: [body.categoria, body.bairro],
-      website_ids: [ 1 ],
+      website_ids: [1],
       name: body.name,
       description: body.description,
       short_description: body.shortDescription,
@@ -271,8 +271,7 @@ module.exports = {
           if (err) return res.status(500).send(err)
           magento.customer.info({
             customerId: customer.dataValues.entity_id
-          },
-          function (err, customerInfo) {
+          }, function (err, customerInfo) {
             if (err && !checkPasswordHash(req.query.password, customerInfo.password_hash)) return res.status(500).send(err)
             cedCsmarketplaceVendorInt.find({
               where: {
@@ -319,8 +318,7 @@ module.exports = {
       if (error) response.status(500).send(errorSanitizer(error))
       magento.catalogProductAttributeMedia.list({
         product: body.productId
-      },
-      function (error, product) {
+      }, function (error, product) {
         if (error) response.status(500).send(errorSanitizer(error))
         createProductImage(
           body.imageBase64,
