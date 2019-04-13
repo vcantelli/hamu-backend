@@ -12,27 +12,22 @@ const customerEntity = require('../models').customer_entity
 const magento = new MagentoAPI(require('../config/magento'))
 
 module.exports = {
-  create (req, res) {
-    if (req.body.email && req.body.firstname &&
-      req.body.lastname && req.body.password && req.body.fantasy_name &&
-      req.body.company_name && req.body.company_address && req.body.company_cnpj && req.body.telephone) {
-      var newCustomer = {
-        email: req.body.email,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        password: req.body.password,
+  create ({ body }, response) {
+    if (customerDataIsComplete(body)) {
+      const customerData = {
+        email: body.email,
+        firstname: body.firstname,
+        lastname: body.lastname,
+        password: body.password,
         website_id: 1,
         store_id: 1,
         group_id: 1
       }
       let vendorId = 0
-      magento.login(function (err, sessId) {
-        if (err) return res.status(500).send(err)
-        magento.customer.create({
-          customerData: newCustomer
-        },
-        function (err, customerInfo) {
-          if (err) return res.status(500).send(err)
+      magento.login(function (error, _sessionId) {
+        if (error) return response.status(500).send({ error: error.message || error })
+        magento.customer.create({ customerData }, function (error, customerInfo) {
+          if (error) return response.status(500).send({ message: error.message || error })
           cedCsmarketplaceVendor.create({
             entity_type_id: 9,
             attribute_set_id: 0,
@@ -42,138 +37,31 @@ module.exports = {
             updated_at: new Date(),
             is_active: 1,
             website_id: 1
+          }).then(vendor => {
+            vendorId = vendor.null
+            return Promise.all([
+              cedCsmarketplaceVendorDatetime.create(generateEntity(9, 133, 0, vendorId, new Date())),
+              cedCsmarketplaceVendorInt.create(generateEntity(9, 132, 0, vendorId, customerInfo)),
+              cedCsmarketplaceVendorInt.create(generateEntity(9, 140, 0, vendorId, 1)),
+              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 137, 0, vendorId, body.company_name)),
+              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 149, 0, vendorId, body.telephone.replace(',', '').replace('.', ''))),
+              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 134, 0, vendorId, (body.company_name).toLowerCase().replace(/\s/g, ''))),
+              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 135, 0, vendorId, 'approved')),
+              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 136, 0, vendorId, 'general')),
+              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 139, 0, vendorId, `${body.firstname} ${body.lastname}`)),
+              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 144, 0, vendorId, body.fantasy_name)),
+              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 148, 0, vendorId, body.company_address)),
+              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 161, 0, vendorId, body.company_cnpj)),
+              body.facebookId ? cedCsmarketplaceVendorVarchar.create(generateEntity(9, 153, 0, vendorId, body.facebookId)) : Promise.resolve()
+            ])
+          }).then(() => {
+            response.status(200).send(vendorId.toString())
+          }).catch(error => {
+            response.status(500).send({ message: error.message || error })
           })
-            .then(vendor => {
-              vendorId = vendor.null
-              return cedCsmarketplaceVendorDatetime.create({
-                entity_type_id: 9,
-                attribute_id: 133,
-                store_id: 0,
-                entity_id: vendorId,
-                value: new Date()
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorInt.create({
-                entity_type_id: 9,
-                attribute_id: 132,
-                store_id: 0,
-                entity_id: vendorId,
-                value: customerInfo
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorInt.create({
-                entity_type_id: 9,
-                attribute_id: 140,
-                store_id: 0,
-                entity_id: vendorId,
-                value: 1
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorVarchar.create({
-                entity_type_id: 9,
-                attribute_id: 137,
-                store_id: 0,
-                entity_id: vendorId,
-                value: req.body.company_name
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorVarchar.create({
-                entity_type_id: 9,
-                attribute_id: 149,
-                store_id: 0,
-                entity_id: vendorId,
-                value: req.body.telephone.replace(',', '').replace('.', '')
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorVarchar.create({
-                entity_type_id: 9,
-                attribute_id: 134,
-                store_id: 0,
-                entity_id: vendorId,
-                value: (req.body.company_name).toLowerCase().replace(/\s/g, '')
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorVarchar.create({
-                entity_type_id: 9,
-                attribute_id: 135,
-                store_id: 0,
-                entity_id: vendorId,
-                value: 'approved'
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorVarchar.create({
-                entity_type_id: 9,
-                attribute_id: 136,
-                store_id: 0,
-                entity_id: vendorId,
-                value: 'general'
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorVarchar.create({
-                entity_type_id: 9,
-                attribute_id: 139,
-                store_id: 0,
-                entity_id: vendorId,
-                value: req.body.firstname + ' ' + req.body.lastname
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorVarchar.create({
-                entity_type_id: 9,
-                attribute_id: 144,
-                store_id: 0,
-                entity_id: vendorId,
-                value: req.body.fantasy_name
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorVarchar.create({
-                entity_type_id: 9,
-                attribute_id: 148,
-                store_id: 0,
-                entity_id: vendorId,
-                value: req.body.company_address
-              })
-            })
-            .then(() => {
-              return cedCsmarketplaceVendorVarchar.create({
-                entity_type_id: 9,
-                attribute_id: 161,
-                store_id: 0,
-                entity_id: vendorId,
-                value: req.body.company_cnpj
-              })
-            })
-            .then(newVendorType => {
-              if (req.body.facebookId) {
-                return cedCsmarketplaceVendorVarchar.create({
-                  entity_type_id: 9,
-                  attribute_id: 153,
-                  store_id: 0,
-                  entity_id: vendorId,
-                  value: req.body.facebookId
-                })
-              } else {
-                return newVendorType
-              }
-            })
-            .then(() => {
-              return res.status(200).send(vendorId.toString())
-            })
-            .catch(err => {
-              return res.status(500).send(err)
-            })
         })
       })
-    }
+    } else response.status(400).send({ message: 'There are mandatory fields missing' })
   },
 
   list (req, res) {
@@ -521,6 +409,24 @@ function checkPasswordHash (password, hash) {
   var hashSplit = hash.split(':')
   if (hashSplit[0] === md5(hashSplit[1] + password)) return true
   else return false
+}
+
+function customerDataIsComplete (data) {
+  return (
+    data.email &&
+    data.firstname &&
+    data.lastname &&
+    data.password &&
+    data.fantasy_name &&
+    data.company_name &&
+    data.company_address &&
+    data.company_cnpj &&
+    data.telephone
+  )
+}
+
+function generateEntity (entity_type_id, attribute_id, store_id, entity_id, value) {
+  return { entity_type_id, attribute_id, store_id, entity_id, value }
 }
 
 // magento.login(function (err, sessId) {
