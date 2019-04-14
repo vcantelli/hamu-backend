@@ -244,44 +244,39 @@ module.exports = {
   destroy (_request, response) {
     cedCsmarketplaceVendorShop.destroy({
       where: { id: 1 }
-    }).then(shop => {
+    }).then(_shop => {
       response.status(200).send()
     }).catch(err => {
       response.status(500).send(err)
     })
   },
 
-  checkPassword (req, res) {
-    if (!(req.query.email && req.query.password)) return res.status(200).send(false)
+  checkPassword ({ query }, response) {
+    if (!(query.email && query.password)) return response.status(200).send(false)
     customerEntity.find({
-      where: {
-        email: req.query.email
-      }
+      where: { email: query.email }
     }).then(customer => {
-      if (customer) {
-        magento.login(function (err, sessId) {
-          if (err) return res.status(500).send(err)
-          magento.customer.info({
-            customerId: customer.dataValues.entity_id
-          }, function (err, customerInfo) {
-            if (err && !checkPasswordHash(req.query.password, customerInfo.password_hash)) return res.status(500).send(err)
-            cedCsmarketplaceVendorInt.find({
-              where: {
-                attribute_id: 132,
-                value: customer.dataValues.entity_id
-              }
-            }).then(vendor => {
-              return res.status(200).send(vendor.dataValues.entity_id.toString())
-            }).catch(err => {
-              return res.status(400).send(err)
-            })
+      if (!customer) return response.status(200).send('0')
+      magento.login(function (error, _sessionId) {
+        if (error) return response.status(500).send(errorSanitizer(error))
+        magento.customer.info({
+          customerId: customer.dataValues.entity_id
+        }, function (error, customerInfo) {
+          if (error && !checkPasswordHash(query.password, customerInfo.password_hash)) return response.status(500).send(errorSanitizer(error))
+          cedCsmarketplaceVendorInt.find({
+            where: {
+              attribute_id: 132,
+              value: customer.dataValues.entity_id
+            }
+          }).then(vendor => {
+            return response.status(200).send(vendor.dataValues.entity_id.toString())
+          }).catch(error => {
+            return response.status(400).send(errorSanitizer(error))
           })
         })
-      } else {
-        return res.status(200).send('0')
-      }
-    }).catch(err => {
-      return res.status(400).send(err)
+      })
+    }).catch(error => {
+      return response.status(400).send(errorSanitizer(error))
     })
   },
 
