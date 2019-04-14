@@ -262,7 +262,8 @@ module.exports = {
         magento.customer.info({
           customerId: customer.dataValues.entity_id
         }, function (error, customerInfo) {
-          if (error && !checkPasswordHash(query.password, customerInfo.password_hash)) return response.status(500).send(errorSanitizer(error))
+          if (error) return response.status(500).send(errorSanitizer(error))
+          if (!checkPasswordHash(query.password, customerInfo.password_hash)) return response.status(500).send('0')
           cedCsmarketplaceVendorInt.find({
             where: {
               attribute_id: 132,
