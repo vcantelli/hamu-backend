@@ -228,35 +228,27 @@ module.exports = {
     })
   },
 
-  edit (req, res) {
+  edit (_request, response) {
     cedCsmarketplaceVendorShop.find({
-      where: {
-        id: 1
-      }
+      where: { id: 1 }
+    }).then(shop => {
+      shop.updateAttributes({
+        shop_disable: 1
+      })
+      response.status(200).send(shop)
+    }).catch(error => {
+      response.status(500).send(errorSanitizer(error))
     })
-      .then(shop => {
-        shop.updateAttributes({
-          shop_disable: 1
-        })
-        res.status(200).send(shop)
-      })
-      .catch(err => {
-        res.status(500).send(err)
-      })
   },
 
-  destroy (req, res) {
+  destroy (_request, response) {
     cedCsmarketplaceVendorShop.destroy({
-      where: {
-        id: 1
-      }
+      where: { id: 1 }
+    }).then(shop => {
+      response.status(200).send()
+    }).catch(err => {
+      response.status(500).send(err)
     })
-      .then(shop => {
-        res.status(200).send()
-      })
-      .catch(err => {
-        res.status(500).send(err)
-      })
   },
 
   checkPassword (req, res) {
