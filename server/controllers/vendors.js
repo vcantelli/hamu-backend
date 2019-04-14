@@ -4,11 +4,11 @@ const {
   cedCsmarketplaceVendor,
   cedCsmarketplaceVendorDatetime,
   cedCsmarketplaceVendorInt,
-  cedCsmarketplaceVendorVarchar
+  cedCsmarketplaceVendorVarchar,
+  customerEntity
 } = require('../models')
 const MagentoAPI = require('magento-api')
 const md5 = require('md5')
-const customerEntity = require('../models').customer_entity
 const magento = new MagentoAPI(require('../config/magento'))
 
 module.exports = {
