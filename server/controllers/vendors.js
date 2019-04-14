@@ -371,77 +371,74 @@ function errorSanitizer (error) {
   }
 }
 
-// magento.login(function (err, sessId) {
-//   if (err) return res.status(500).send(err)
-//      magento.catalogProductAttributeMedia.list({
-//       product : 163
-//     }, function(err, product){
-//         console.log("err"+err)
-//         console.log(product)
-//     })
+// magento.login(function (error, sessId) {
+//   if (error) return res.status(500).send(error)
+//   magento.catalogProductAttributeMedia.list({
+//     product: 163
+//   }, function (error, product) {
+//     console.log("err" + error)
+//     console.log(product)
+//   })
 // })
 
-// magento.login(function(err, sessId) {
-//     if (err) {
-//       // deal with error
-//       return;
-//     }
-//     var passwordHash = '45690e2bdeb92e845cdc3080e497a0ef:X5q6mZkXVPQZKKbLl2Fi30LuV8wZD59q'
-//     var passwordHash2 = 'X5q6mZkXVPQZKKbLl2Fi30LuV8wZD59q'
-//     var password = 'y94rywvx'
-//     var hash = md5(passwordHash2 + password)
-//     // magento.catalogProduct.info({
-//     //     id: 163
-//     // }, function(err, product){
-//     //     console.log("err"+err)
-//     //     console.log(product)
-//     // })
-//     var new_image =
-//     {
-//         file:
-//         {
-//             content: '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAXABcDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDLooor8XP4DCiiigAooooAKKKKAP/Z',
-//             mime: 'image/jpeg',
-//             name: 'Teste'
-//         },
-//         label: '',
-//         position: 3,
-//         types: [],
-//         exclude: '0'
-//     }
-//     // magento.catalogProductAttributeMedia.list({
-//     //     product:    163,
-//     //   },  function(err, product){
-//     //     console.log("err"+err)
-//     //     console.log(product)
-//     // });
+// magento.login(function (error, sessId) {
+//   if (error) {
+//     // deal with error
+//     return;
+//   }
+//   var passwordHash = '45690e2bdeb92e845cdc3080e497a0ef:X5q6mZkXVPQZKKbLl2Fi30LuV8wZD59q'
+//   var passwordHash2 = 'X5q6mZkXVPQZKKbLl2Fi30LuV8wZD59q'
+//   var password = 'y94rywvx'
+//   var hash = md5(passwordHash2 + password)
+//   // magento.catalogProduct.info({
+//   //   id: 163
+//   // }, function (err, product) {
+//   //   console.log("err" + err)
+//   //   console.log(product)
+//   // })
+//   var new_image = {
+//     file: {
+//       content: '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAXABcDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDLooor8XP4DCiiigAooooAKKKKAP/Z',
+//       mime: 'image/jpeg',
+//       name: 'Teste'
+//     },
+//     label: '',
+//     position: 3,
+//     types: [],
+//     exclude: '0'
+//   }
+//   // magento.catalogProductAttributeMedia.list({
+//   //   product: 163,
+//   // }, function (error, product) {
+//   //   console.log("err" + error)
+//   //   console.log(product)
+//   // });
 
-//     magento.customer.login({
-//         email: 'v.cantelli@hotmail.com',
-//         password: 'y94rywvx'
-//       }, function(err, product){
-//         console.log("err"+err)
-//         console.log(product)
-//     });
+//   magento.customer.login({
+//     email: 'v.cantelli@hotmail.com',
+//     password: 'y94rywvx'
+//   }, function (error, product) {
+//     console.log("err" + error)
+//     console.log(product)
+//   });
 
-//     // magento.customer.info({
-//     //     customerId: 34
-//     //   }, function(err, product){
-//     //     console.log("err"+err)
-//     //     console.log(product)
-//     // });
+//   // magento.customer.info({
+//   //   customerId: 34
+//   // }, function (error, product) {
+//   //   console.log("err" + error)
+//   //   console.log(product)
+//   // });
 
-//     // magento.catalogProductAttributeMedia.create({
-//     //     product: 163,
-//     //     data: new_image,
-//     //   },  function(err, product){
-//     //     console.log("err"+err)
-//     //     console.log(product)
-//     // });
-//     // magento.catalogProduct.list(function(err,product)
-//     // {
-//     //     console.log("err"+err)
-//     //     console.log(product)
-//     // })
-//     // use magento
-//   })
+//   // magento.catalogProductAttributeMedia.create({
+//   //   product: 163,
+//   //   data: new_image,
+//   // }, function (error, product) {
+//   //   console.log("err" + error)
+//   //   console.log(product)
+//   // });
+//   // magento.catalogProduct.list(function (error, product) {
+//   //   console.log("err" + error)
+//   //   console.log(product)
+//   // })
+//   // use magento
+// })
