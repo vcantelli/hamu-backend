@@ -33,7 +33,7 @@ routes.get('/checkFacebookId', checkFacebookId)
 // routes.put('/:vendorId/products/:productId', editProduct) // Edit a product from that vendor
 // routes.post('/:vendorId/products/:productId/image', addImage) // Add new image to that product
 // routes.post('/destroy', destroy) // ???
-// routes.get('/password/check', checkPassword) // Check username and password
+// routes.get('/login', checkPassword) // ??? Login route
 // routes.get('/facebook-id/check', checkFacebookId) // Check FacebookID
 
 module.exports = routes
