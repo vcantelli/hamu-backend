@@ -361,11 +361,7 @@ function createProductImage (content, name, productId, position, magento) {
   if (!content) return Promise.resolve()
   return new Promise(function (resolve) {
     var newImage = {
-      file: {
-        content,
-        mime: 'image/jpeg',
-        name
-      },
+      file: { name, content, mime: 'image/jpeg' },
       label: '',
       position,
       types: position === 0 ? ['image', 'small_image', 'thumbnail'] : [],
