@@ -20,4 +20,11 @@ describe('Vendors', function () {
       done()
     })
   })
+
+  it('should check if the password is valid GET /vendors/checkPassword', done => {
+    chai.request(server).get('/api/vendors/checkPassword?email=neryuuk@neryuuk.com&password=batata').end((_error, response) => {
+      response.should.have.status(200)
+      done()
+    })
+  })
 })
