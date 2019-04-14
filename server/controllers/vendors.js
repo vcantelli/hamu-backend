@@ -316,7 +316,7 @@ module.exports = {
       magento.catalogProductAttributeMedia.list({
         product: body.productId
       }, function (error, product) {
-        if (error) response.status(500).send(errorSanitizer(error))
+        if (error) return response.status(500).send(errorSanitizer(error))
         createProductImage(
           body.imageBase64,
           body.imageName,
@@ -327,7 +327,7 @@ module.exports = {
           if (error) response.status(500).send(errorSanitizer(error))
           console.log(image)
           response.status(200).send(image)
-        })
+        }).catch(error => { response.status(500).send(errorSanitizer(error)) })
       })
     })
   }
