@@ -321,10 +321,9 @@ module.exports = {
   }
 }
 
-function checkPasswordHash (password, hash) {
-  var hashSplit = hash.split(':')
-  if (hashSplit[0] === md5(hashSplit[1] + password)) return true
-  else return false
+function checkPasswordHash (password, stored) {
+  const [hash, salt] = stored.split(':')
+  return (hash === md5(salt + password))
 }
 
 function customerDataIsComplete (data) {
