@@ -1,3 +1,4 @@
 module.exports = {
-  vendorsController: { ...(require('./vendors')) }
+  vendorsController: { ...(require('./vendors')) },
+  authController: require('./auth')
 }
