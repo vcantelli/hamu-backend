@@ -1,3 +1,7 @@
+const jwt = require('jsonwebtoken')
+const MagentoAPI = require('magento-api')
+const md5 = require('md5')
+const { secret, config } = require('../config/jwt')
 const {
   cedCsmarketplaceVendorProducts,
   cedCsmarketplaceVendorShop,
@@ -7,8 +11,6 @@ const {
   cedCsmarketplaceVendorVarchar,
   customerEntity
 } = require('../models')
-const MagentoAPI = require('magento-api')
-const md5 = require('md5')
 const magento = new MagentoAPI(require('../config/magento'))
 
 module.exports = {
@@ -251,26 +253,31 @@ module.exports = {
     })
   },
 
-  checkPassword ({ query }, response) {
-    if (!(query.email && query.password)) return response.status(200).send(false)
+  checkPassword ({ body }, response) {
+    if (!(body.email && body.password)) return response.status(400).send(false)
+
     customerEntity.find({
-      where: { email: query.email }
+      where: { email: body.email }
     }).then(customer => {
-      if (!customer) return response.status(200).send('0')
+      if (!customer) return response.status(403).send('0')
+
       magento.login(function (error, _sessionId) {
         if (error) return response.status(500).send(errorSanitizer(error))
+
         magento.customer.info({
           customerId: customer.dataValues.entity_id
         }, function (error, customerInfo) {
           if (error) return response.status(500).send(errorSanitizer(error))
-          if (!checkPasswordHash(query.password, customerInfo.password_hash)) return response.status(500).send('0')
+          if (!checkPasswordHash(body.password, customerInfo.password_hash)) return response.status(403).send('0')
+
           cedCsmarketplaceVendorInt.find({
             where: {
               attribute_id: 132,
               value: customer.dataValues.entity_id
             }
           }).then(vendor => {
-            return response.status(200).send(vendor.dataValues.entity_id.toString())
+            const token = jwt.sign(vendor.toJSON(), secret, config)
+            return response.status(200).send({ vendor, token })
           }).catch(error => {
             return response.status(400).send(errorSanitizer(error))
           })
