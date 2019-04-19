@@ -9,31 +9,45 @@ const {
   addImage,
   createProduct,
   getProduct,
-  editProduct,
-  checkFacebookId
+  editProduct
 } = require('../controllers').vendorsController
-
-routes.get('/list', list)
-routes.post('/create', create)
-routes.post('/edit', edit)
-routes.post('/destroy', destroy)
-routes.get('/checkPassword', checkPassword)
-routes.post('/addImage', addImage)
-routes.post('/createProduct', createProduct)
-routes.get('/getProduct', getProduct)
-routes.post('/editProduct', editProduct)
-routes.get('/checkFacebookId', checkFacebookId)
+const authenticator = require('../controllers').authController
 
 // Proposed new routes // Let's discuss it first
-// routes.post('/', create) // Create new vendor
-// routes.put('/:vendorId', edit) // Edit the vendor :vendorId
-// routes.post('/:vendorId/products', createProduct) // Create new product
-// routes.get('/:vendorId/products', list) // List all products from that vendor
-// routes.get('/:vendorId/products/:productId', getProduct) // Get a product from that vendor
-// routes.put('/:vendorId/products/:productId', editProduct) // Edit a product from that vendor
-// routes.post('/:vendorId/products/:productId/image', addImage) // Add new image to that product
-// routes.post('/destroy', destroy) // ???
-// routes.get('/login', checkPassword) // ??? Login route
-// routes.get('/facebook-id/check', checkFacebookId) // Check FacebookID
+routes.route('/login').post(checkPassword)
+
+routes.route('/')
+  .post(create) // Create new vendor
+  .put(authenticator, edit) // Edit the vendor :vendorId
+
+routes.route('/products')
+  .all(authenticator)
+  .post(createProduct) // Create new product
+  .get(list) // List all products from that vendor
+
+routes.route('/products/:productId')
+  .all(authenticator)
+  .get(getProduct) // Get a product from that vendor
+  .put(editProduct) // Edit a product from that vendor
+
+routes.route('/products/:productId/image')
+  .all(authenticator)
+  .post(addImage) // Add new image to that product
+
+routes.route('/destroy')
+  .all(authenticator)
+  .post(destroy) // ???
+
+// Old routes
+// routes.get('/list', list)
+// routes.post('/create', create)
+// routes.post('/edit', edit)
+// routes.post('/destroy', destroy)
+// routes.get('/checkPassword', checkPassword)
+// routes.post('/addImage', addImage)
+// routes.post('/createProduct', createProduct)
+// routes.get('/getProduct', getProduct)
+// routes.post('/editProduct', editProduct)
+// routes.get('/checkFacebookId', checkFacebookId)
 
 module.exports = routes
