@@ -66,11 +66,11 @@ module.exports = {
     } else response.status(400).send(errorSanitizer({ name: 'Missing fields', message: 'There are mandatory fields missing' }))
   },
 
-  list ({ query }, response) {
+  list ({ decoded }, response) {
     magento.login(function (error, _sessionId) {
       if (error) return response.status(500).send(errorSanitizer(error))
-      return cedCsmarketplaceVendorProducts.findAll({
-        where: { vendor_id: query.vendorId }
+      cedCsmarketplaceVendorProducts.findAll({
+        where: { vendor_id: decoded.vendorId }
       }).then(products => {
         return Promise.all(products.map(({ dataValues }) => {
           return new Promise((resolve, _reject) => {
@@ -91,7 +91,7 @@ module.exports = {
     })
   },
 
-  createProduct ({ body }, response) {
+  createProduct ({ body, decoded }, response) {
     let productId
     let newProduct = {
       category_ids: [body.categoria, body.bairro],
@@ -121,7 +121,7 @@ module.exports = {
       }, function (error, product) {
         if (error) return response.status(500).send(errorSanitizer(error))
         cedCsmarketplaceVendorProducts.create({
-          vendor_id: body.vendorId,
+          vendor_id: decoded.vendorId,
           product_id: product,
           type: 'simple',
           price: body.price,
