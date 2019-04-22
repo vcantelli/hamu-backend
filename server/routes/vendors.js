@@ -1,42 +1,31 @@
 const express = require('express')
 const routes = express.Router()
-const {
-  list,
-  create,
-  edit,
-  destroy,
-  checkPassword,
-  addImage,
-  createProduct,
-  getProduct,
-  editProduct
-} = require('../controllers').vendorsController
-const authenticator = require('../controllers').authController
+const { authController, vendorsController } = require('../controllers')
 
 // Proposed new routes // Let's discuss it first
-routes.route('/login').post(checkPassword)
+routes.route('/login').post(vendorsController.checkPassword)
 
 routes.route('/')
-  .post(create) // Create new vendor
-  .put(authenticator, edit) // Edit the vendor :vendorId
+  .post(vendorsController.create) // Create new vendor
+  .put(authController, vendorsController.edit) // Edit the vendor :vendorId
 
 routes.route('/products')
-  .all(authenticator)
-  .post(createProduct) // Create new product
-  .get(list) // List all products from that vendor
+  .all(authController)
+  .post(vendorsController.createProduct) // Create new product
+  .get(vendorsController.list) // List all products from that vendor
 
 routes.route('/products/:productId')
-  .all(authenticator)
-  .get(getProduct) // Get a product from that vendor
-  .put(editProduct) // Edit a product from that vendor
+  .all(authController)
+  .get(vendorsController.getProduct) // Get a product from that vendor
+  .put(vendorsController.editProduct) // Edit a product from that vendor
 
 routes.route('/products/:productId/image')
-  .all(authenticator)
-  .post(addImage) // Add new image to that product
+  .all(authController)
+  .post(vendorsController.addImage) // Add new image to that product
 
 routes.route('/destroy')
-  .all(authenticator)
-  .post(destroy) // ???
+  .all(authController)
+  .post(vendorsController.destroy) // ???
 
 // Old routes
 // routes.get('/list', list)
