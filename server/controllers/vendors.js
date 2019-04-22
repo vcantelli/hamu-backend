@@ -275,8 +275,12 @@ module.exports = {
               attribute_id: 132,
               value: customer.dataValues.entity_id
             }
-          }).then(vendor => {
-            const token = jwt.sign(vendor.toJSON(), secret, config)
+          }).then(result => {
+            const vendor = {
+              vendorId: result.entity_id,
+              email: body.email
+            }
+            const token = jwt.sign(vendor, secret, config)
             return response.status(200).send({ vendor, token })
           }).catch(error => {
             return response.status(400).send(errorSanitizer(error))
