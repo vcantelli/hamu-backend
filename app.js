@@ -25,9 +25,6 @@ app.use(cookieParser())
 // console.log(`Got response: ${res.statusCode}`);
 // });
 
-// view engine setup
-app.set('view engine', 'ejs')
-app.set('views', 'views/')
 app.set('models', 'models/')
 
 app.use('/api', require('./server/routes/api'))
