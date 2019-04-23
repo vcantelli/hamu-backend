@@ -66,7 +66,7 @@ module.exports = {
     } else response.status(400).send(errorSanitizer({ name: 'Missing fields', message: 'There are mandatory fields missing' }))
   },
 
-  list ({ decoded }, response) {
+  listProducts ({ decoded }, response) {
     magento.login(function (error, _sessionId) {
       if (error) return response.status(500).send(errorSanitizer(error))
       cedCsmarketplaceVendorProducts.findAll({
@@ -161,16 +161,16 @@ module.exports = {
     })
   },
 
-  getProduct ({ query }, response) {
+  getProduct ({ params }, response) {
     magento.login(function (error, _sessionId) {
       if (error) return response.status(500).send(errorSanitizer(error))
       magento.catalogProduct.info({
-        id: query.productId
+        id: params.productId
       }, function (error, product) {
         if (error) return response.status(500).send(errorSanitizer(error))
         cedCsmarketplaceVendorProducts.find({
           where: {
-            product_id: query.productId
+            product_id: params.productId
           }
         }).then(vendorProduct => {
           const newProduct = {
@@ -194,7 +194,7 @@ module.exports = {
     })
   },
 
-  editProduct ({ body }, response) {
+  editProduct ({ body, params }, response) {
     let editProduct = {
       category_ids: [body.categoria, body.bairro],
       price: body.price,
@@ -205,7 +205,7 @@ module.exports = {
     magento.login(function (error, _sessionId) {
       if (error) return response.status(500).send(errorSanitizer(error))
       magento.catalogProduct.update({
-        id: body.productId,
+        id: params.productId,
         data: editProduct
       }, function (error) {
         if (error) return response.status(500).send(errorSanitizer(error))
@@ -218,7 +218,7 @@ module.exports = {
             qty: body.quantity
           }, {
             where: {
-              product_id: body.productId
+              product_id: params.productId
             }
           }
         ).then(() => {
