@@ -230,7 +230,18 @@ module.exports = {
       tax_class_id: 1,
       meta_title: req.body.metaTitle,
       meta_keyword: req.body.metaKeyword,
-      meta_description: req.body.metaDescription
+      meta_description: req.body.metaDescription,
+      stock_data: {
+        qty: req.body.quantity,
+        is_in_stock: 1,
+        manage_stock: 1,
+        use_config_manage_stock: 1,
+        use_config_min_qty: 1,
+        use_config_min_sale_qty: 1,
+        use_config_max_sale_qty: 1,
+        use_config_backorders: 1,
+        use_config_notify_stock_qty: 1
+      }
     }
 
     magento.login(function (err, sessId) {
