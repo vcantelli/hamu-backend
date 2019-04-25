@@ -13,6 +13,14 @@ const {
   customerEntity
 } = require('../models')
 const magento = new MagentoAPI(require('../config/magento'))
+magento.login = promisify(magento.login).bind(magento)
+magento.customer.create = promisify(magento.customer.create).bind(magento.customer)
+magento.customer.info = promisify(magento.customer.info).bind(magento.customer)
+magento.catalogProduct.create = promisify(magento.catalogProduct.create).bind(magento.catalogProduct)
+magento.catalogProduct.info = promisify(magento.catalogProduct.info).bind(magento.catalogProduct)
+magento.catalogProduct.update = promisify(magento.catalogProduct.update).bind(magento.catalogProduct)
+magento.catalogProductAttributeMedia.create = promisify(magento.catalogProductAttributeMedia.create).bind(magento.catalogProductAttributeMedia)
+magento.catalogProductAttributeMedia.list = promisify(magento.catalogProductAttributeMedia.list).bind(magento.catalogProductAttributeMedia)
 
 module.exports = {
   create ({ body }, response) {
@@ -20,9 +28,7 @@ module.exports = {
       return response.status(400).send({ name: 'Missing fields', message: 'There are mandatory fields missing' })
     }
 
-    magento.login = promisify(magento.login).bind(magento)
     magento.login().then(() => {
-      magento.customer.create = promisify(magento.customer.create).bind(magento.customer)
       return magento.customer.create({
         customerData: {
           email: body.email,
@@ -44,14 +50,12 @@ module.exports = {
   },
 
   listProducts ({ decoded }, response) {
-    magento.login = promisify(magento.login).bind(magento)
     magento.login().then(() => {
       return cedCsmarketplaceVendorProducts.findAll({
         where: { vendor_id: decoded.vendorId }
       })
     }).then(products => {
       return Promise.all(products.map(({ dataValues }) => {
-        magento.catalogProductAttributeMedia.list = promisify(magento.catalogProductAttributeMedia.list).bind(magento.catalogProductAttributeMedia)
         return new Promise(resolve => {
           magento.catalogProductAttributeMedia.list({
             product: dataValues.product_id
@@ -74,9 +78,7 @@ module.exports = {
   createProduct ({ body, decoded }, response) {
     let productId
 
-    magento.login = promisify(magento.login).bind(magento)
     magento.login().then(() => {
-      magento.catalogProduct.create = promisify(magento.catalogProduct.create).bind(magento.catalogProduct)
       return magento.catalogProduct.create({
         type: 'simple',
         set: 4,
@@ -121,7 +123,6 @@ module.exports = {
     }).then(result => {
       productId = result.dataValues.product_id
       return new Promise(resolve => {
-        magento.catalogProductAttributeMedia.list = promisify(magento.catalogProductAttributeMedia.list).bind(magento.catalogProductAttributeMedia)
         magento.catalogProductAttributeMedia.list({
           product: productId
         }).then(() => resolve()).catch(resolve)
@@ -142,9 +143,7 @@ module.exports = {
   },
 
   getProduct ({ params }, response) {
-    magento.login = promisify(magento.login).bind(magento)
     magento.login().then(() => {
-      magento.catalogProduct.info = promisify(magento.catalogProduct.info).bind(magento.catalogProduct)
       return Promise.all([
         magento.catalogProduct.info({ id: params.productId }),
         cedCsmarketplaceVendorProducts.find({ where: { product_id: params.productId } })
@@ -170,9 +169,7 @@ module.exports = {
   },
 
   editProduct ({ body, params }, response) {
-    magento.login = promisify(magento.login).bind(magento)
     magento.login().then(() => {
-      magento.catalogProduct.update = promisify(magento.catalogProduct.update).bind(magento.catalogProduct)
       return Promise.all([
         magento.catalogProduct.update({
           id: params.productId,
