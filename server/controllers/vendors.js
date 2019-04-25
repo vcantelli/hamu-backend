@@ -13,6 +13,22 @@ const {
   customerEntity
 } = require('../models')
 const magento = new MagentoAPI(require('../config/magento'))
+
+const VENDOR_SINCE = 133
+const CUSTOMER_ID = 132
+const GENDER = 140
+const EMAIL = 142
+const COMPANY_NAME = 137
+const PHONE = 149
+const SHOP_URL = 134
+const STATUS = 135
+const GROUP = 136
+const NAME = 139
+const FANTASY_NAME = 144
+const COMPANY_ADDRESS = 148
+const CNPJ = 161
+const FACEBOOK_ID = 153
+
 magento.login = promisify(magento.login).bind(magento)
 magento.customer.create = promisify(magento.customer.create).bind(magento.customer)
 magento.customer.info = promisify(magento.customer.info).bind(magento.customer)
