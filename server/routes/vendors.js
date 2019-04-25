@@ -3,7 +3,7 @@ const routes = express.Router()
 const { auth, vendors } = require('../controllers')
 
 routes.route('/login')
-  .post(vendors.checkPassword)
+  .post(vendors.login)
 
 routes.route('/')
   .post(vendors.create)

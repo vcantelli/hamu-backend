@@ -253,7 +253,7 @@ module.exports = {
     })
   },
 
-  checkPassword ({ body }, response) {
+  login ({ body }, response) {
     if (!(body.email && body.password)) return response.status(400).send(false)
 
     customerEntity.find({
