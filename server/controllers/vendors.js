@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const MagentoAPI = require('magento-api')
 const md5 = require('md5')
+const { promisify } = require('util')
 const { secret, config } = require('../config/jwt')
 const {
   cedCsmarketplaceVendorProducts,
@@ -15,29 +16,30 @@ const magento = new MagentoAPI(require('../config/magento'))
 
 module.exports = {
   create ({ body }, response) {
-    if (customerDataIsIncomplete(body)) return response.status(400).send(errorSanitizer({ name: 'Missing fields', message: 'There are mandatory fields missing' }))
-
-    const customerData = {
-      email: body.email,
-      firstname: body.firstname,
-      lastname: body.lastname,
-      password: body.password,
-      website_id: 1,
-      store_id: 1,
-      group_id: 1
+    if (customerDataIsIncomplete(body)) {
+      return response.status(400).send({ name: 'Missing fields', message: 'There are mandatory fields missing' })
     }
-    magento.login(function (error, _sessionId) {
-      if (error) return response.status(500).send(errorSanitizer(error))
 
-      magento.customer.create({ customerData }, function (error, customerInfo) {
-        if (error) return response.status(500).send(errorSanitizer(error))
-
-        createMarketplaceVendor(body, customerInfo).then(vendorId => {
-          response.status(200).send(vendorId.toString())
-        }).catch(error => {
-          response.status(500).send(errorSanitizer(error))
-        })
+    magento.login = promisify(magento.login).bind(magento)
+    magento.login().then(() => {
+      magento.customer.create = promisify(magento.customer.create).bind(magento.customer)
+      return magento.customer.create({
+        customerData: {
+          email: body.email,
+          firstname: body.firstname,
+          lastname: body.lastname,
+          password: body.password,
+          website_id: 1,
+          store_id: 1,
+          group_id: 1
+        }
       })
+    }).then(customerInfo => {
+      return createMarketplaceVendor(body, customerInfo)
+    }).then(vendorId => {
+      response.status(200).send(vendorId.toString())
+    }).catch(error => {
+      response.status(500).send(errorSanitizer(error))
     })
   },
 
