@@ -44,27 +44,30 @@ module.exports = {
   },
 
   listProducts ({ decoded }, response) {
-    magento.login(function (error, _sessionId) {
-      if (error) return response.status(500).send(errorSanitizer(error))
-      cedCsmarketplaceVendorProducts.findAll({
+    magento.login = promisify(magento.login).bind(magento)
+    magento.login().then(() => {
+      return cedCsmarketplaceVendorProducts.findAll({
         where: { vendor_id: decoded.vendorId }
-      }).then(products => {
-        return Promise.all(products.map(({ dataValues }) => {
-          return new Promise((resolve, _reject) => {
-            magento.catalogProductAttributeMedia.list({
-              product: dataValues.product_id
-            }, function (_error, product) {
-              resolve({ ...dataValues, Media: product || null })
-            })
-          })
-        }))
-      }).then(productsList => {
-        var newList = productsList.filter(item => !!item)
-        console.log(newList)
-        response.status(200).send(newList)
-      }).catch(error => {
-        response.status(500).send(errorSanitizer(error))
       })
+    }).then(products => {
+      return Promise.all(products.map(({ dataValues }) => {
+        magento.catalogProductAttributeMedia.list = promisify(magento.catalogProductAttributeMedia.list).bind(magento.catalogProductAttributeMedia)
+        return new Promise(resolve => {
+          magento.catalogProductAttributeMedia.list({
+            product: dataValues.product_id
+          }).then(Media => {
+            resolve({ ...dataValues, Media })
+          }).catch(() => {
+            resolve({ ...dataValues, Media: [] })
+          })
+        })
+      }))
+    }).then(productsList => {
+      var newList = productsList.filter(item => !!item)
+      console.log(newList)
+      response.status(200).send(newList)
+    }).catch(error => {
+      response.status(500).send(errorSanitizer(error))
     })
   },
 
