@@ -73,71 +73,71 @@ module.exports = {
 
   createProduct ({ body, decoded }, response) {
     let productId
-    let newProduct = {
-      category_ids: [body.categoria, body.bairro],
-      website_ids: [1],
-      name: body.name,
-      description: body.description,
-      short_description: body.shortDescription,
-      weight: body.weight,
-      status: '1',
-      url_key: body.urlKey,
-      url_path: body.urlPath,
-      visibility: '4',
-      price: body.price,
-      tax_class_id: 1,
-      meta_title: body.metaTitle,
-      meta_keyword: body.metaKeyword,
-      meta_description: body.metaDescription
-    }
 
-    magento.login(function (error, _sessionId) {
-      if (error) return response.status(500).send(errorSanitizer(error))
-      magento.catalogProduct.create({
+    magento.login = promisify(magento.login).bind(magento)
+    magento.login().then(() => {
+      magento.catalogProduct.create = promisify(magento.catalogProduct.create).bind(magento.catalogProduct)
+      return magento.catalogProduct.create({
         type: 'simple',
         set: 4,
         sku: body.sku,
-        data: newProduct
-      }, function (error, product) {
-        if (error) return response.status(500).send(errorSanitizer(error))
-        cedCsmarketplaceVendorProducts.create({
-          vendor_id: decoded.vendorId,
-          product_id: product,
-          type: 'simple',
-          price: body.price,
-          special_price: 0,
+        data: {
+          category_ids: [body.categoria, body.bairro],
+          website_ids: [1],
           name: body.name,
           description: body.description,
           short_description: body.shortDescription,
-          sku: body.sku,
           weight: body.weight,
-          check_status: 1,
-          qty: body.quantity,
-          is_in_stock: 1,
-          website_ids: '1',
-          is_multiseller: 0,
-          parent_id: 0
-        }).then(result => {
-          productId = result.dataValues.product_id
-          return new Promise(resolve => {
-            magento.catalogProductAttributeMedia.list({
-              product: productId
-            }, resolve)
-          })
-        }).then(error => {
-          if (error) return Promise.resolve()
-          const images = [
-            [body.imageBase64, body.imageName],
-            [body.image2Base64, body.image2Name],
-            [body.image3Base64, body.image3Name]
-          ]
-          return Promise.all(images.map((img, i) => createProductImage(img[0], img[1], productId, i, magento)))
-        }).then(() => {
-          response.status(200).send(productId.toString())
-        }).catch(error => {
-          response.status(500).send(errorSanitizer(error))
-        })
+          status: '1',
+          url_key: body.urlKey,
+          url_path: body.urlPath,
+          visibility: '4',
+          price: body.price,
+          tax_class_id: 1,
+          meta_title: body.metaTitle,
+          meta_keyword: body.metaKeyword,
+          meta_description: body.metaDescription
+        }
       })
+    }).then(product => {
+      return cedCsmarketplaceVendorProducts.create({
+        vendor_id: decoded.vendorId,
+        product_id: product,
+        type: 'simple',
+        price: body.price,
+        special_price: 0,
+        name: body.name,
+        description: body.description,
+        short_description: body.shortDescription,
+        sku: body.sku,
+        weight: body.weight,
+        check_status: 1,
+        qty: body.quantity,
+        is_in_stock: 1,
+        website_ids: '1',
+        is_multiseller: 0,
+        parent_id: 0
+      })
+    }).then(result => {
+      productId = result.dataValues.product_id
+      return new Promise(resolve => {
+        magento.catalogProductAttributeMedia.list = promisify(magento.catalogProductAttributeMedia.list).bind(magento.catalogProductAttributeMedia)
+        magento.catalogProductAttributeMedia.list({
+          product: productId
+        }).then(() => resolve()).catch(resolve)
+      })
+    }).then(error => {
+      if (error) return Promise.resolve()
+      const images = [
+        [body.imageBase64, body.imageName],
+        [body.image2Base64, body.image2Name],
+        [body.image3Base64, body.image3Name]
+      ]
+      return Promise.all(images.map((img, i) => createProductImage(img[0], img[1], productId, i, magento)))
+    }).then(() => {
+      response.status(200).send(productId.toString())
+    }).catch(error => {
+      response.status(500).send(errorSanitizer(error))
     })
   },
 
