@@ -253,17 +253,8 @@ module.exports = {
     }).then(customerInfo => {
       if (!checkPasswordHash(body.password, customerInfo.password_hash)) throw 403
 
-      return cedCsmarketplaceVendorInt.find({
-        where: {
-          attribute_id: 132,
-          value: customerInfo.customer_id
-        }
-      })
-    }).then(result => {
-      const vendor = {
-        vendorId: result.entity_id,
-        email: body.email
-      }
+      return recoverMarketplaceVendor(customerInfo.customer_id, body.email)
+    }).then(vendor => {
       const token = jwt.sign(vendor, secret, config)
       return response.status(200).send({ vendor, token })
     }).catch(error => {
@@ -327,6 +318,39 @@ function customerDataIsIncomplete (data) {
     !data.company_cnpj ||
     !data.telephone
   )
+}
+
+function recoverMarketplaceVendor (customerId, email) {
+  return new Promise(function (resolve, reject) {
+    cedCsmarketplaceVendorInt.find({
+      where: {
+        attribute_id: 132, value: customerId
+      }
+    }).then(({ entity_id }) => {
+      return Promise.all([
+        Promise.resolve(entity_id),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(9, NAME, 0, entity_id) }),
+        Promise.resolve(email),
+        // cedCsmarketplaceVendorVarchar.find({ where: generateEntity(9, EMAIL, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(9, PHONE, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(9, CNPJ, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(9, COMPANY_NAME, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(9, FANTASY_NAME, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(9, COMPANY_ADDRESS, 0, entity_id) })
+      ])
+    }).then(([id, name, email, phone, cnpj, companyName, fantasyName, companyAddress]) => {
+      resolve({
+        id,
+        name: name && name.value || '',
+        email,
+        phone: phone && phone.value || '',
+        cnpj: cnpj && cnpj.value || '',
+        companyName: companyName && companyName.value || '',
+        fantasyName: fantasyName && fantasyName.value || '',
+        companyAddress: companyAddress && companyAddress.value || ''
+      })
+    }).catch(reject)
+  })
 }
 
 function createMarketplaceVendor (data, customerInfo) {
