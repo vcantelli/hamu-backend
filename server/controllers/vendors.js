@@ -228,38 +228,30 @@ module.exports = {
   login ({ body }, response) {
     if (!(body.email && body.password)) return response.status(400).send(false)
 
-    customerEntity.find({
-      where: { email: body.email }
+    magento.login().then(() => {
+      return customerEntity.find({ where: { email: body.email } })
     }).then(customer => {
-      if (!customer) return response.status(403).send('0')
+      if (!customer) throw 403
 
-      magento.login(function (error, _sessionId) {
-        if (error) return response.status(500).send(errorSanitizer(error))
+      return magento.customer.info({ customerId: customer.dataValues.entity_id })
+    }).then(customerInfo => {
+      if (!checkPasswordHash(body.password, customerInfo.password_hash)) throw 403
 
-        magento.customer.info({
-          customerId: customer.dataValues.entity_id
-        }, function (error, customerInfo) {
-          if (error) return response.status(500).send(errorSanitizer(error))
-          if (!checkPasswordHash(body.password, customerInfo.password_hash)) return response.status(403).send('0')
-
-          cedCsmarketplaceVendorInt.find({
-            where: {
-              attribute_id: 132,
-              value: customer.dataValues.entity_id
-            }
-          }).then(result => {
-            const vendor = {
-              vendorId: result.entity_id,
-              email: body.email
-            }
-            const token = jwt.sign(vendor, secret, config)
-            return response.status(200).send({ vendor, token })
-          }).catch(error => {
-            return response.status(400).send(errorSanitizer(error))
-          })
-        })
+      return cedCsmarketplaceVendorInt.find({
+        where: {
+          attribute_id: 132,
+          value: customerInfo.customer_id
+        }
       })
+    }).then(result => {
+      const vendor = {
+        vendorId: result.entity_id,
+        email: body.email
+      }
+      const token = jwt.sign(vendor, secret, config)
+      return response.status(200).send({ vendor, token })
     }).catch(error => {
+      if (error === 403) return response.status(403).send('0')
       return response.status(400).send(errorSanitizer(error))
     })
   },
