@@ -15,55 +15,55 @@ const magento = new MagentoAPI(require('../config/magento'))
 
 module.exports = {
   create ({ body }, response) {
-    if (customerDataIsComplete(body)) {
-      const customerData = {
-        email: body.email,
-        firstname: body.firstname,
-        lastname: body.lastname,
-        password: body.password,
-        website_id: 1,
-        store_id: 1,
-        group_id: 1
-      }
-      let vendorId = 0
-      magento.login(function (error, _sessionId) {
+    if (customerDataIsIncomplete(body)) return response.status(400).send(errorSanitizer({ name: 'Missing fields', message: 'There are mandatory fields missing' }))
+
+    const customerData = {
+      email: body.email,
+      firstname: body.firstname,
+      lastname: body.lastname,
+      password: body.password,
+      website_id: 1,
+      store_id: 1,
+      group_id: 1
+    }
+    let vendorId = 0
+    magento.login(function (error, _sessionId) {
+      if (error) return response.status(500).send(errorSanitizer(error))
+      magento.customer.create({ customerData }, function (error, customerInfo) {
         if (error) return response.status(500).send(errorSanitizer(error))
-        magento.customer.create({ customerData }, function (error, customerInfo) {
-          if (error) return response.status(500).send(errorSanitizer(error))
-          cedCsmarketplaceVendor.create({
-            entity_type_id: 9,
-            attribute_set_id: 0,
-            increment_id: '',
-            store_id: 0,
-            created_at: new Date(),
-            updated_at: new Date(),
-            is_active: 1,
-            website_id: 1
-          }).then(vendor => {
-            vendorId = vendor.null
-            return Promise.all([
-              cedCsmarketplaceVendorDatetime.create(generateEntity(9, 133, 0, vendorId, new Date())),
-              cedCsmarketplaceVendorInt.create(generateEntity(9, 132, 0, vendorId, customerInfo)),
-              cedCsmarketplaceVendorInt.create(generateEntity(9, 140, 0, vendorId, 1)),
-              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 137, 0, vendorId, body.company_name)),
-              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 149, 0, vendorId, body.telephone.replace(',', '').replace('.', ''))),
-              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 134, 0, vendorId, (body.company_name).toLowerCase().replace(/\s/g, ''))),
-              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 135, 0, vendorId, 'approved')),
-              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 136, 0, vendorId, 'general')),
-              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 139, 0, vendorId, `${body.firstname} ${body.lastname}`)),
-              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 144, 0, vendorId, body.fantasy_name)),
-              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 148, 0, vendorId, body.company_address)),
-              cedCsmarketplaceVendorVarchar.create(generateEntity(9, 161, 0, vendorId, body.company_cnpj)),
-              body.facebookId ? cedCsmarketplaceVendorVarchar.create(generateEntity(9, 153, 0, vendorId, body.facebookId)) : Promise.resolve()
-            ])
-          }).then(() => {
-            response.status(200).send(vendorId.toString())
-          }).catch(error => {
-            response.status(500).send(errorSanitizer(error))
-          })
+        cedCsmarketplaceVendor.create({
+          entity_type_id: 9,
+          attribute_set_id: 0,
+          increment_id: '',
+          store_id: 0,
+          created_at: new Date(),
+          updated_at: new Date(),
+          is_active: 1,
+          website_id: 1
+        }).then(vendor => {
+          vendorId = vendor.null
+          return Promise.all([
+            cedCsmarketplaceVendorDatetime.create(generateEntity(9, 133, 0, vendorId, new Date())),
+            cedCsmarketplaceVendorInt.create(generateEntity(9, 132, 0, vendorId, customerInfo)),
+            cedCsmarketplaceVendorInt.create(generateEntity(9, 140, 0, vendorId, 1)),
+            cedCsmarketplaceVendorVarchar.create(generateEntity(9, 137, 0, vendorId, body.company_name)),
+            cedCsmarketplaceVendorVarchar.create(generateEntity(9, 149, 0, vendorId, body.telephone.replace(',', '').replace('.', ''))),
+            cedCsmarketplaceVendorVarchar.create(generateEntity(9, 134, 0, vendorId, (body.company_name).toLowerCase().replace(/\s/g, ''))),
+            cedCsmarketplaceVendorVarchar.create(generateEntity(9, 135, 0, vendorId, 'approved')),
+            cedCsmarketplaceVendorVarchar.create(generateEntity(9, 136, 0, vendorId, 'general')),
+            cedCsmarketplaceVendorVarchar.create(generateEntity(9, 139, 0, vendorId, `${body.firstname} ${body.lastname}`)),
+            cedCsmarketplaceVendorVarchar.create(generateEntity(9, 144, 0, vendorId, body.fantasy_name)),
+            cedCsmarketplaceVendorVarchar.create(generateEntity(9, 148, 0, vendorId, body.company_address)),
+            cedCsmarketplaceVendorVarchar.create(generateEntity(9, 161, 0, vendorId, body.company_cnpj)),
+            body.facebookId ? cedCsmarketplaceVendorVarchar.create(generateEntity(9, 153, 0, vendorId, body.facebookId)) : Promise.resolve()
+          ])
+        }).then(() => {
+          response.status(200).send(vendorId.toString())
+        }).catch(error => {
+          response.status(500).send(errorSanitizer(error))
         })
       })
-    } else response.status(400).send(errorSanitizer({ name: 'Missing fields', message: 'There are mandatory fields missing' }))
+    })
   },
 
   listProducts ({ decoded }, response) {
@@ -337,17 +337,17 @@ function checkPasswordHash (password, stored) {
   return (hash === md5(salt + password))
 }
 
-function customerDataIsComplete (data) {
+function customerDataIsIncomplete (data) {
   return (
-    data.email &&
-    data.firstname &&
-    data.lastname &&
-    data.password &&
-    data.fantasy_name &&
-    data.company_name &&
-    data.company_address &&
-    data.company_cnpj &&
-    data.telephone
+    !data.email ||
+    !data.firstname ||
+    !data.lastname ||
+    !data.password ||
+    !data.fantasy_name ||
+    !data.company_name ||
+    !data.company_address ||
+    !data.company_cnpj ||
+    !data.telephone
   )
 }
 
