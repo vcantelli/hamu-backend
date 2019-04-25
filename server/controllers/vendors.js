@@ -344,19 +344,19 @@ function createMarketplaceVendor (data, customerInfo) {
     }).then(function (vendor) {
       return Promise.all([
         Promise.resolve(vendor.null),
-        cedCsmarketplaceVendorDatetime.create(generateEntity(9, 133, 0, vendor.null, now)),
-        cedCsmarketplaceVendorInt.create(generateEntity(9, 132, 0, vendor.null, customerInfo)),
-        cedCsmarketplaceVendorInt.create(generateEntity(9, 140, 0, vendor.null, 1)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(9, 137, 0, vendor.null, data.company_name)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(9, 149, 0, vendor.null, data.telephone.replace(',', '').replace('.', ''))),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(9, 134, 0, vendor.null, (data.company_name).toLowerCase().replace(/\s/g, ''))),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(9, 135, 0, vendor.null, 'approved')),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(9, 136, 0, vendor.null, 'general')),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(9, 139, 0, vendor.null, `${data.firstname} ${data.lastname}`)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(9, 144, 0, vendor.null, data.fantasy_name)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(9, 148, 0, vendor.null, data.company_address)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(9, 161, 0, vendor.null, data.company_cnpj)),
-        data.facebookId ? cedCsmarketplaceVendorVarchar.create(generateEntity(9, 153, 0, vendor.null, data.facebookId)) : Promise.resolve()
+        cedCsmarketplaceVendorDatetime.create(generateEntity(9, VENDOR_SINCE, 0, vendor.null, now)),
+        cedCsmarketplaceVendorInt.create(generateEntity(9, CUSTOMER_ID, 0, vendor.null, customerInfo)),
+        cedCsmarketplaceVendorInt.create(generateEntity(9, GENDER, 0, vendor.null, 1)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(9, COMPANY_NAME, 0, vendor.null, data.company_name)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(9, PHONE, 0, vendor.null, data.telephone.replace(',', '').replace('.', ''))),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(9, SHOP_URL, 0, vendor.null, (data.company_name).toLowerCase().replace(/\s/g, ''))),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(9, STATUS, 0, vendor.null, 'approved')),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(9, GROUP, 0, vendor.null, 'general')),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(9, NAME, 0, vendor.null, `${data.firstname} ${data.lastname}`)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(9, FANTASY_NAME, 0, vendor.null, data.fantasy_name)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(9, COMPANY_ADDRESS, 0, vendor.null, data.company_address)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(9, CNPJ, 0, vendor.null, data.company_cnpj)),
+        data.facebookId ? cedCsmarketplaceVendorVarchar.create(generateEntity(9, FACEBOOK_ID, 0, vendor.null, data.facebookId)) : Promise.resolve()
       ])
     }).then(function ([vendorId]) { resolve(vendorId) }).catch(reject)
   })
