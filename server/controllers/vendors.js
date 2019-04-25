@@ -170,20 +170,20 @@ module.exports = {
   },
 
   editProduct ({ body, params }, response) {
-    let editProduct = {
-      category_ids: [body.categoria, body.bairro],
-      price: body.price,
-      name: body.name,
-      description: body.description,
-      short_description: body.shortDescription
-    }
-    magento.login(function (error, _sessionId) {
-      if (error) return response.status(500).send(errorSanitizer(error))
-      magento.catalogProduct.update({
-        id: params.productId,
-        data: editProduct
-      }, function (error) {
-        if (error) return response.status(500).send(errorSanitizer(error))
+    magento.login = promisify(magento.login).bind(magento)
+    magento.login().then(() => {
+      magento.catalogProduct.update = promisify(magento.catalogProduct.update).bind(magento.catalogProduct)
+      return Promise.all([
+        magento.catalogProduct.update({
+          id: params.productId,
+          data: {
+            category_ids: [body.categoria, body.bairro],
+            price: body.price,
+            name: body.name,
+            description: body.description,
+            short_description: body.shortDescription
+          }
+        }),
         cedCsmarketplaceVendorProducts.update(
           {
             price: body.price,
@@ -196,12 +196,12 @@ module.exports = {
               product_id: params.productId
             }
           }
-        ).then(() => {
-          response.status(200).send(true)
-        }).catch(error => {
-          response.status(500).send(errorSanitizer(error))
-        })
-      })
+        )
+      ])
+    }).then(() => {
+      response.status(200).send(true)
+    }).catch(error => {
+      response.status(500).send(errorSanitizer(error))
     })
   },
 
