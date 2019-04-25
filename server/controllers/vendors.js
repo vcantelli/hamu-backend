@@ -363,7 +363,15 @@ function createMarketplaceVendor (data, customerInfo) {
 }
 
 function generateEntity (entity_type_id, attribute_id, store_id, entity_id, value) {
-  return { entity_type_id, attribute_id, store_id, entity_id, value }
+  var result = {}
+
+  if (entity_type_id) result.entity_type_id = entity_type_id
+  if (attribute_id) result.attribute_id = attribute_id
+  if (store_id) result.store_id = store_id
+  if (entity_id) result.entity_id = entity_id
+  if (value) result.value = value
+
+  return result
 }
 
 function createProductImage (content, name, productId, position, magento) {
