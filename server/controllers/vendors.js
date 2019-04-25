@@ -281,25 +281,23 @@ module.exports = {
     })
   },
 
-  addImage ({ body }, response) {
-    magento.login(function (error, _sessionId) {
-      if (error) response.status(500).send(errorSanitizer(error))
-      magento.catalogProductAttributeMedia.list({
-        product: body.productId
-      }, function (error, product) {
-        if (error) return response.status(500).send(errorSanitizer(error))
-        createProductImage(
-          body.imageBase64,
-          body.imageName,
-          body.productId,
-          product.lenght,
-          magento
-        ).then((error, image) => {
-          if (error) response.status(500).send(errorSanitizer(error))
-          console.log(image)
-          response.status(200).send(image)
-        }).catch(error => { response.status(500).send(errorSanitizer(error)) })
+  addImage ({ body, params }, response) {
+    magento.login().then(() => {
+      return magento.catalogProductAttributeMedia.list({
+        product: params.productId
       })
+    }).then(product => {
+      return createProductImage(
+        body.imageBase64,
+        body.imageName,
+        params.productId,
+        product.lenght,
+        magento
+      )
+    }).then(image => {
+      response.status(200).send(image)
+    }).catch(error => {
+      response.status(500).send(errorSanitizer(error))
     })
   }
 }
@@ -363,18 +361,17 @@ function generateEntity (entity_type_id, attribute_id, store_id, entity_id, valu
 function createProductImage (content, name, productId, position, magento) {
   if (!content) return Promise.resolve()
   return new Promise(function (resolve) {
-    var newImage = {
-      file: { name, content, mime: 'image/jpeg' },
-      label: '',
-      position,
-      types: position === 0 ? ['image', 'small_image', 'thumbnail'] : [],
-      exclude: '0'
-    }
     magento.catalogProductAttributeMedia.create({
       product: productId,
-      data: newImage
-    }, function (error) {
-      if (error) console.error(error)
+      data: {
+        file: { name, content, mime: 'image/jpeg' },
+        label: '',
+        position,
+        types: position === 0 ? ['image', 'small_image', 'thumbnail'] : [],
+        exclude: '0'
+      }
+    }).then(resolve).catch(error => {
+      console.error(error)
       resolve()
     })
   })
