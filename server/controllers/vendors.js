@@ -142,35 +142,30 @@ module.exports = {
   },
 
   getProduct ({ params }, response) {
-    magento.login(function (error, _sessionId) {
-      if (error) return response.status(500).send(errorSanitizer(error))
-      magento.catalogProduct.info({
-        id: params.productId
-      }, function (error, product) {
-        if (error) return response.status(500).send(errorSanitizer(error))
-        cedCsmarketplaceVendorProducts.find({
-          where: {
-            product_id: params.productId
-          }
-        }).then(vendorProduct => {
-          const newProduct = {
-            product_id: Number(product.product_id),
-            price: Number(product.price),
-            special_price: Number(product.special_price),
-            name: product.name,
-            description: product.description,
-            shortDescription: product.short_description,
-            sku: product.sku,
-            qty: vendorProduct && vendorProduct.dataValues.qty,
-            category: product.category_ids[0],
-            neighbourhood: product.category_ids[1]
-          }
-          console.log(newProduct)
-          response.status(200).send(newProduct)
-        }).catch(error => {
-          response.status(500).send(errorSanitizer(error))
-        })
-      })
+    magento.login = promisify(magento.login).bind(magento)
+    magento.login().then(() => {
+      magento.catalogProduct.info = promisify(magento.catalogProduct.info).bind(magento.catalogProduct)
+      return Promise.all([
+        magento.catalogProduct.info({ id: params.productId }),
+        cedCsmarketplaceVendorProducts.find({ where: { product_id: params.productId } })
+      ])
+    }).then(([product, vendorProduct]) => {
+      const newProduct = {
+        product_id: Number(product.product_id),
+        price: Number(product.price),
+        special_price: Number(product.special_price),
+        name: product.name,
+        description: product.description,
+        shortDescription: product.short_description,
+        sku: product.sku,
+        qty: vendorProduct && vendorProduct.dataValues.qty,
+        category: product.category_ids[0],
+        neighbourhood: product.category_ids[1]
+      }
+      console.log(newProduct)
+      response.status(200).send(newProduct)
+    }).catch(error => {
+      response.status(500).send(errorSanitizer(error))
     })
   },
 
