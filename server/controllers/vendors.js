@@ -333,14 +333,14 @@ function recoverMarketplaceVendor (customerId, email) {
     }).then(({ entity_id }) => {
       return Promise.all([
         Promise.resolve(entity_id),
-        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, NAME, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(NAME, 0, entity_id) }),
         Promise.resolve(email),
-        // cedCsmarketplaceVendorVarchar.find({ where: generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, EMAIL, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, PHONE, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, CNPJ, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, COMPANY_NAME, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, FANTASY_NAME, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, COMPANY_ADDRESS, 0, entity_id) })
+        // cedCsmarketplaceVendorVarchar.find({ where: generateEntity(EMAIL, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(PHONE, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(CNPJ, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_NAME, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(FANTASY_NAME, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_ADDRESS, 0, entity_id) })
       ])
     }).then(([id, name, email, phone, cnpj, companyName, fantasyName, companyAddress]) => {
       resolve({
@@ -372,28 +372,29 @@ function createMarketplaceVendor (data, customerInfo) {
     }).then(function (vendor) {
       return Promise.all([
         Promise.resolve(vendor.null),
-        cedCsmarketplaceVendorDatetime.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, VENDOR_SINCE, 0, vendor.null, now)),
-        cedCsmarketplaceVendorInt.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, CUSTOMER_ID, 0, vendor.null, customerInfo)),
-        cedCsmarketplaceVendorInt.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, GENDER, 0, vendor.null, 1)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, COMPANY_NAME, 0, vendor.null, data.company_name)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, PHONE, 0, vendor.null, data.telephone.replace(',', '').replace('.', ''))),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, SHOP_URL, 0, vendor.null, (data.company_name).toLowerCase().replace(/\s/g, ''))),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, STATUS, 0, vendor.null, 'approved')),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, GROUP, 0, vendor.null, 'general')),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, NAME, 0, vendor.null, `${data.firstname} ${data.lastname}`)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, FANTASY_NAME, 0, vendor.null, data.fantasy_name)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, COMPANY_ADDRESS, 0, vendor.null, data.company_address)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, CNPJ, 0, vendor.null, data.company_cnpj)),
-        data.facebookId ? cedCsmarketplaceVendorVarchar.create(generateEntity(ENTITY_CS_MARKETPLACE_VENDOR, FACEBOOK_ID, 0, vendor.null, data.facebookId)) : Promise.resolve()
+        cedCsmarketplaceVendorDatetime.create(generateEntity(VENDOR_SINCE, 0, vendor.null, now)),
+        cedCsmarketplaceVendorInt.create(generateEntity(CUSTOMER_ID, 0, vendor.null, customerInfo)),
+        cedCsmarketplaceVendorInt.create(generateEntity(GENDER, 0, vendor.null, 1)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_NAME, 0, vendor.null, data.company_name)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(PHONE, 0, vendor.null, data.telephone.replace(',', '').replace('.', ''))),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(SHOP_URL, 0, vendor.null, (data.company_name).toLowerCase().replace(/\s/g, ''))),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(STATUS, 0, vendor.null, 'approved')),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(GROUP, 0, vendor.null, 'general')),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(NAME, 0, vendor.null, `${data.firstname} ${data.lastname}`)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(FANTASY_NAME, 0, vendor.null, data.fantasy_name)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_ADDRESS, 0, vendor.null, data.company_address)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(CNPJ, 0, vendor.null, data.company_cnpj)),
+        data.facebookId ? cedCsmarketplaceVendorVarchar.create(generateEntity(FACEBOOK_ID, 0, vendor.null, data.facebookId)) : Promise.resolve()
       ])
     }).then(function ([vendorId]) { resolve(vendorId) }).catch(reject)
   })
 }
 
-function generateEntity (entity_type_id, attribute_id, store_id, entity_id, value) {
-  var result = {}
+function generateEntity (attribute_id, store_id, entity_id, value) {
+  var result = {
+    entity_type_id = ENTITY_CS_MARKETPLACE_VENDOR
+  }
 
-  if (entity_type_id) result.entity_type_id = entity_type_id
   if (attribute_id) result.attribute_id = attribute_id
   if (store_id) result.store_id = store_id
   if (entity_id) result.entity_id = entity_id
