@@ -335,19 +335,18 @@ function customerDataIsIncomplete (data) {
 
 function upsertFirebaseToken (token, vendorId) {
   return new Promise(function (resolve, reject) {
-
+    cedCsmarketplaceVendorVarchar.find({
+      where: generateEntity(FIREBASE_TOKEN, 0, vendorId)
+    }).then(function (result) {
+      if (!result) {
+        return cedCsmarketplaceVendorVarchar.create()
+      } else {
+        return result.updateAttributes({
+          value: token
+        })
+      }
+    }).catch(reject)
   })
-  cedCsmarketplaceVendorVarchar.find({
-    where: generateEntity(FIREBASE_TOKEN, 0, vendorId)
-  }).then(function (result) {
-    if (!result) {
-      return cedCsmarketplaceVendorVarchar.create()
-    } else {
-      return result.updateAttributes({
-        value: token
-      })
-    }
-  }).catch(reject)
 }
 
 function recoverMarketplaceVendor (customerId, email) {
