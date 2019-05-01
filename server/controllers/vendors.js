@@ -327,7 +327,7 @@ function recoverMarketplaceVendor (customerId, email) {
   return new Promise(function (resolve, reject) {
     cedCsmarketplaceVendorInt.find({
       where: {
-        attribute_id: 132, value: customerId
+        attribute_id: CUSTOMER_ID, value: customerId
       }
     }).then(({ entity_id }) => {
       return Promise.all([
