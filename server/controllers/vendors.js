@@ -417,7 +417,7 @@ function createMarketplaceVendor (data, customerInfo) {
 
 function generateEntity (attribute_id, store_id, entity_id, value) {
   var result = {
-    entity_type_id = ENTITY_CS_MARKETPLACE_VENDOR
+    entity_type_id: ENTITY_CS_MARKETPLACE_VENDOR
   }
 
   if (attribute_id) result.attribute_id = attribute_id
