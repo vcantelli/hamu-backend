@@ -270,7 +270,7 @@ module.exports = {
     if (!query.facebookId) return response.status(200).send(false)
     cedCsmarketplaceVendorVarchar.find({
       where: {
-        attribute_id: 153,
+        attribute_id: FACEBOOK_ID,
         entity_type_id: 9,
         store_id: 0,
         value: query.facebookId
