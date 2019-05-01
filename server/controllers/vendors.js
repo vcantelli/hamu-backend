@@ -29,7 +29,7 @@ const FANTASY_NAME = 144
 const COMPANY_ADDRESS = 148
 const CNPJ = 161
 const FACEBOOK_ID = 153
-const FIREBASE_TOKEN = 999
+const FIREBASE_TOKEN = 175
 
 magento.login = promisify(magento.login).bind(magento)
 magento.customer.create = promisify(magento.customer.create).bind(magento.customer)
