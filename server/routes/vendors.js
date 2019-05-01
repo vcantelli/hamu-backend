@@ -9,6 +9,9 @@ routes.route('/')
   .post(vendors.create)
   .put(auth, vendors.edit)
 
+routes.route('/token').all(auth)
+  .post(vendors.registerToken)
+
 routes.route('/products').all(auth)
   .post(vendors.createProduct)
   .get(vendors.listProducts)

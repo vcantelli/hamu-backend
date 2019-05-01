@@ -29,6 +29,7 @@ const FANTASY_NAME = 144
 const COMPANY_ADDRESS = 148
 const CNPJ = 161
 const FACEBOOK_ID = 153
+const FIREBASE_TOKEN = 999
 
 magento.login = promisify(magento.login).bind(magento)
 magento.customer.create = promisify(magento.customer.create).bind(magento.customer)
@@ -40,6 +41,14 @@ magento.catalogProductAttributeMedia.create = promisify(magento.catalogProductAt
 magento.catalogProductAttributeMedia.list = promisify(magento.catalogProductAttributeMedia.list).bind(magento.catalogProductAttributeMedia)
 
 module.exports = {
+  registerToken ({ body, decoded }, response) {
+    upsertFirebaseToken(body.token, decoded.vendorId).then(function () {
+      response.status(200).end()
+    }).catch(function () {
+      response.status(500).end()
+    })
+  },
+
   create ({ body }, response) {
     if (customerDataIsIncomplete(body)) {
       return response.status(400).send({ name: 'Missing fields', message: 'There are mandatory fields missing' })
@@ -322,6 +331,23 @@ function customerDataIsIncomplete (data) {
     !data.company_cnpj ||
     !data.telephone
   )
+}
+
+function upsertFirebaseToken (token, vendorId) {
+  return new Promise(function (resolve, reject) {
+
+  })
+  cedCsmarketplaceVendorVarchar.find({
+    where: generateEntity(FIREBASE_TOKEN, 0, vendorId)
+  }).then(function (result) {
+    if (!result) {
+      return cedCsmarketplaceVendorVarchar.create()
+    } else {
+      return result.updateAttributes({
+        value: token
+      })
+    }
+  }).catch(reject)
 }
 
 function recoverMarketplaceVendor (customerId, email) {
