@@ -76,7 +76,10 @@ module.exports = {
           magento.catalogProductAttributeMedia.list({
             product: dataValues.product_id
           }).then(Media => {
-            resolve({ ...dataValues, Media })
+            resolve({
+              ...dataValues,
+              Media: Media.map(({ position, url }) => { return { position, url } })
+            })
           }).catch(() => {
             resolve({ ...dataValues, Media: [] })
           })
