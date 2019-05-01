@@ -44,8 +44,8 @@ module.exports = {
   registerToken ({ body, decoded }, response) {
     upsertFirebaseToken(body.token, decoded.vendorId).then(function () {
       response.status(200).end()
-    }).catch(function () {
-      response.status(500).end()
+    }).catch(function (error) {
+      response.status(500).send(errorSanitizer(error))
     })
   },
 
@@ -334,18 +334,13 @@ function customerDataIsIncomplete (data) {
 }
 
 function upsertFirebaseToken (token, vendorId) {
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     cedCsmarketplaceVendorVarchar.find({
       where: generateEntity(FIREBASE_TOKEN, 0, vendorId)
-    }).then(function (result) {
-      if (!result) {
-        return cedCsmarketplaceVendorVarchar.create()
-      } else {
-        return result.updateAttributes({
-          value: token
-        })
-      }
-    }).catch(reject)
+    }).then(result => {
+      if (!result) return cedCsmarketplaceVendorVarchar.create(generateEntity(FIREBASE_TOKEN, 0, vendorId, token))
+      else return result.updateAttributes({ value: token })
+    }).then(resolve).catch(reject)
   })
 }
 
