@@ -262,7 +262,7 @@ module.exports = {
 
   deleteProduct ({ params }, response) {
     magento.login().then(() => {
-      return magento.catalogProduct.delete({productId: params.productId})
+      return magento.catalogProduct.delete({ productId: params.productId })
     }).then(() => {
       response.status(200).send(true)
     }).catch(error => {
@@ -332,14 +332,16 @@ module.exports = {
     })
   },
 
-  getCategoriesList (request, response) {
+  getCategoriesList (_request, response) {
     magento.login().then(() => {
-      return magento.catalogCategory.tree({parentId: 8})
+      return magento.catalogCategory.tree({ parentId: 8 })
     }).then(categories => {
-      return response.status(200).send({categories: categories.children.filter(category => category.is_active === '1')})
+      response.status(200).send({
+        categories: categories.children.filter(category => category.is_active === '1')
+      })
     }).catch(error => {
-      if (error === 403) return response.status(403).send('0')
-      return response.status(400).send(errorSanitizer(error))
+      if (error === 403) response.status(403).send('0')
+      else response.status(400).send(errorSanitizer(error))
     })
   },
 
