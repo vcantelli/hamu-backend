@@ -10,7 +10,9 @@ const {
   cedCsmarketplaceVendorDatetime,
   cedCsmarketplaceVendorInt,
   cedCsmarketplaceVendorVarchar,
-  customerEntity
+  customerEntity,
+  customerEntityDatetime,
+  customerEntityVarchar
 } = require('../models')
 const magento = new MagentoAPI(require('../config/magento'))
 
@@ -30,6 +32,20 @@ const COMPANY_ADDRESS = 148
 const CNPJ = 161
 const FACEBOOK_ID = 153
 const FIREBASE_TOKEN = 175
+const PERSONAL_DOCUMENT = 15
+const DATE_OF_BIRTH = 11
+const COMPANY_INTERNAL_ADDRESS = 155
+const COMPANY_INTERNAL_CITY = 156
+const COMPANY_INTERNAL_POSTAL_CODE = 157
+const COMPANY_INTERNAL_STATE = 158
+const COMPANY_CATEGORY = 176
+const COMPANY_HOLDER_NAME = 177
+const COMPANY_DOCUMENT = 178
+const COMPANY_ACCOUNT_NUMBER = 179
+const COMPANY_BANK_NUMBER = 180
+const COMPANY_AGENCY_NUMBER = 181
+const COMPANY_TYPE_OF_ACCOUNT = 182
+const HAS_ACCEPTED_TERMS = 183
 
 magento.login = promisify(magento.login).bind(magento)
 magento.customer.create = promisify(magento.customer.create).bind(magento.customer)
@@ -39,6 +55,7 @@ magento.catalogProduct.info = promisify(magento.catalogProduct.info).bind(magent
 magento.catalogProduct.update = promisify(magento.catalogProduct.update).bind(magento.catalogProduct)
 magento.catalogProductAttributeMedia.create = promisify(magento.catalogProductAttributeMedia.create).bind(magento.catalogProductAttributeMedia)
 magento.catalogProductAttributeMedia.list = promisify(magento.catalogProductAttributeMedia.list).bind(magento.catalogProductAttributeMedia)
+magento.catalogCategory.tree = promisify(magento.catalogCategory.tree).bind(magento.catalogCategory)
 
 module.exports = {
   registerToken ({ body, decoded }, response) {
@@ -67,6 +84,18 @@ module.exports = {
         }
       })
     }).then(customerInfo => {
+      body.dateOfBirth && customerEntityDatetime.create({
+        entity_type_id: 1,
+        attribute_id: DATE_OF_BIRTH,
+        entity_id: customerInfo,
+        value: body.dateOfBirth
+      })
+      body.personalDocument && customerEntityVarchar.create({
+        entity_type_id: 1,
+        attribute_id: PERSONAL_DOCUMENT,
+        entity_id: customerInfo,
+        value: body.personalDocument
+      })
       return createMarketplaceVendor(body, customerInfo)
     }).then(vendorId => {
       response.status(200).send(vendorId.toString())
@@ -231,6 +260,16 @@ module.exports = {
     })
   },
 
+  deleteProduct ({ params }, response) {
+    magento.login().then(() => {
+      return magento.catalogProduct.delete({productId: params.productId})
+    }).then(() => {
+      response.status(200).send(true)
+    }).catch(error => {
+      response.status(500).send(errorSanitizer(error))
+    })
+  },
+
   edit (_request, response) {
     cedCsmarketplaceVendorShop.find({
       where: { id: 1 }
@@ -290,6 +329,17 @@ module.exports = {
       else return response.status(200).send('0')
     }).catch(err => {
       return response.status(400).send(err)
+    })
+  },
+
+  getCategoriesList (request, response) {
+    magento.login().then(() => {
+      return magento.catalogCategory.tree({parentId: 8})
+    }).then(categories => {
+      return response.status(200).send({categories: categories.children.filter(category => category.is_active === '1')})
+    }).catch(error => {
+      if (error === 403) return response.status(403).send('0')
+      return response.status(400).send(errorSanitizer(error))
     })
   },
 
@@ -360,9 +410,10 @@ function recoverMarketplaceVendor (customerId, email) {
         cedCsmarketplaceVendorVarchar.find({ where: generateEntity(CNPJ, 0, entity_id) }),
         cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_NAME, 0, entity_id) }),
         cedCsmarketplaceVendorVarchar.find({ where: generateEntity(FANTASY_NAME, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_ADDRESS, 0, entity_id) })
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_ADDRESS, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_CATEGORY, 0, entity_id) }),
       ])
-    }).then(([id, name, email, phone, cnpj, companyName, fantasyName, companyAddress]) => {
+    }).then(([id, name, email, phone, cnpj, companyName, fantasyName, companyAddress, companyCategory]) => {
       resolve({
         id,
         name: name && name.value || '',
@@ -371,7 +422,9 @@ function recoverMarketplaceVendor (customerId, email) {
         cnpj: cnpj && cnpj.value || '',
         companyName: companyName && companyName.value || '',
         fantasyName: fantasyName && fantasyName.value || '',
-        companyAddress: companyAddress && companyAddress.value || ''
+        companyAddress: companyAddress && companyAddress.value || '',
+        companyCategory: companyCategory && companyCategory.value || '',
+        companyCategory: companyCategory && companyCategory.value || '',
       })
     }).catch(reject)
   })
@@ -402,7 +455,21 @@ function createMarketplaceVendor (data, customerInfo) {
         cedCsmarketplaceVendorVarchar.create(generateEntity(GROUP, 0, vendor.null, 'general')),
         cedCsmarketplaceVendorVarchar.create(generateEntity(NAME, 0, vendor.null, `${data.firstname} ${data.lastname}`)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(FANTASY_NAME, 0, vendor.null, data.fantasy_name)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(EMAIL, 0, vendor.null, data.personal_email)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_ADDRESS, 0, vendor.null, data.company_address)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_ADDRESS, 0, vendor.null, data.company_address)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_ADDRESS, 0, vendor.null, data.company_address)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_CITY, 0, vendor.null, data.company_city)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_POSTAL_CODE, 0, vendor.null, data.company_postal_code)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_STATE, 0, vendor.null, data.company_state)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_CATEGORY, 0, vendor.null, data.company_category)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_HOLDER_NAME, 0, vendor.null, data.company_holder_name)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_DOCUMENT, 0, vendor.null, data.company_document)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_ACCOUNT_NUMBER, 0, vendor.null, data.company_account_number)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_BANK_NUMBER, 0, vendor.null, data.company_bank_number)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_AGENCY_NUMBER, 0, vendor.null, data.company_agency_number)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_TYPE_OF_ACCOUNT, 0, vendor.null, data.company_type_of_account)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(HAS_ACCEPTED_TERMS, 0, vendor.null, 1)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(CNPJ, 0, vendor.null, data.company_cnpj)),
         data.facebookId ? cedCsmarketplaceVendorVarchar.create(generateEntity(FACEBOOK_ID, 0, vendor.null, data.facebookId)) : Promise.resolve()
       ])
