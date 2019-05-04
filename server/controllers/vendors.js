@@ -426,8 +426,7 @@ function recoverMarketplaceVendor (customerId, email) {
         companyName: companyName && companyName.value || '',
         fantasyName: fantasyName && fantasyName.value || '',
         companyAddress: companyAddress && companyAddress.value || '',
-        companyCategory: companyCategory && companyCategory.value || '',
-        companyCategory: companyCategory && companyCategory.value || '',
+        companyCategory: companyCategory && companyCategory.value || ''
       })
     }).catch(reject)
   })
