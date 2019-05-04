@@ -29,6 +29,6 @@ app.use(cookieParser())
 app.set('models', 'models/')
 
 app.use('/api', require('./server/routes/api'))
-app.use(express.static('public'))
+app.use('*', function (_request, response) { response.status(406).json() })
 
 module.exports = app
