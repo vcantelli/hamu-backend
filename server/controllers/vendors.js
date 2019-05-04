@@ -85,17 +85,17 @@ module.exports = {
         }
       })
     }).then(customerInfo => {
-      body.dateOfBirth && customerEntityDatetime.create({
+      body.date_of_birth && customerEntityDatetime.create({
         entity_type_id: 1,
         attribute_id: DATE_OF_BIRTH,
         entity_id: customerInfo,
-        value: body.dateOfBirth
+        value: body.date_of_birth
       })
-      body.personalDocument && customerEntityVarchar.create({
+      body.personal_document && customerEntityVarchar.create({
         entity_type_id: 1,
         attribute_id: PERSONAL_DOCUMENT,
         entity_id: customerInfo,
-        value: body.personalDocument
+        value: body.personal_document
       })
       return createMarketplaceVendor(body, customerInfo)
     }).then(vendorId => {
