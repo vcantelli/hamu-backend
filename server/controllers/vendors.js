@@ -143,7 +143,7 @@ module.exports = {
         set: 4,
         sku: body.sku,
         data: {
-          category_ids: [body.categoria, body.bairro],
+          category_ids: [body.category, body.neighborhood],
           website_ids: [1],
           name: body.name,
           description: body.description,
@@ -233,7 +233,7 @@ module.exports = {
         magento.catalogProduct.update({
           id: params.productId,
           data: {
-            category_ids: [body.categoria, body.bairro],
+            category_ids: [body.category, body.neighborhood],
             price: body.price,
             name: body.name,
             description: body.description,
