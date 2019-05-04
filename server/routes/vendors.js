@@ -16,6 +16,9 @@ routes.route('/products').all(auth)
   .post(vendors.createProduct)
   .get(vendors.listProducts)
 
+routes.route('/products/categories').all(auth)
+  .get(vendors.getCategoriesList)
+
 routes.route('/products/:productId').all(auth)
   .get(vendors.getProduct)
   .put(vendors.editProduct)
