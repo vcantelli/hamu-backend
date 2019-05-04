@@ -263,7 +263,7 @@ module.exports = {
 
   deleteProduct ({ params }, response) {
     magento.login().then(() => {
-      return magento.catalogProduct.delete({ productId: params.productId })
+      return magento.catalogProduct.delete({ id: Number(params.productId) })
     }).then(() => {
       response.status(200).send(true)
     }).catch(error => {
