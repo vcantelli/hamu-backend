@@ -22,6 +22,7 @@ routes.route('/products/categories').all(auth)
 routes.route('/products/:productId').all(auth)
   .get(vendors.getProduct)
   .put(vendors.editProduct)
+  .delete(vendors.deleteProduct)
 
 routes.route('/products/:productId/image').all(auth)
   .put(vendors.addImage)
