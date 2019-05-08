@@ -248,7 +248,18 @@ module.exports = {
             price: body.price,
             name: body.name,
             description: body.description,
-            short_description: body.shortDescription
+            short_description: body.shortDescription,
+            stock_data: {
+              qty: req.body.quantity,
+              is_in_stock: 1,
+              manage_stock: 1,
+              use_config_manage_stock: 1,
+              use_config_min_qty: 1,
+              use_config_min_sale_qty: 1,
+              use_config_max_sale_qty: 1,
+              use_config_backorders: 1,
+              use_config_notify_stock_qty: 1
+            }
           }
         }),
         cedCsmarketplaceVendorProducts.update(
