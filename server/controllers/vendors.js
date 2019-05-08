@@ -3,6 +3,7 @@ const MagentoAPI = require('magento-api')
 const md5 = require('md5')
 const { promisify } = require('util')
 const { secret, config } = require('../config/jwt')
+const codigoBancos = require('../models/codigo_bancos')
 const {
   cedCsmarketplaceVendorProducts,
   cedCsmarketplaceVendorShop,
@@ -77,7 +78,7 @@ module.exports = {
         customerData: {
           email: body.email,
           firstname: body.firstname,
-          lastname: body.lastname,
+          lastname: body.firstname.substr(body.firstname.indexOf(' ') + 1),
           password: body.password,
           website_id: 1,
           store_id: 1,
@@ -98,8 +99,11 @@ module.exports = {
         value: body.personal_document
       })
       return createMarketplaceVendor(body, customerInfo)
-    }).then(vendorId => {
-      response.status(200).send(vendorId.toString())
+    }).then(() => {
+      return recoverMarketplaceVendor(customerInfo, body.email)
+    }).then(vendor => {
+      const token = jwt.sign(vendor, secret, config)
+      return response.status(200).send({ vendor, token })
     }).catch(error => {
       response.status(500).send(errorSanitizer(error))
     })
@@ -368,6 +372,10 @@ module.exports = {
     })
   },
 
+  getBankCodes (_request, response) {
+    response.status(200).send(codigoBancos)
+  },
+
   addImage ({ body, params }, response) {
     magento.login().then(() => {
       return magento.catalogProductAttributeMedia.list({
@@ -398,7 +406,6 @@ function customerDataIsIncomplete (data) {
   return (
     !data.email ||
     !data.firstname ||
-    !data.lastname ||
     !data.password ||
     !data.fantasy_name ||
     !data.company_name ||
@@ -477,15 +484,16 @@ function createMarketplaceVendor (data, customerInfo) {
         cedCsmarketplaceVendorVarchar.create(generateEntity(SHOP_URL, 0, vendor.null, (data.company_name).toLowerCase().replace(/\s/g, ''))),
         cedCsmarketplaceVendorVarchar.create(generateEntity(STATUS, 0, vendor.null, 'approved')),
         cedCsmarketplaceVendorVarchar.create(generateEntity(GROUP, 0, vendor.null, 'general')),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(NAME, 0, vendor.null, `${data.firstname} ${data.lastname}`)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(NAME, 0, vendor.null, data.firstname)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(FANTASY_NAME, 0, vendor.null, data.fantasy_name)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(EMAIL, 0, vendor.null, data.personal_email)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_ADDRESS, 0, vendor.null, data.company_address)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_ADDRESS, 0, vendor.null, data.company_address)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_ADDRESS, 0, vendor.null, data.company_address)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_CITY, 0, vendor.null, data.company_city)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_ADDRESS, 0, vendor.null, `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}`)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_ADDRESS, 0, vendor.null, `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}`)),
+        // cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_CITY, 0, vendor.null, data.company_city)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_CITY, 0, vendor.null, 'Santo André')),
         cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_POSTAL_CODE, 0, vendor.null, data.company_postal_code)),
-        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_STATE, 0, vendor.null, data.company_state)),
+        // cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_STATE, 0, vendor.null, data.company_state)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_INTERNAL_STATE, 0, vendor.null, 'São Paulo')),
         cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_CATEGORY, 0, vendor.null, data.company_category)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_HOLDER_NAME, 0, vendor.null, data.company_holder_name)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_DOCUMENT, 0, vendor.null, data.company_document)),
