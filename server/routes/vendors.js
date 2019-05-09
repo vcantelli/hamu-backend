@@ -7,10 +7,11 @@ routes.route('/login')
 
 routes.route('/')
   .post(vendors.create)
-  .put(auth, vendors.edit)
+  .put(auth, vendors.update)
+  .get(auth, vendors.get)
 
 routes.route('/bank/codes')
-.get(vendors.getBankCodes)
+  .get(vendors.getBankCodes)
 
 routes.route('/token').all(auth)
   .post(vendors.registerToken)
@@ -21,6 +22,15 @@ routes.route('/products').all(auth)
 
 routes.route('/products/categories')
   .get(vendors.getCategoriesList)
+
+routes.route('/products/sales').all(auth)
+  .get(vendors.listSales)
+
+routes.route('/terms')
+.get(vendors.getTermsHtml)
+
+routes.route('/products/sizes/:id').all(auth)
+  .get(vendors.getSizes)
 
 routes.route('/products/:productId').all(auth)
   .get(vendors.getProduct)
