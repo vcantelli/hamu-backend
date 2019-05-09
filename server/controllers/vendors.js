@@ -112,7 +112,7 @@ module.exports = {
   listProducts ({ decoded }, response) {
     magento.login().then(() => {
       return cedCsmarketplaceVendorProducts.findAll({
-        where: { vendor_id: decoded.vendorId }
+        where: { vendor_id: decoded.id }
       })
     }).then(products => {
       return Promise.all(products.map(({ dataValues }) => {
@@ -374,6 +374,14 @@ module.exports = {
 
   getBankCodes (_request, response) {
     response.status(200).send(codigoBancos)
+  },
+
+  getShoesSizes (_request, response) {
+    response.status(200).send(['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44'])
+  },
+
+  getShirtsSizes (_request, response) {
+    response.status(200).send(['EP', 'P', 'M', 'G', 'GG', 'XG'])
   },
 
   addImage ({ body, params }, response) {
