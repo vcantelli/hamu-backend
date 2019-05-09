@@ -61,7 +61,7 @@ magento.catalogCategory.tree = promisify(magento.catalogCategory.tree).bind(mage
 
 module.exports = {
   registerToken ({ body, decoded }, response) {
-    upsertFirebaseToken(body.token, decoded.vendorId).then(function () {
+    upsertFirebaseToken(body.token, decoded.id).then(function () {
       response.status(200).end()
     }).catch(function (error) {
       response.status(500).send(errorSanitizer(error))
@@ -109,6 +109,70 @@ module.exports = {
     })
   },
 
+  update ({ body, decoded }, response) {
+    if (customerDataIsIncomplete(body)) {
+      return response.status(400).send({ name: 'Missing fields', message: 'There are mandatory fields missing' })
+    }
+
+    magento.login().then(() => {
+      return magento.customer.update({
+        customerId: decoded.customerId,
+        customerData: {
+          email: body.email,
+          firstname: body.firstname,
+          lastname: body.firstname.substr(body.firstname.indexOf(' ') + 1),
+          password: body.password,
+          website_id: 1,
+          store_id: 1,
+          group_id: 1
+        }
+      })
+    }).then(customerInfo => {
+      body.date_of_birth && customerEntityDatetime.update({
+        value: body.date_of_birth
+      }, {
+        where: {
+          entity_type_id: 1,
+          attribute_id: DATE_OF_BIRTH,
+          entity_id: customerInfo
+        }
+      })
+
+      body.personal_document && customerEntityVarchar.update({
+        value: body.personal_document
+      }, {
+        where: {
+          entity_type_id: 1,
+          attribute_id: PERSONAL_DOCUMENT,
+          entity_id: customerInfo
+        }
+      })
+      return updateMarketplaceVendor(body, decoded.id)
+    }).then(() => {
+      return recoverMarketplaceVendor(customerInfo, body.email)
+    }).then(vendor => {
+      const token = jwt.sign(vendor, secret, config)
+      return response.status(200).send({ vendor, token })
+    }).catch(error => {
+      response.status(500).send(errorSanitizer(error))
+    })
+  },
+
+
+  get ({ decoded }, response) {
+    magento.login().then(() => {
+      return magento.customer.info({ customerId: decoded.customerId })
+    }).then(customerInfo => {
+      return getMarketplaceVendor(customerInfo, decoded.id, decoded.customerId)
+    })
+    .then(vendor => {
+      response.status(200).send(vendor)
+    })
+    .catch(error => {
+      response.status(500).send(errorSanitizer(error))
+    })
+  },
+
   listProducts ({ decoded }, response) {
     magento.login().then(() => {
       return cedCsmarketplaceVendorProducts.findAll({
@@ -130,7 +194,40 @@ module.exports = {
         })
       }))
     }).then(productsList => {
-      var newList = productsList.filter(item => !!item)
+      var newList = productsList.filter(item => !!item && item.check_status === true)
+      console.log(newList)
+      response.status(200).send(newList)
+    }).catch(error => {
+      response.status(500).send(errorSanitizer(error))
+    })
+  },
+
+  listSales ({ decoded }, response) {
+    magento.login().then(() => {
+      return cedCsmarketplaceVendorProducts.findAll({
+        where: { vendor_id: decoded.id }
+      })
+    }).then(products => {
+      return Promise.all(products.map(({ dataValues }) => {
+        return new Promise(resolve => {
+          magento.catalogProductAttributeMedia.list({
+            product: dataValues.product_id
+          }).then(Media => {
+            resolve({
+              ...dataValues,
+              Media: Media.map(({ position, url }) => { return { position, url } })
+            })
+          }).catch(() => {
+            resolve({ ...dataValues, Media: [] })
+          })
+        })
+      }))
+    }).then(productsList => {
+      var newList = productsList.filter(item => !!item).map(item => {
+        item.qty = 0
+        item.price = 0
+        return item
+      })
       console.log(newList)
       response.status(200).send(newList)
     }).catch(error => {
@@ -140,28 +237,29 @@ module.exports = {
 
   createProduct ({ body, decoded }, response) {
     let productId
+    let sku = generateSKU(body.name)
 
     magento.login().then(() => {
       return magento.catalogProduct.create({
         type: 'simple',
         set: 4,
-        sku: body.sku,
+        sku: sku,
         data: {
           category_ids: [body.category, body.neighborhood],
           website_ids: [1],
           name: body.name,
           description: body.description,
-          short_description: body.shortDescription,
+          short_description: body.shortDescription || '',
           weight: body.weight,
           status: '1',
-          url_key: body.urlKey,
-          url_path: body.urlPath,
+          url_key: body.urlKey || '',
+          url_path: body.urlPath || '',
           visibility: '4',
           price: body.price,
           tax_class_id: 1,
-          meta_title: body.metaTitle,
-          meta_keyword: body.metaKeyword,
-          meta_description: body.metaDescription,
+          meta_title: body.metaTitle || '',
+          meta_keyword: body.metaKeyword || '',
+          meta_description: body.metaDescription || '',
           stock_data: {
             qty: body.quantity,
             is_in_stock: 1,
@@ -177,14 +275,14 @@ module.exports = {
       })
     }).then(product => {
       return cedCsmarketplaceVendorProducts.create({
-        vendor_id: decoded.vendorId,
+        vendor_id: decoded.id,
         product_id: product,
         type: 'simple',
         price: body.price,
         special_price: 0,
         name: body.name,
         description: body.description,
-        short_description: body.shortDescription,
+        short_description: body.shortDescription || '',
         sku: body.sku,
         weight: body.weight,
         check_status: 1,
@@ -204,13 +302,13 @@ module.exports = {
     }).then(error => {
       if (error) return Promise.resolve()
       const images = [
-        [body.imageBase64, body.imageName],
-        [body.image2Base64, body.image2Name],
-        [body.image3Base64, body.image3Name]
+        [body.image1Base64, body.imageName || 'img1'],
+        [body.image2Base64, body.image2Name || 'img2'],
+        [body.image3Base64, body.image3Name || 'img3']
       ]
       return Promise.all(images.map((img, i) => createProductImage(img[0], img[1], productId, i, magento)))
     }).then(() => {
-      response.status(200).send(productId.toString())
+      response.status(200).send({ sku })
     }).catch(error => {
       response.status(500).send(errorSanitizer(error))
     })
@@ -252,9 +350,9 @@ module.exports = {
             price: body.price,
             name: body.name,
             description: body.description,
-            short_description: body.shortDescription,
+            short_description: body.shortDescription || '',
             stock_data: {
-              qty: req.body.quantity,
+              qty: body.quantity,
               is_in_stock: 1,
               manage_stock: 1,
               use_config_manage_stock: 1,
@@ -271,7 +369,7 @@ module.exports = {
             price: body.price,
             name: body.name,
             description: body.description,
-            short_description: body.shortDescription,
+            short_description: body.shortDescription || '',
             qty: body.quantity
           }, {
             where: {
@@ -281,7 +379,21 @@ module.exports = {
         )
       ])
     }).then(() => {
-      response.status(200).send(true)
+      return new Promise(resolve => {
+        magento.catalogProductAttributeMedia.list({
+          product: params.productId
+        }).then(() => resolve()).catch(resolve)
+      })
+    }).then(error => {
+      if (error) return Promise.resolve()
+      const images = [
+        body.image1Base64 && !body.image1Base64.includes("www.hamu.com.br") && [body.image1Base64, body.imageName || 'img1'],
+        body.image2Base64 && !body.image2Base64.includes("www.hamu.com.br") && [body.image2Base64, body.image2Name || 'img2'],
+        body.image3Base64 && !body.image3Base64.includes("www.hamu.com.br") && [body.image3Base64, body.image3Name || 'img3']
+      ]
+      return Promise.all(images.filter(item => !!item).map((img, i) => updateProductImage(img[0], img[1], params.productId, i, magento)))
+    }).then(() => {
+      response.status(200).send()
     }).catch(error => {
       response.status(500).send(errorSanitizer(error))
     })
@@ -291,7 +403,9 @@ module.exports = {
     magento.login().then(() => {
       return magento.catalogProduct.delete({ id: Number(params.productId) })
     }).then(() => {
-      response.status(200).send(true)
+      return cedCsmarketplaceVendorProducts.destroy({ where: { product_id: Number(params.productId) }})
+    }).then(() => {
+      response.status(200).send()
     }).catch(error => {
       response.status(500).send(errorSanitizer(error))
     })
@@ -376,12 +490,27 @@ module.exports = {
     response.status(200).send(codigoBancos)
   },
 
-  getShoesSizes (_request, response) {
-    response.status(200).send(['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44'])
+  getSizes ({ params }, response) {
+    if(params.id === '161') {
+      response.status(200).send(['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44'])
+    } else if(params.id === 180) {
+      response.status(200).send(['EP', 'P', 'M', 'G', 'GG', 'XG'])
+    } else {
+      response.status(200).send([])
+    }
   },
 
-  getShirtsSizes (_request, response) {
-    response.status(200).send(['EP', 'P', 'M', 'G', 'GG', 'XG'])
+  getTermsHtml (_request, response) {
+    response.status(200).send({
+      terms: `
+        <p>Teste dos termos</p>
+        </br>
+        <strong>Vamos ver se funciona isso aqui</strong>
+        <b>OU ISSO</b>
+        <h1> Teste H1 </h1>
+        <h2> Teste H2 </h2>
+        <h3> Teste H3 </h3>
+    `})
   },
 
   addImage ({ body, params }, response) {
@@ -403,6 +532,24 @@ module.exports = {
       response.status(500).send(errorSanitizer(error))
     })
   }
+}
+
+function generateSKU (name) {
+  name = name.replace(/ /g,'')
+  const firstCharacter = name[0]
+  const secondCharacter = name[name.length - 1]
+  const thirdCharacter = name[parseInt((name.length - 1) / 2)]
+  return `${firstCharacter}${secondCharacter}${thirdCharacter}-${generateRandomString(8)}`
+}
+
+function generateRandomString (length) {
+  var result = ''
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  var charactersLength = characters.length
+  for ( var i = 0; i < length; i++) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
 }
 
 function checkPasswordHash (password, stored) {
@@ -456,6 +603,7 @@ function recoverMarketplaceVendor (customerId, email) {
     }).then(([id, name, email, phone, cnpj, companyName, fantasyName, companyAddress, companyCategory]) => {
       resolve({
         id,
+        customerId: customerId,
         name: name && name.value || '',
         email,
         phone: phone && phone.value || '',
@@ -517,6 +665,91 @@ function createMarketplaceVendor (data, customerInfo) {
   })
 }
 
+function updateMarketplaceVendor (data, vendorId) {
+  return new Promise(function (resolve, reject) {
+    return Promise.all([
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_name }, { where: generateEntity(COMPANY_NAME, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.telephone.replace(',', '').replace('.', '') }, { where: generateEntity(PHONE, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: (data.company_name).toLowerCase().replace(/\s/g, '') }, { where: generateEntity(SHOP_URL, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.firstname }, { where: generateEntity(NAME, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.fantasy_name }, { where: generateEntity(FANTASY_NAME, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.personal_email }, { where: generateEntity(EMAIL, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}` }, { where: generateEntity(COMPANY_ADDRESS, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}` }, { where: generateEntity(COMPANY_INTERNAL_ADDRESS, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_postal_code }, { where: generateEntity(COMPANY_INTERNAL_POSTAL_CODE, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_category }, { where: generateEntity(COMPANY_CATEGORY, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_holder_name }, { where: generateEntity(COMPANY_HOLDER_NAME, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_document }, { where: generateEntity(COMPANY_DOCUMENT, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_account_number }, { where: generateEntity(COMPANY_ACCOUNT_NUMBER, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_bank_number }, { where: generateEntity(COMPANY_BANK_NUMBER, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_agency_number }, { where: generateEntity(COMPANY_AGENCY_NUMBER, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_type_of_account }, { where: generateEntity(COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_cnpj }, { where: generateEntity(CNPJ, 0, vendorId, null)}),
+      data.facebookId ? cedCsmarketplaceVendorVarchar.update({ value: data.facebookId }, { where: generateEntity(FACEBOOK_ID, 0, vendorId, null)}) : Promise.resolve()
+    ])
+    .then(() => { resolve(vendorId) }).catch(reject)
+  })
+}
+
+function getMarketplaceVendor (data, vendorId, customerId) {
+  return new Promise(function (resolve, reject) {
+    return Promise.all([
+      customerEntityDatetime.find({
+        where: {
+          entity_type_id: 1,
+          attribute_id: DATE_OF_BIRTH,
+          entity_id: customerId
+        }
+      }),
+      customerEntityVarchar.find({
+        where: {
+          entity_type_id: 1,
+          attribute_id: PERSONAL_DOCUMENT,
+          entity_id: customerId
+        }
+      }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_NAME, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(PHONE, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(NAME, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(FANTASY_NAME, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(EMAIL, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_ADDRESS, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_INTERNAL_POSTAL_CODE, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_CATEGORY, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_HOLDER_NAME, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_DOCUMENT, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_ACCOUNT_NUMBER, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_BANK_NUMBER, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_AGENCY_NUMBER, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(CNPJ, 0, vendorId, null)})
+    ])
+    .then(([date_of_birth, personal_document, companyName, phone, name, fantasyName, email, companyAddress, companyInternalPostalCode, companyCategory, companyHolderName, companyDocument, companyAccountNumber, companyBankNumber, companyAgencyNumber, companyTypeOfAccount, cnpj ]) => { resolve({
+      ...data,
+      date_of_birth: date_of_birth && date_of_birth.value.toLocaleDateString('en-US') || '',
+      personal_document: personal_document && personal_document.value || '',
+      company_name: companyName && companyName.value || '',
+      telephone: phone && phone.value || '',
+      firstname: name && name.value || '',
+      fantasy_name: fantasyName && fantasyName.value || '',
+      personal_email: email && email.value || '',
+      company_address: companyAddress && companyAddress.value || '',
+      company_address_number: '',
+      company_adj: '',
+      company_neighborhood: '',
+      company_postal_code: companyInternalPostalCode && companyInternalPostalCode.value || '',
+      company_category: companyCategory && companyCategory.value || '',
+      company_holder_name: companyHolderName && companyHolderName.value || '',
+      company_document: companyDocument && companyDocument.value || '',
+      company_account_number: companyAccountNumber && companyAccountNumber.value || '',
+      company_bank_number: companyBankNumber && companyBankNumber.value || '',
+      company_agency_number: companyAgencyNumber && companyAgencyNumber.value || '',
+      company_type_of_account: companyTypeOfAccount && companyTypeOfAccount.value || '',
+      company_cnpj: cnpj && cnpj.value || ''
+    }) }).catch(reject)
+  })
+}
+
 function generateEntity (attribute_id, store_id, entity_id, value) {
   var result = {
     entity_type_id: ENTITY_CS_MARKETPLACE_VENDOR
@@ -543,6 +776,27 @@ function createProductImage (content, name, productId, position, magento) {
         exclude: '0'
       }
     }).then(resolve).catch(error => {
+      console.error(error)
+      resolve()
+    })
+  })
+}
+
+function updateProductImage (content, name, productId, position, magento) {
+  if (!content) return Promise.resolve()
+  return new Promise(function (resolve) {
+    magento.catalogProductAttributeMedia.update({
+      product: productId,
+      data: {
+        file: { name, content, mime: 'image/jpeg' },
+        label: '',
+        position,
+        types: position === 0 ? ['image', 'small_image', 'thumbnail'] : [],
+        exclude: '0'
+      }
+    })
+    .then(resolve)
+    .catch(error => {
       console.error(error)
       resolve()
     })
