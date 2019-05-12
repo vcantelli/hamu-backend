@@ -1,0 +1,7 @@
+{
+  "host": "www.hamu.com.br",
+  "port": 443,
+  "path": "/api/xmlrpc/",
+  "login": "admgeral",
+  "pass": "paineldeacesso2017"
+}

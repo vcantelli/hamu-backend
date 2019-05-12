@@ -1,20 +1,22 @@
 'use strict'
 
 module.exports = function (sequelize, DataTypes) {
-  var ced_csmarketplace_vendor_text = sequelize.define(
-    'ced_csmarketplace_vendor_text',
+  var customerEntityDateTime = sequelize.define(
+    'customer_entity_datetime',
     {
-      value_id: DataTypes.INTEGER,
+      value_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true
+      },
       entity_type_id: DataTypes.INTEGER,
       attribute_id: DataTypes.INTEGER,
-      store_id: DataTypes.INTEGER,
       entity_id: DataTypes.INTEGER,
-      value: DataTypes.STRING
+      value: DataTypes.DATE
     }, {
       timestamps: false,
       freezeTableName: true
     }
   )
 
-  return ced_csmarketplace_vendor_text
+  return customerEntityDateTime
 }

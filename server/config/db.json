@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "cyezaqab_vcant",
+    "password": "Y@y94rywvx",
+    "database": "cyezaqab_HCbD",
+    "host": "204.155.156.39",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "evnts",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "cyezaqab_vcant",
+    "password": "Y@y94rywvx",
+    "database": "cyezaqab_HCbD",
+    "host": "204.155.156.39",
+    "dialect": "mysql"
+  }
+}

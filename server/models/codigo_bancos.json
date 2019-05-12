@@ -1,0 +1,774 @@
+[
+  {
+    "code": "001",
+    "bank": "Banco do Brasil S.A."
+  },
+  {
+    "code": "003",
+    "bank": "Banco da Amazônia S.A."
+  },
+  {
+    "code": "004",
+    "bank": "Banco do Nordeste do Brasil S.A."
+  },
+  {
+    "code": "007",
+    "bank": "Banco Nacional de Desenvolvimento Econômico e Social BNDES"
+  },
+  {
+    "code": "010",
+    "bank": "Credicoamo Crédito Rural Cooperativa"
+  },
+  {
+    "code": "011",
+    "bank": "Credit Suisse Hedging-Griffo Corretora de Valores S.A."
+  },
+  {
+    "code": "012",
+    "bank": "Banco Inbursa S.A."
+  },
+  {
+    "code": "014",
+    "bank": "Natixis Brasil S.A. Banco Múltiplo"
+  },
+  {
+    "code": "015",
+    "bank": "UBS Brasil Corretora de Câmbio, Títulos e Valores Mobiliários S.A."
+  },
+  {
+    "code": "016",
+    "bank": "Coop de Créd. Mútuo dos Despachantes de Trânsito de SC e Rio Grande do Sul"
+  },
+  {
+    "code": "017",
+    "bank": "BNY Mellon Banco S.A."
+  },
+  {
+    "code": "018",
+    "bank": "Banco Tricury S.A."
+  },
+  {
+    "code": "021",
+    "bank": "Banestes S.A. Banco do Estado do Espírito Santo"
+  },
+  {
+    "code": "024",
+    "bank": "Banco Bandepe S.A."
+  },
+  {
+    "code": "025",
+    "bank": "Banco Alfa S.A."
+  },
+  {
+    "code": "029",
+    "bank": "Banco Itaú Consignado S.A."
+  },
+  {
+    "code": "033",
+    "bank": "Banco Santander (Brasil) S. A."
+  },
+  {
+    "code": "036",
+    "bank": "Banco Bradesco BBI S.A."
+  },
+  {
+    "code": "037",
+    "bank": "Banco do Estado do Pará S.A."
+  },
+  {
+    "code": "040",
+    "bank": "Banco Cargill S.A."
+  },
+  {
+    "code": "041",
+    "bank": "Banco do Estado do Rio Grande do Sul S.A."
+  },
+  {
+    "code": "047",
+    "bank": "Banco do Estado de Sergipe S.A."
+  },
+  {
+    "code": "060",
+    "bank": "Confidence Corretora de Câmbio S.A."
+  },
+  {
+    "code": "062",
+    "bank": "Hipercard Banco Múltiplo S.A."
+  },
+  {
+    "code": "063",
+    "bank": "Banco Bradescard S.A."
+  },
+  {
+    "code": "064",
+    "bank": "Goldman Sachs do Brasil  Banco Múltiplo S. A."
+  },
+  {
+    "code": "065",
+    "bank": "Banco AndBank (Brasil) S.A."
+  },
+  {
+    "code": "066",
+    "bank": "Banco Morgan Stanley S. A."
+  },
+  {
+    "code": "069",
+    "bank": "Banco Crefisa S.A."
+  },
+  {
+    "code": "070",
+    "bank": "Banco de Brasília S.A."
+  },
+  {
+    "code": "074",
+    "bank": "Banco J. Safra S.A."
+  },
+  {
+    "code": "075",
+    "bank": "Banco ABN Amro S.A."
+  },
+  {
+    "code": "076",
+    "bank": "Banco KDB do Brasil S.A."
+  },
+  {
+    "code": "077",
+    "bank": "Banco Inter S.A."
+  },
+  {
+    "code": "078",
+    "bank": "Haitong Banco de Investimento do Brasil S.A."
+  },
+  {
+    "code": "079",
+    "bank": "Banco Original do Agronegócio S.A."
+  },
+  {
+    "code": "080",
+    "bank": "BT Corretora de Câmbio Ltda."
+  },
+  {
+    "code": "081",
+    "bank": "BBN Banco Brasileiro de Negocios S.A."
+  },
+  {
+    "code": "082",
+    "bank": "Banco Topazio S.A."
+  },
+  {
+    "code": "083",
+    "bank": "Banco da China Brasil S.A."
+  },
+  {
+    "code": "084",
+    "bank": "Uniprime Norte do Paraná - Cooperativa de Crédito Ltda."
+  },
+  {
+    "code": "085",
+    "bank": "Cooperativa Central de Crédito Urbano - Cecred"
+  },
+  {
+    "code": "089",
+    "bank": "Cooperativa de Crédito Rural da Região da Mogiana"
+  },
+  {
+    "code": "091",
+    "bank": "Central de Cooperativas de Economia e Crédito Mútuo do Est RS - Unicred"
+  },
+  {
+    "code": "092",
+    "bank": "BRK S.A. Crédito, Financiamento e Investimento"
+  },
+  {
+    "code": "093",
+    "bank": "Pólocred Sociedade de Crédito ao Microempreendedor e à Empresa de Pequeno Porte"
+  },
+  {
+    "code": "094",
+    "bank": "Banco Finaxis S.A."
+  },
+  {
+    "code": "095",
+    "bank": "Banco Confidence de Câmbio S.A."
+  },
+  {
+    "code": "096",
+    "bank": "Banco BMFBovespa de Serviços de Liquidação e Custódia S/A"
+  },
+  {
+    "code": "097",
+    "bank": "Cooperativa Central de Crédito Noroeste Brasileiro Ltda - CentralCredi"
+  },
+  {
+    "code": "098",
+    "bank": "Credialiança Cooperativa de Crédito Rural"
+  },
+  {
+    "code": "099",
+    "bank": "Uniprime Central – Central Interestadual de Cooperativas de Crédito Ltda."
+  },
+  {
+    "code": "100",
+    "bank": "Planner Corretora de Valores S.A."
+  },
+  {
+    "code": "101",
+    "bank": "Renascença Distribuidora de Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "code": "102",
+    "bank": "XP Investimentos Corretora de Câmbio Títulos e Valores Mobiliários S.A."
+  },
+  {
+    "code": "104",
+    "bank": "Caixa Econômica Federal"
+  },
+  {
+    "code": "105",
+    "bank": "Lecca Crédito, Financiamento e Investimento S/A"
+  },
+  {
+    "code": "107",
+    "bank": "Banco Bocom BBM S.A."
+  },
+  {
+    "code": "108",
+    "bank": "PortoCred S.A. Crédito, Financiamento e Investimento"
+  },
+  {
+    "code": "111",
+    "bank": "Oliveira Trust Distribuidora de Títulos e Valores Mobiliários S.A."
+  },
+  {
+    "code": "113",
+    "bank": "Magliano S.A. Corretora de Cambio e Valores Mobiliarios"
+  },
+  {
+    "code": "114",
+    "bank": "Central Cooperativa de Crédito no Estado do Espírito Santo - CECOOP"
+  },
+  {
+    "code": "117",
+    "bank": "Advanced Corretora de Câmbio Ltda."
+  },
+  {
+    "code": "118",
+    "bank": "Standard Chartered Bank (Brasil) S.A. Banco de Investimento"
+  },
+  {
+    "code": "119",
+    "bank": "Banco Western Union do Brasil S.A."
+  },
+  {
+    "code": "120",
+    "bank": "Banco Rodobens SA"
+  },
+  {
+    "code": "121",
+    "bank": "Banco Agibank S.A."
+  },
+  {
+    "code": "122",
+    "bank": "Banco Bradesco BERJ S.A."
+  },
+  {
+    "code": "124",
+    "bank": "Banco Woori Bank do Brasil S.A."
+  },
+  {
+    "code": "125",
+    "bank": "Brasil Plural S.A. Banco Múltiplo"
+  },
+  {
+    "code": "126",
+    "bank": "BR Partners Banco de Investimento S.A."
+  },
+  {
+    "code": "127",
+    "bank": "Codepe Corretora de Valores e Câmbio S.A."
+  },
+  {
+    "code": "128",
+    "bank": "MS Bank S.A. Banco de Câmbio"
+  },
+  {
+    "code": "129",
+    "bank": "UBS Brasil Banco de Investimento S.A."
+  },
+  {
+    "code": "130",
+    "bank": "Caruana S.A. Sociedade de Crédito, Financiamento e Investimento"
+  },
+  {
+    "code": "131",
+    "bank": "Tullett Prebon Brasil Corretora de Valores e Câmbio Ltda."
+  },
+  {
+    "code": "132",
+    "bank": "ICBC do Brasil Banco Múltiplo S.A."
+  },
+  {
+    "code": "133",
+    "bank": "Confederação Nacional das Cooperativas Centrais de Crédito e Economia Familiar e"
+  },
+  {
+    "code": "134",
+    "bank": "BGC Liquidez Distribuidora de Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "code": "135",
+    "bank": "Gradual Corretora de Câmbio, Títulos e Valores Mobiliários S.A."
+  },
+  {
+    "code": "136",
+    "bank": "Confederação Nacional das Cooperativas Centrais Unicred Ltda – Unicred do Brasil"
+  },
+  {
+    "code": "137",
+    "bank": "Multimoney Corretora de Câmbio Ltda"
+  },
+  {
+    "code": "138",
+    "bank": "Get Money Corretora de Câmbio S.A."
+  },
+  {
+    "code": "139",
+    "bank": "Intesa Sanpaolo Brasil S.A. - Banco Múltiplo"
+  },
+  {
+    "code": "140",
+    "bank": "Easynvest - Título Corretora de Valores SA"
+  },
+  {
+    "code": "142",
+    "bank": "Broker Brasil Corretora de Câmbio Ltda."
+  },
+  {
+    "code": "143",
+    "bank": "Treviso Corretora de Câmbio S.A."
+  },
+  {
+    "code": "144",
+    "bank": "Bexs Banco de Câmbio S.A."
+  },
+  {
+    "code": "145",
+    "bank": "Levycam - Corretora de Câmbio e Valores Ltda."
+  },
+  {
+    "code": "146",
+    "bank": "Guitta Corretora de Câmbio Ltda."
+  },
+  {
+    "code": "149",
+    "bank": "Facta Financeira S.A. - Crédito Financiamento e Investimento"
+  },
+  {
+    "code": "157",
+    "bank": "ICAP do Brasil Corretora de Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "code": "159",
+    "bank": "Casa do Crédito S.A. Sociedade de Crédito ao Microempreendedor"
+  },
+  {
+    "code": "163",
+    "bank": "Commerzbank Brasil S.A. - Banco Múltiplo"
+  },
+  {
+    "code": "169",
+    "bank": "Banco Olé Bonsucesso Consignado S.A."
+  },
+  {
+    "code": "172",
+    "bank": "Albatross Corretora de Câmbio e Valores S.A"
+  },
+  {
+    "code": "173",
+    "bank": "BRL Trust Distribuidora de Títulos e Valores Mobiliários S.A."
+  },
+  {
+    "code": "174",
+    "bank": "Pernambucanas Financiadora S.A. Crédito, Financiamento e Investimento"
+  },
+  {
+    "code": "177",
+    "bank": "Guide Investimentos S.A. Corretora de Valores"
+  },
+  {
+    "code": "180",
+    "bank": "CM Capital Markets Corretora de Câmbio, Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "code": "182",
+    "bank": "Dacasa Financeira S/A - Sociedade de Crédito, Financiamento e Investimento"
+  },
+  {
+    "code": "183",
+    "bank": "Socred S.A. - Sociedade de Crédito ao Microempreendedor"
+  },
+  {
+    "code": "184",
+    "bank": "Banco Itaú BBA S.A."
+  },
+  {
+    "code": "188",
+    "bank": "Ativa Investimentos S.A. Corretora de Títulos Câmbio e Valores"
+  },
+  {
+    "code": "189",
+    "bank": "HS Financeira S/A Crédito, Financiamento e Investimentos"
+  },
+  {
+    "code": "190",
+    "bank": "Cooperativa de Economia e Crédito Mútuo dos Servidores Públicos Estaduais do Rio"
+  },
+  {
+    "code": "191",
+    "bank": "Nova Futura Corretora de Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "code": "194",
+    "bank": "Parmetal Distribuidora de Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "code": "196",
+    "bank": "Fair Corretora de Câmbio S.A."
+  },
+  {
+    "code": "197",
+    "bank": "Stone Pagamentos S.A."
+  },
+  {
+    "code": "204",
+    "bank": "Banco Bradesco Cartões S.A."
+  },
+  {
+    "code": "208",
+    "bank": "Banco BTG Pactual S.A."
+  },
+  {
+    "code": "212",
+    "bank": "Banco Original S.A."
+  },
+  {
+    "code": "213",
+    "bank": "Banco Arbi S.A."
+  },
+  {
+    "code": "217",
+    "bank": "Banco John Deere S.A."
+  },
+  {
+    "code": "218",
+    "bank": "Banco BS2 S.A."
+  },
+  {
+    "code": "222",
+    "bank": "Banco Credit Agrícole Brasil S.A."
+  },
+  {
+    "code": "224",
+    "bank": "Banco Fibra S.A."
+  },
+  {
+    "code": "233",
+    "bank": "Banco Cifra S.A."
+  },
+  {
+    "code": "237",
+    "bank": "Banco Bradesco S.A."
+  },
+  {
+    "code": "241",
+    "bank": "Banco Clássico S.A."
+  },
+  {
+    "code": "243",
+    "bank": "Banco Máxima S.A."
+  },
+  {
+    "code": "246",
+    "bank": "Banco ABC Brasil S.A."
+  },
+  {
+    "code": "249",
+    "bank": "Banco Investcred Unibanco S.A."
+  },
+  {
+    "code": "250",
+    "bank": "BCV - Banco de Crédito e Varejo S/A"
+  },
+  {
+    "code": "253",
+    "bank": "Bexs Corretora de Câmbio S/A"
+  },
+  {
+    "code": "254",
+    "bank": "Parana Banco S. A."
+  },
+  {
+    "code": "260",
+    "bank": "Nu Pagamentos S.A."
+  },
+  {
+    "code": "265",
+    "bank": "Banco Fator S.A."
+  },
+  {
+    "code": "266",
+    "bank": "Banco Cédula S.A."
+  },
+  {
+    "code": "268",
+    "bank": "Barigui Companhia Hipotecária"
+  },
+  {
+    "code": "269",
+    "bank": "HSBC Brasil S.A. Banco de Investimento"
+  },
+  {
+    "code": "271",
+    "bank": "IB Corretora de Câmbio, Títulos e Valores Mobiliários Ltda."
+  },
+  {
+    "code": "300",
+    "bank": "Banco de la Nacion Argentina"
+  },
+  {
+    "code": "318",
+    "bank": "Banco BMG S.A."
+  },
+  {
+    "code": "320",
+    "bank": "China Construction Bank (Brasil) Banco Múltiplo S/A"
+  },
+  {
+    "code": "341",
+    "bank": "Itaú Unibanco  S.A."
+  },
+  {
+    "code": "366",
+    "bank": "Banco Société Générale Brasil S.A."
+  },
+  {
+    "code": "370",
+    "bank": "Banco Mizuho do Brasil S.A."
+  },
+  {
+    "code": "376",
+    "bank": "Banco J. P. Morgan S. A."
+  },
+  {
+    "code": "389",
+    "bank": "Banco Mercantil do Brasil S.A."
+  },
+  {
+    "code": "394",
+    "bank": "Banco Bradesco Financiamentos S.A."
+  },
+  {
+    "code": "399",
+    "bank": "Kirton Bank S.A. - Banco Múltiplo"
+  },
+  {
+    "code": "412",
+    "bank": "Banco Capital S. A."
+  },
+  {
+    "code": "422",
+    "bank": "Banco Safra S.A."
+  },
+  {
+    "code": "456",
+    "bank": "Banco MUFG Brasil S.A."
+  },
+  {
+    "code": "464",
+    "bank": "Banco Sumitomo Mitsui Brasileiro S.A."
+  },
+  {
+    "code": "473",
+    "bank": "Banco Caixa Geral - Brasil S.A."
+  },
+  {
+    "code": "477",
+    "bank": "Citibank N.A."
+  },
+  {
+    "code": "479",
+    "bank": "Banco ItauBank S.A."
+  },
+  {
+    "code": "487",
+    "bank": "Deutsche Bank S.A. - Banco Alemão"
+  },
+  {
+    "code": "488",
+    "bank": "JPMorgan Chase Bank, National Association"
+  },
+  {
+    "code": "492",
+    "bank": "ING Bank N.V."
+  },
+  {
+    "code": "494",
+    "bank": "Banco de La Republica Oriental del Uruguay"
+  },
+  {
+    "code": "495",
+    "bank": "Banco de La Provincia de Buenos Aires"
+  },
+  {
+    "code": "505",
+    "bank": "Banco Credit Suisse (Brasil) S.A."
+  },
+  {
+    "code": "545",
+    "bank": "Senso Corretora de Câmbio e Valores Mobiliários S.A."
+  },
+  {
+    "code": "600",
+    "bank": "Banco Luso Brasileiro S.A."
+  },
+  {
+    "code": "604",
+    "bank": "Banco Industrial do Brasil S.A."
+  },
+  {
+    "code": "610",
+    "bank": "Banco VR S.A."
+  },
+  {
+    "code": "611",
+    "bank": "Banco Paulista S.A."
+  },
+  {
+    "code": "612",
+    "bank": "Banco Guanabara S.A."
+  },
+  {
+    "code": "613",
+    "bank": "Omni Banco S.A."
+  },
+  {
+    "code": "623",
+    "bank": "Banco Pan S.A."
+  },
+  {
+    "code": "626",
+    "bank": "Banco Ficsa S. A."
+  },
+  {
+    "code": "630",
+    "bank": "Banco Intercap S.A."
+  },
+  {
+    "code": "633",
+    "bank": "Banco Rendimento S.A."
+  },
+  {
+    "code": "634",
+    "bank": "Banco Triângulo S.A."
+  },
+  {
+    "code": "637",
+    "bank": "Banco Sofisa S. A."
+  },
+  {
+    "code": "641",
+    "bank": "Banco Alvorada S.A."
+  },
+  {
+    "code": "643",
+    "bank": "Banco Pine S.A."
+  },
+  {
+    "code": "652",
+    "bank": "Itaú Unibanco Holding S.A."
+  },
+  {
+    "code": "653",
+    "bank": "Banco Indusval S. A."
+  },
+  {
+    "code": "654",
+    "bank": "Banco A. J. Renner S.A."
+  },
+  {
+    "code": "655",
+    "bank": "Banco Votorantim S.A."
+  },
+  {
+    "code": "707",
+    "bank": "Banco Daycoval S.A."
+  },
+  {
+    "code": "712",
+    "bank": "Banco Ourinvest S.A."
+  },
+  {
+    "code": "719",
+    "bank": "Banif - Bco Internacional do Funchal (Brasil) S.A."
+  },
+  {
+    "code": "735",
+    "bank": "Banco Neon S.A."
+  },
+  {
+    "code": "739",
+    "bank": "Banco Cetelem S.A."
+  },
+  {
+    "code": "741",
+    "bank": "Banco Ribeirão Preto S.A."
+  },
+  {
+    "code": "743",
+    "bank": "Banco Semear S.A."
+  },
+  {
+    "code": "745",
+    "bank": "Banco Citibank S.A."
+  },
+  {
+    "code": "746",
+    "bank": "Banco Modal S.A."
+  },
+  {
+    "code": "747",
+    "bank": "Banco Rabobank International Brasil S.A."
+  },
+  {
+    "code": "748",
+    "bank": "Banco Cooperativo Sicredi S. A."
+  },
+  {
+    "code": "751",
+    "bank": "Scotiabank Brasil S.A. Banco Múltiplo"
+  },
+  {
+    "code": "752",
+    "bank": "Banco BNP Paribas Brasil S.A."
+  },
+  {
+    "code": "753",
+    "bank": "Novo Banco Continental S.A. - Banco Múltiplo"
+  },
+  {
+    "code": "754",
+    "bank": "Banco Sistema S.A."
+  },
+  {
+    "code": "755",
+    "bank": "Bank of America Merrill Lynch Banco Múltiplo S.A."
+  },
+  {
+    "code": "756",
+    "bank": "Banco Cooperativo do Brasil S/A - Bancoob"
+  },
+  {
+    "code": "757",
+    "bank": "Banco Keb Hana do Brasil S. A."
+  }
+]

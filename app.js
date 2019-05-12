@@ -1,19 +1,17 @@
-var express = require('express')
-var app = express()
-var cookieParser = require('cookie-parser')
-var bodyParser = require('body-parser')
-var morgan = require('morgan')
+require('dotenv').config()
+const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const express = require('express')
+const morgan = require('morgan')
+const app = express()
 
-const http = require('http').Server(app)
-const port = process.env.PORT || 8080
 // const url = require('url')
 // const fixieUrl = url.parse('http://fixie:ZZksOn1Ml8Qcm8x@velodrome.usefixie.com:80')
 // const requestUrl = url.parse('https://hamu.herokuapp.com')
 
-app.use(bodyParser.json({limit: '50mb'}))
 app.use(morgan('dev')) // log every request to the console
-app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json({ limit: '50mb' }))
 app.use(cookieParser())
 
 // app.get({
@@ -28,18 +26,9 @@ app.use(cookieParser())
 // console.log(`Got response: ${res.statusCode}`);
 // });
 
-// view engine setup
-app.set('view engine', 'ejs')
-app.set('views', 'views/')
 app.set('models', 'models/')
 
-const apiRoutes = express.Router()
-require('./server/routes/api')(apiRoutes)
-app.use('/api', apiRoutes)
-app.use(express.static('public'))
+app.use('/api', require('./server/routes/api'))
+app.use('*', function (_request, response) { response.status(406).json() })
 
 module.exports = app
-
-/* LAUNCH */
-http.listen(port)
-console.log('Witchcraft happening at port: ' + port)

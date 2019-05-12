@@ -1,5 +1,5 @@
-const vendors = require('./vendors');
-
 module.exports = {
-    vendors
+  vendors: { ...(require('./vendors')) },
+  firebase: require('./firebase'),
+  auth: require('./auth')
 }
