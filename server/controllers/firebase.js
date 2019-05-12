@@ -1,6 +1,6 @@
 const admin = require('firebase-admin')
 const serviceAccountBuffer = Buffer.from(
-  process.env.SERVICE_ACCOUNT,
+  process.env.SERVICE_ACCOUNT || '',
   'base64'
 ).toString('ascii')
 
