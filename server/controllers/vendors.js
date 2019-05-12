@@ -13,7 +13,8 @@ const {
   cedCsmarketplaceVendorVarchar,
   customerEntity,
   customerEntityDatetime,
-  customerEntityVarchar
+  customerEntityVarchar,
+  salesFlatOrderItem
 } = require('../models')
 const magento = new MagentoAPI(require('../config/magento'))
 
@@ -47,6 +48,7 @@ const COMPANY_BANK_NUMBER = 180
 const COMPANY_AGENCY_NUMBER = 181
 const COMPANY_TYPE_OF_ACCOUNT = 182
 const HAS_ACCEPTED_TERMS = 183
+const COMPANY_TELEPHONE = 184
 
 magento.login = promisify(magento.login).bind(magento)
 magento.customer.create = promisify(magento.customer.create).bind(magento.customer)
@@ -203,6 +205,7 @@ module.exports = {
   },
 
   listSales ({ decoded }, response) {
+    var listOfProducts = []
     magento.login().then(() => {
       return cedCsmarketplaceVendorProducts.findAll({
         where: { vendor_id: decoded.id }
@@ -223,13 +226,37 @@ module.exports = {
         })
       }))
     }).then(productsList => {
-      var newList = productsList.filter(item => !!item).map(item => {
+      listOfProducts = productsList.filter(item => !!item).map(item => {
         item.qty = 0
         item.price = 0
         return item
       })
-      console.log(newList)
-      response.status(200).send(newList)
+      return salesFlatOrderItem.findAll({ where: { product_id: listOfProducts.map(item => item.product_id) } })
+    }).then(productsList => {
+      console.log(productsList)
+      var totals = productsList.reduce((list, product) => {
+        let index = list.findIndex(item => item.id === product.product_id)
+        if(index !== -1) {
+          list[index].qty++
+          list[index].price += product.price
+        } else {
+          list.push({
+            id: product.product_id,
+            qty: 1,
+            price: product.price
+          })
+        }
+        return list
+      }, [])
+      var listWithTotals = listOfProducts.map(item => {
+        let index = totals.findIndex(item => item.id === item.product_id)
+        if(index !== -1) {
+          item.qty = totals[index].qty
+          item.price = totals[index].price
+        }
+        return item
+      })
+      response.status(200).send(listWithTotals)
     }).catch(error => {
       response.status(500).send(errorSanitizer(error))
     })
@@ -657,6 +684,7 @@ function createMarketplaceVendor (data, customerInfo) {
         cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_BANK_NUMBER, 0, vendor.null, data.company_bank_number)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_AGENCY_NUMBER, 0, vendor.null, data.company_agency_number)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_TYPE_OF_ACCOUNT, 0, vendor.null, data.company_type_of_account)),
+        cedCsmarketplaceVendorVarchar.create(generateEntity(COMPANY_TELEPHONE, 0, vendor.null, data.company_telephone)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(HAS_ACCEPTED_TERMS, 0, vendor.null, 1)),
         cedCsmarketplaceVendorVarchar.create(generateEntity(CNPJ, 0, vendor.null, data.company_cnpj)),
         data.facebookId ? cedCsmarketplaceVendorVarchar.create(generateEntity(FACEBOOK_ID, 0, vendor.null, data.facebookId)) : Promise.resolve()
@@ -685,6 +713,7 @@ function updateMarketplaceVendor (data, vendorId) {
       cedCsmarketplaceVendorVarchar.update({ value: data.company_agency_number }, { where: generateEntity(COMPANY_AGENCY_NUMBER, 0, vendorId, null)}),
       cedCsmarketplaceVendorVarchar.update({ value: data.company_type_of_account }, { where: generateEntity(COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null)}),
       cedCsmarketplaceVendorVarchar.update({ value: data.company_cnpj }, { where: generateEntity(CNPJ, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_telephone }, { where: generateEntity(COMPANY_TELEPHONE, 0, vendorId, null)}),
       data.facebookId ? cedCsmarketplaceVendorVarchar.update({ value: data.facebookId }, { where: generateEntity(FACEBOOK_ID, 0, vendorId, null)}) : Promise.resolve()
     ])
     .then(() => { resolve(vendorId) }).catch(reject)
@@ -722,9 +751,10 @@ function getMarketplaceVendor (data, vendorId, customerId) {
       cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_BANK_NUMBER, 0, vendorId, null)}),
       cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_AGENCY_NUMBER, 0, vendorId, null)}),
       cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null)}),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_TELEPHONE, 0, vendorId, null)}),
       cedCsmarketplaceVendorVarchar.find({ where: generateEntity(CNPJ, 0, vendorId, null)})
     ])
-    .then(([date_of_birth, personal_document, companyName, phone, name, fantasyName, email, companyAddress, companyInternalPostalCode, companyCategory, companyHolderName, companyDocument, companyAccountNumber, companyBankNumber, companyAgencyNumber, companyTypeOfAccount, cnpj ]) => { resolve({
+    .then(([date_of_birth, personal_document, companyName, phone, name, fantasyName, email, companyAddress, companyInternalPostalCode, companyCategory, companyHolderName, companyDocument, companyAccountNumber, companyBankNumber, companyAgencyNumber, companyTypeOfAccount, companyTelephone, cnpj ]) => { resolve({
       ...data,
       date_of_birth: date_of_birth && date_of_birth.value.toLocaleDateString('en-US') || '',
       personal_document: personal_document && personal_document.value || '',
@@ -745,6 +775,7 @@ function getMarketplaceVendor (data, vendorId, customerId) {
       company_bank_number: companyBankNumber && companyBankNumber.value || '',
       company_agency_number: companyAgencyNumber && companyAgencyNumber.value || '',
       company_type_of_account: companyTypeOfAccount && companyTypeOfAccount.value || '',
+      company_telephone: companyTelephone && companyTelephone.value || '',
       company_cnpj: cnpj && cnpj.value || ''
     }) }).catch(reject)
   })
