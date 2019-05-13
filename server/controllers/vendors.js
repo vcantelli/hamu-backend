@@ -310,7 +310,7 @@ module.exports = {
         name: body.name,
         description: body.description,
         short_description: body.shortDescription || '',
-        sku: body.sku,
+        sku: sku,
         weight: body.weight,
         check_status: 1,
         qty: body.quantity,
