@@ -59,6 +59,7 @@ magento.catalogProduct.update = promisify(magento.catalogProduct.update).bind(ma
 magento.catalogProduct.delete = promisify(magento.catalogProduct.delete).bind(magento.catalogProduct)
 magento.catalogProductAttributeMedia.create = promisify(magento.catalogProductAttributeMedia.create).bind(magento.catalogProductAttributeMedia)
 magento.catalogProductAttributeMedia.list = promisify(magento.catalogProductAttributeMedia.list).bind(magento.catalogProductAttributeMedia)
+magento.catalogProductAttributeMedia.update = promisify(magento.catalogProductAttributeMedia.update).bind(magento.catalogProductAttributeMedia)
 magento.catalogCategory.tree = promisify(magento.catalogCategory.tree).bind(magento.catalogCategory)
 
 module.exports = {
