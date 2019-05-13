@@ -27,7 +27,7 @@ routes.route('/products/sales').all(auth)
   .get(vendors.listSales)
 
 routes.route('/terms')
-.get(vendors.getTermsHtml)
+  .get(vendors.getTermsHtml)
 
 routes.route('/products/sizes/:id').all(auth)
   .get(vendors.getSizes)

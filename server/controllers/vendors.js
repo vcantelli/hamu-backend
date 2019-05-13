@@ -135,25 +135,31 @@ module.exports = {
         }
       })
     }).then(customerInfo => {
-      body.date_of_birth && customerEntityDatetime.update({
-        value: body.date_of_birth
-      }, {
-        where: {
-          entity_type_id: 1,
-          attribute_id: DATE_OF_BIRTH,
-          entity_id: customerInfo
+      body.date_of_birth && customerEntityDatetime.update(
+        {
+          value: body.date_of_birth
+        },
+        {
+          where: {
+            entity_type_id: 1,
+            attribute_id: DATE_OF_BIRTH,
+            entity_id: customerInfo
+          }
         }
-      })
+      )
 
-      body.personal_document && customerEntityVarchar.update({
-        value: body.personal_document
-      }, {
-        where: {
-          entity_type_id: 1,
-          attribute_id: PERSONAL_DOCUMENT,
-          entity_id: customerInfo
+      body.personal_document && customerEntityVarchar.update(
+        {
+          value: body.personal_document
+        },
+        {
+          where: {
+            entity_type_id: 1,
+            attribute_id: PERSONAL_DOCUMENT,
+            entity_id: customerInfo
+          }
         }
-      })
+      )
       return updateMarketplaceVendor(body, decoded.id)
     }).then(() => {
       return recoverMarketplaceVendor(customerInfo, body.email)
@@ -165,17 +171,14 @@ module.exports = {
     })
   },
 
-
   get ({ decoded }, response) {
     magento.login().then(() => {
       return magento.customer.info({ customerId: decoded.customerId })
     }).then(customerInfo => {
       return getMarketplaceVendor(customerInfo, decoded.id, decoded.customerId)
-    })
-    .then(vendor => {
+    }).then(vendor => {
       response.status(200).send(vendor)
-    })
-    .catch(error => {
+    }).catch(error => {
       response.status(500).send(errorSanitizer(error))
     })
   },
@@ -241,7 +244,7 @@ module.exports = {
       console.log(productsList)
       var totals = productsList.reduce((list, product) => {
         let index = list.findIndex(item => item.id === product.product_id)
-        if(index !== -1) {
+        if (index !== -1) {
           list[index].qty++
           list[index].price += product.price
         } else {
@@ -255,7 +258,7 @@ module.exports = {
       }, [])
       var listWithTotals = listOfProducts.map(item => {
         let index = totals.findIndex(item => item.id === item.product_id)
-        if(index !== -1) {
+        if (index !== -1) {
           item.qty = totals[index].qty
           item.price = totals[index].price
         }
@@ -435,7 +438,7 @@ module.exports = {
     magento.login().then(() => {
       return magento.catalogProduct.delete({ id: Number(params.productId) })
     }).then(() => {
-      return cedCsmarketplaceVendorProducts.destroy({ where: { product_id: Number(params.productId) }})
+      return cedCsmarketplaceVendorProducts.destroy({ where: { product_id: Number(params.productId) } })
     }).then(() => {
       response.status(200).send()
     }).catch(error => {
@@ -523,9 +526,9 @@ module.exports = {
   },
 
   getSizes ({ params }, response) {
-    if(params.id === '161') {
+    if (params.id === '161') {
       response.status(200).send(['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44'])
-    } else if(params.id === 180) {
+    } else if (params.id === 180) {
       response.status(200).send(['EP', 'P', 'M', 'G', 'GG', 'XG'])
     } else {
       response.status(200).send([])
@@ -567,7 +570,7 @@ module.exports = {
 }
 
 function generateSKU (name) {
-  name = name.replace(/ /g,'')
+  name = name.replace(/ /g, '')
   const firstCharacter = name[0]
   const secondCharacter = name[name.length - 1]
   const thirdCharacter = name[parseInt((name.length - 1) / 2)]
@@ -578,8 +581,8 @@ function generateRandomString (length) {
   var result = ''
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
   var charactersLength = characters.length
-  for ( var i = 0; i < length; i++) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
   }
   return result
 }
@@ -701,27 +704,26 @@ function createMarketplaceVendor (data, customerInfo) {
 function updateMarketplaceVendor (data, vendorId) {
   return new Promise(function (resolve, reject) {
     return Promise.all([
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_name }, { where: generateEntity(COMPANY_NAME, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.telephone.replace(',', '').replace('.', '') }, { where: generateEntity(PHONE, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: (data.company_name).toLowerCase().replace(/\s/g, '') }, { where: generateEntity(SHOP_URL, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.firstname }, { where: generateEntity(NAME, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.fantasy_name }, { where: generateEntity(FANTASY_NAME, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.personal_email }, { where: generateEntity(EMAIL, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}` }, { where: generateEntity(COMPANY_ADDRESS, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}` }, { where: generateEntity(COMPANY_INTERNAL_ADDRESS, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_postal_code }, { where: generateEntity(COMPANY_INTERNAL_POSTAL_CODE, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_category }, { where: generateEntity(COMPANY_CATEGORY, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_holder_name }, { where: generateEntity(COMPANY_HOLDER_NAME, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_document }, { where: generateEntity(COMPANY_DOCUMENT, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_account_number }, { where: generateEntity(COMPANY_ACCOUNT_NUMBER, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_bank_number }, { where: generateEntity(COMPANY_BANK_NUMBER, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_agency_number }, { where: generateEntity(COMPANY_AGENCY_NUMBER, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_type_of_account }, { where: generateEntity(COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_cnpj }, { where: generateEntity(CNPJ, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_telephone }, { where: generateEntity(COMPANY_TELEPHONE, 0, vendorId, null)}),
-      data.facebookId ? cedCsmarketplaceVendorVarchar.update({ value: data.facebookId }, { where: generateEntity(FACEBOOK_ID, 0, vendorId, null)}) : Promise.resolve()
-    ])
-    .then(() => { resolve(vendorId) }).catch(reject)
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_name }, { where: generateEntity(COMPANY_NAME, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.telephone.replace(',', '').replace('.', '') }, { where: generateEntity(PHONE, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: (data.company_name).toLowerCase().replace(/\s/g, '') }, { where: generateEntity(SHOP_URL, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.firstname }, { where: generateEntity(NAME, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.fantasy_name }, { where: generateEntity(FANTASY_NAME, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.personal_email }, { where: generateEntity(EMAIL, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}` }, { where: generateEntity(COMPANY_ADDRESS, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}` }, { where: generateEntity(COMPANY_INTERNAL_ADDRESS, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_postal_code }, { where: generateEntity(COMPANY_INTERNAL_POSTAL_CODE, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_category }, { where: generateEntity(COMPANY_CATEGORY, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_holder_name }, { where: generateEntity(COMPANY_HOLDER_NAME, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_document }, { where: generateEntity(COMPANY_DOCUMENT, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_account_number }, { where: generateEntity(COMPANY_ACCOUNT_NUMBER, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_bank_number }, { where: generateEntity(COMPANY_BANK_NUMBER, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_agency_number }, { where: generateEntity(COMPANY_AGENCY_NUMBER, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_type_of_account }, { where: generateEntity(COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_cnpj }, { where: generateEntity(CNPJ, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_telephone }, { where: generateEntity(COMPANY_TELEPHONE, 0, vendorId, null) }),
+      data.facebookId ? cedCsmarketplaceVendorVarchar.update({ value: data.facebookId }, { where: generateEntity(FACEBOOK_ID, 0, vendorId, null) }) : Promise.resolve()
+    ]).then(() => { resolve(vendorId) }).catch(reject)
   })
 }
 
@@ -742,47 +744,48 @@ function getMarketplaceVendor (data, vendorId, customerId) {
           entity_id: customerId
         }
       }),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_NAME, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(PHONE, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(NAME, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(FANTASY_NAME, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(EMAIL, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_ADDRESS, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_INTERNAL_POSTAL_CODE, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_CATEGORY, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_HOLDER_NAME, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_DOCUMENT, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_ACCOUNT_NUMBER, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_BANK_NUMBER, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_AGENCY_NUMBER, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_TELEPHONE, 0, vendorId, null)}),
-      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(CNPJ, 0, vendorId, null)})
-    ])
-    .then(([date_of_birth, personal_document, companyName, phone, name, fantasyName, email, companyAddress, companyInternalPostalCode, companyCategory, companyHolderName, companyDocument, companyAccountNumber, companyBankNumber, companyAgencyNumber, companyTypeOfAccount, companyTelephone, cnpj ]) => { resolve({
-      ...data,
-      date_of_birth: date_of_birth && date_of_birth.value.toLocaleDateString('en-US') || '',
-      personal_document: personal_document && personal_document.value || '',
-      company_name: companyName && companyName.value || '',
-      telephone: phone && phone.value || '',
-      firstname: name && name.value || '',
-      fantasy_name: fantasyName && fantasyName.value || '',
-      personal_email: email && email.value || '',
-      company_address: companyAddress && companyAddress.value || '',
-      company_address_number: '',
-      company_adj: '',
-      company_neighborhood: '',
-      company_postal_code: companyInternalPostalCode && companyInternalPostalCode.value || '',
-      company_category: companyCategory && companyCategory.value || '',
-      company_holder_name: companyHolderName && companyHolderName.value || '',
-      company_document: companyDocument && companyDocument.value || '',
-      company_account_number: companyAccountNumber && companyAccountNumber.value || '',
-      company_bank_number: companyBankNumber && companyBankNumber.value || '',
-      company_agency_number: companyAgencyNumber && companyAgencyNumber.value || '',
-      company_type_of_account: companyTypeOfAccount && companyTypeOfAccount.value || '',
-      company_telephone: companyTelephone && companyTelephone.value || '',
-      company_cnpj: cnpj && cnpj.value || ''
-    }) }).catch(reject)
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_NAME, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(PHONE, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(NAME, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(FANTASY_NAME, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(EMAIL, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_ADDRESS, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_INTERNAL_POSTAL_CODE, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_CATEGORY, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_HOLDER_NAME, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_DOCUMENT, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_ACCOUNT_NUMBER, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_BANK_NUMBER, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_AGENCY_NUMBER, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(COMPANY_TELEPHONE, 0, vendorId, null) }),
+      cedCsmarketplaceVendorVarchar.find({ where: generateEntity(CNPJ, 0, vendorId, null) })
+    ]).then(([date_of_birth, personal_document, companyName, phone, name, fantasyName, email, companyAddress, companyInternalPostalCode, companyCategory, companyHolderName, companyDocument, companyAccountNumber, companyBankNumber, companyAgencyNumber, companyTypeOfAccount, companyTelephone, cnpj]) => {
+      resolve({
+        ...data,
+        date_of_birth: date_of_birth && date_of_birth.value.toLocaleDateString('en-US') || '',
+        personal_document: personal_document && personal_document.value || '',
+        company_name: companyName && companyName.value || '',
+        telephone: phone && phone.value || '',
+        firstname: name && name.value || '',
+        fantasy_name: fantasyName && fantasyName.value || '',
+        personal_email: email && email.value || '',
+        company_address: companyAddress && companyAddress.value || '',
+        company_address_number: '',
+        company_adj: '',
+        company_neighborhood: '',
+        company_postal_code: companyInternalPostalCode && companyInternalPostalCode.value || '',
+        company_category: companyCategory && companyCategory.value || '',
+        company_holder_name: companyHolderName && companyHolderName.value || '',
+        company_document: companyDocument && companyDocument.value || '',
+        company_account_number: companyAccountNumber && companyAccountNumber.value || '',
+        company_bank_number: companyBankNumber && companyBankNumber.value || '',
+        company_agency_number: companyAgencyNumber && companyAgencyNumber.value || '',
+        company_type_of_account: companyTypeOfAccount && companyTypeOfAccount.value || '',
+        company_telephone: companyTelephone && companyTelephone.value || '',
+        company_cnpj: cnpj && cnpj.value || ''
+      })
+    }).catch(reject)
   })
 }
 
@@ -830,9 +833,7 @@ function updateProductImage (content, name, productId, position, magento) {
         types: position === 0 ? ['image', 'small_image', 'thumbnail'] : [],
         exclude: '0'
       }
-    })
-    .then(resolve)
-    .catch(error => {
+    }).then(resolve).catch(error => {
       console.error(error)
       resolve()
     })
