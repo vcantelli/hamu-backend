@@ -7,8 +7,9 @@ routes.route('/login')
 
 routes.route('/')
   .post(vendors.create)
-  .put(auth, vendors.update)
-  .get(auth, vendors.get)
+  .all(auth)
+  .put(vendors.update)
+  .get(vendors.get)
 
 routes.route('/bank/codes')
   .get(vendors.getBankCodes)
