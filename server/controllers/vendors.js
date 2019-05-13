@@ -51,16 +51,20 @@ const HAS_ACCEPTED_TERMS = 183
 const COMPANY_TELEPHONE = 184
 
 magento.login = promisify(magento.login).bind(magento)
+
 magento.customer.create = promisify(magento.customer.create).bind(magento.customer)
 magento.customer.info = promisify(magento.customer.info).bind(magento.customer)
+
+magento.catalogCategory.tree = promisify(magento.catalogCategory.tree).bind(magento.catalogCategory)
+
 magento.catalogProduct.create = promisify(magento.catalogProduct.create).bind(magento.catalogProduct)
 magento.catalogProduct.info = promisify(magento.catalogProduct.info).bind(magento.catalogProduct)
 magento.catalogProduct.update = promisify(magento.catalogProduct.update).bind(magento.catalogProduct)
 magento.catalogProduct.delete = promisify(magento.catalogProduct.delete).bind(magento.catalogProduct)
+
 magento.catalogProductAttributeMedia.create = promisify(magento.catalogProductAttributeMedia.create).bind(magento.catalogProductAttributeMedia)
 magento.catalogProductAttributeMedia.list = promisify(magento.catalogProductAttributeMedia.list).bind(magento.catalogProductAttributeMedia)
 magento.catalogProductAttributeMedia.update = promisify(magento.catalogProductAttributeMedia.update).bind(magento.catalogProductAttributeMedia)
-magento.catalogCategory.tree = promisify(magento.catalogCategory.tree).bind(magento.catalogCategory)
 
 module.exports = {
   registerToken ({ body, decoded }, response) {
