@@ -81,6 +81,7 @@ module.exports = {
       return response.status(400).send({ name: 'Missing fields', message: 'There are mandatory fields missing' })
     }
 
+    var customerInfo
     magento.login().then(() => {
       return magento.customer.create({
         customerData: {
@@ -93,7 +94,8 @@ module.exports = {
           group_id: 1
         }
       })
-    }).then(customerInfo => {
+    }).then(created => {
+      customerInfo = created
       return createMarketplaceVendor(body, customerInfo)
     }).then(() => {
       return recoverMarketplaceVendor(customerInfo, body.email)
