@@ -790,11 +790,10 @@ function getMarketplaceVendor (data, vendorId, customerId) {
   })
 }
 
-function entity (entity_id = ENTITY_CS_VENDOR, attribute_id, store_id, entity_id, value) {
-  var result = {
-    entity_type_id: entity_id
-  }
+function entity (entity_type_id = ENTITY_CS_VENDOR, attribute_id, store_id, entity_id, value) {
+  const result = {}
 
+  if (entity_type_id) result.entity_type_id = entity_type_id
   if (attribute_id) result.attribute_id = attribute_id
   if (store_id) result.store_id = store_id
   if (entity_id) result.entity_id = entity_id
