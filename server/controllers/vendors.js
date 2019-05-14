@@ -574,9 +574,9 @@ function customerDataIsIncomplete (data) {
 function upsertFirebaseToken (token, vendorId) {
   return new Promise((resolve, reject) => {
     cedCsmarketplaceVendorVarchar.find({
-      where: entity(null, FIREBASE_TOKEN, 0, vendorId)
+      where: entity([, FIREBASE_TOKEN, 0, vendorId])
     }).then(result => {
-      if (!result) return cedCsmarketplaceVendorVarchar.create(entity(null, FIREBASE_TOKEN, 0, vendorId, token))
+      if (!result) return cedCsmarketplaceVendorVarchar.create(entity([, FIREBASE_TOKEN, 0, vendorId, token]))
       else return result.updateAttributes({ value: token })
     }).then(resolve).catch(reject)
   })
@@ -591,15 +591,15 @@ function recoverMarketplaceVendor (customerId, email) {
     }).then(({ entity_id }) => {
       return Promise.all([
         Promise.resolve(entity_id),
-        cedCsmarketplaceVendorVarchar.find({ where: entity(null, NAME, 0, entity_id) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, NAME, 0, entity_id]) }),
         Promise.resolve(email),
-        // cedCsmarketplaceVendorVarchar.find({ where: entity(null, EMAIL, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity(null, PHONE, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity(null, CNPJ, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_NAME, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity(null, FANTASY_NAME, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_ADDRESS, 0, entity_id) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_CATEGORY, 0, entity_id) }),
+        // cedCsmarketplaceVendorVarchar.find({ where: entity([, EMAIL, 0, entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, PHONE, 0, entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, CNPJ, 0, entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_NAME, 0, entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, FANTASY_NAME, 0, entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_ADDRESS, 0, entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_CATEGORY, 0, entity_id]) }),
       ])
     }).then(([id, name, email, phone, cnpj, companyName, fantasyName, companyAddress, companyCategory]) => {
       resolve({
@@ -633,41 +633,41 @@ function createMarketplaceVendor (data, customerInfo) {
     }).then(function (vendor) {
       return Promise.all([
         Promise.resolve(vendor.null),
-        cedCsmarketplaceVendorDatetime.create(entity(null, VENDOR_SINCE, 0, vendor.null, now)),
-        cedCsmarketplaceVendorInt.create(entity(null, CUSTOMER_ID, 0, vendor.null, customerInfo)),
-        cedCsmarketplaceVendorInt.create(entity(null, GENDER, 0, vendor.null, 1)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_NAME, 0, vendor.null, data.company_name)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, PHONE, 0, vendor.null, data.telephone.replace(',', '').replace('.', ''))),
-        cedCsmarketplaceVendorVarchar.create(entity(null, SHOP_URL, 0, vendor.null, (data.company_name).toLowerCase().replace(/\s/g, ''))),
-        cedCsmarketplaceVendorVarchar.create(entity(null, STATUS, 0, vendor.null, 'approved')),
-        cedCsmarketplaceVendorVarchar.create(entity(null, GROUP, 0, vendor.null, 'general')),
-        cedCsmarketplaceVendorVarchar.create(entity(null, NAME, 0, vendor.null, data.name)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, FANTASY_NAME, 0, vendor.null, data.fantasy_name)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, EMAIL, 0, vendor.null, data.personal_email)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_ADDRESS, 0, vendor.null, `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}`)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_ADDRESS, 0, vendor.null, `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}`)),
+        cedCsmarketplaceVendorDatetime.create(entity([, VENDOR_SINCE, null, vendor.null, now])),
+        cedCsmarketplaceVendorInt.create(entity([, CUSTOMER_ID, 0, vendor.null, customerInfo])),
+        cedCsmarketplaceVendorInt.create(entity([, GENDER, 0, vendor.null, 1])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_NAME, 0, vendor.null, data.company_name])),
+        cedCsmarketplaceVendorVarchar.create(entity([, PHONE, 0, vendor.null, data.telephone.replace(',', '').replace('.', '')])),
+        cedCsmarketplaceVendorVarchar.create(entity([, SHOP_URL, 0, vendor.null, (data.company_name).toLowerCase().replace(/\s/g, '')])),
+        cedCsmarketplaceVendorVarchar.create(entity([, STATUS, 0, vendor.null, 'approved'])),
+        cedCsmarketplaceVendorVarchar.create(entity([, GROUP, 0, vendor.null, 'general'])),
+        cedCsmarketplaceVendorVarchar.create(entity([, NAME, 0, vendor.null, data.name])),
+        cedCsmarketplaceVendorVarchar.create(entity([, FANTASY_NAME, 0, vendor.null, data.fantasy_name])),
+        cedCsmarketplaceVendorVarchar.create(entity([, EMAIL, 0, vendor.null, data.personal_email])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_ADDRESS, 0, vendor.null, `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}`])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_INTERNAL_ADDRESS, 0, vendor.null, `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}`])),
         // TODO: Descomentar esse cara quando estivermos recebendo o campo de cidade
-        // cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_CITY, 0, vendor.null, data.company_city)),
+        // cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_INTERNAL_CITY, 0, vendor.null, data.company_city])),
         // TODO: Remover esse cara quando estivermos recebendo o campo de cidade
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_CITY, 0, vendor.null, 'Santo André')),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_POSTAL_CODE, 0, vendor.null, data.company_postal_code)),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_INTERNAL_CITY, 0, vendor.null, 'Santo André'])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_INTERNAL_POSTAL_CODE, 0, vendor.null, data.company_postal_code])),
         // TODO: Descomentar esse cara quando estivermos recebendo o campo de estado
-        // cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_STATE, 0, vendor.null, data.company_state)),
+        // cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_INTERNAL_STATE, 0, vendor.null, data.company_state])),
         // TODO: Remover esse cara quando estivermos recebendo o campo de estado
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_STATE, 0, vendor.null, 'São Paulo')),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_CATEGORY, 0, vendor.null, data.company_category)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_HOLDER_NAME, 0, vendor.null, data.company_holder_name)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_DOCUMENT, 0, vendor.null, data.company_document)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_ACCOUNT_NUMBER, 0, vendor.null, data.company_account_number)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_BANK_NUMBER, 0, vendor.null, data.company_bank_number)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_AGENCY_NUMBER, 0, vendor.null, data.company_agency_number)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_TYPE_OF_ACCOUNT, 0, vendor.null, data.company_type_of_account)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_TELEPHONE, 0, vendor.null, data.company_telephone)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, HAS_ACCEPTED_TERMS, 0, vendor.null, 1)),
-        cedCsmarketplaceVendorVarchar.create(entity(null, CNPJ, 0, vendor.null, data.company_cnpj)),
-        data.date_of_birth ? customerEntityDatetime.create(entity(ENTITY_CUSTOMER, DATE_OF_BIRTH, null, customerInfo, data.date_of_birth)) : Promise.resolve(),
-        data.personal_document ? customerEntityVarchar.create(entity(ENTITY_CUSTOMER, PERSONAL_DOCUMENT, null, customerInfo, data.personal_document)) : Promise.resolve(),
-        data.facebookId ? cedCsmarketplaceVendorVarchar.create(entity(null, FACEBOOK_ID, 0, vendor.null, data.facebookId)) : Promise.resolve()
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_INTERNAL_STATE, 0, vendor.null, 'São Paulo'])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_CATEGORY, 0, vendor.null, data.company_category])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_HOLDER_NAME, 0, vendor.null, data.company_holder_name])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_DOCUMENT, 0, vendor.null, data.company_document])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_ACCOUNT_NUMBER, 0, vendor.null, data.company_account_number])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_BANK_NUMBER, 0, vendor.null, data.company_bank_number])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_AGENCY_NUMBER, 0, vendor.null, data.company_agency_number])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_TYPE_OF_ACCOUNT, 0, vendor.null, data.company_type_of_account])),
+        cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_TELEPHONE, 0, vendor.null, data.company_telephone])),
+        cedCsmarketplaceVendorVarchar.create(entity([, HAS_ACCEPTED_TERMS, 0, vendor.null, 1])),
+        cedCsmarketplaceVendorVarchar.create(entity([, CNPJ, 0, vendor.null, data.company_cnpj])),
+        data.date_of_birth ? customerEntityDatetime.create(entity([ENTITY_CUSTOMER, DATE_OF_BIRTH, null, customerInfo, data.date_of_birth])) : Promise.resolve(),
+        data.personal_document ? customerEntityVarchar.create(entity([ENTITY_CUSTOMER, PERSONAL_DOCUMENT, null, customerInfo, data.personal_document])) : Promise.resolve(),
+        data.facebookId ? cedCsmarketplaceVendorVarchar.create(entity([, FACEBOOK_ID, 0, vendor.null, data.facebookId])) : Promise.resolve()
       ])
     }).then(function ([vendorId]) { resolve(vendorId) }).catch(reject)
   })
@@ -676,27 +676,27 @@ function createMarketplaceVendor (data, customerInfo) {
 function updateMarketplaceVendor (data, vendorId, customerId) {
   return new Promise(function (resolve, reject) {
     return Promise.all([
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_name }, { where: entity(null, COMPANY_NAME, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.telephone.replace(',', '').replace('.', '') }, { where: entity(null, PHONE, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: (data.company_name).toLowerCase().replace(/\s/g, '') }, { where: entity(null, SHOP_URL, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.name }, { where: entity(null, NAME, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.fantasy_name }, { where: entity(null, FANTASY_NAME, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.personal_email }, { where: entity(null, EMAIL, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}` }, { where: entity(null, COMPANY_ADDRESS, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}` }, { where: entity(null, COMPANY_INTERNAL_ADDRESS, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_postal_code }, { where: entity(null, COMPANY_INTERNAL_POSTAL_CODE, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_category }, { where: entity(null, COMPANY_CATEGORY, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_holder_name }, { where: entity(null, COMPANY_HOLDER_NAME, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_document }, { where: entity(null, COMPANY_DOCUMENT, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_account_number }, { where: entity(null, COMPANY_ACCOUNT_NUMBER, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_bank_number }, { where: entity(null, COMPANY_BANK_NUMBER, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_agency_number }, { where: entity(null, COMPANY_AGENCY_NUMBER, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_type_of_account }, { where: entity(null, COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_cnpj }, { where: entity(null, CNPJ, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.update({ value: data.company_telephone }, { where: entity(null, COMPANY_TELEPHONE, 0, vendorId, null) }),
-      data.date_of_birth ? customerEntityDatetime.update({ value: data.date_of_birth }, { where: entity(ENTITY_CUSTOMER, DATE_OF_BIRTH, null, customerId, null) }) : Promise.resolve(),
-      data.personal_document ? customerEntityVarchar.update({ value: data.personal_document }, { where: entity(ENTITY_CUSTOMER, PERSONAL_DOCUMENT, null, customerId, null) }) : Promise.resolve(),
-      data.facebookId ? cedCsmarketplaceVendorVarchar.update({ value: data.facebookId }, { where: entity(null, FACEBOOK_ID, 0, vendorId, null) }) : Promise.resolve()
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_name }, { where: entity([, COMPANY_NAME, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.telephone.replace(',', '').replace('.', '') }, { where: entity([, PHONE, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: (data.company_name).toLowerCase().replace(/\s/g, '') }, { where: entity([, SHOP_URL, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.name }, { where: entity([, NAME, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.fantasy_name }, { where: entity([, FANTASY_NAME, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.personal_email }, { where: entity([, EMAIL, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}` }, { where: entity([, COMPANY_ADDRESS, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}` }, { where: entity([, COMPANY_INTERNAL_ADDRESS, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_postal_code }, { where: entity([, COMPANY_INTERNAL_POSTAL_CODE, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_category }, { where: entity([, COMPANY_CATEGORY, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_holder_name }, { where: entity([, COMPANY_HOLDER_NAME, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_document }, { where: entity([, COMPANY_DOCUMENT, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_account_number }, { where: entity([, COMPANY_ACCOUNT_NUMBER, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_bank_number }, { where: entity([, COMPANY_BANK_NUMBER, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_agency_number }, { where: entity([, COMPANY_AGENCY_NUMBER, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_type_of_account }, { where: entity([, COMPANY_TYPE_OF_ACCOUNT, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_cnpj }, { where: entity([, CNPJ, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.update({ value: data.company_telephone }, { where: entity([, COMPANY_TELEPHONE, 0, vendorId]) }),
+      data.date_of_birth ? customerEntityDatetime.update({ value: data.date_of_birth }, { where: entity([ENTITY_CUSTOMER, DATE_OF_BIRTH, null, customerId]) }) : Promise.resolve(),
+      data.personal_document ? customerEntityVarchar.update({ value: data.personal_document }, { where: entity([ENTITY_CUSTOMER, PERSONAL_DOCUMENT, null, customerId]) }) : Promise.resolve(),
+      data.facebookId ? cedCsmarketplaceVendorVarchar.update({ value: data.facebookId }, { where: entity([, FACEBOOK_ID, 0, vendorId]) }) : Promise.resolve()
     ]).then(() => { resolve(vendorId) }).catch(reject)
   })
 }
@@ -704,24 +704,24 @@ function updateMarketplaceVendor (data, vendorId, customerId) {
 function getMarketplaceVendor (data, vendorId, customerId) {
   return new Promise(function (resolve, reject) {
     Promise.all([
-      customerEntityDatetime.find({ where: entity(ENTITY_CUSTOMER, DATE_OF_BIRTH, null, customerId) }),
-      customerEntityVarchar.find({ where: entity(ENTITY_CUSTOMER, PERSONAL_DOCUMENT, null, customerId) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_NAME, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, PHONE, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, NAME, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, FANTASY_NAME, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, EMAIL, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_ADDRESS, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_INTERNAL_POSTAL_CODE, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_CATEGORY, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_HOLDER_NAME, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_DOCUMENT, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_ACCOUNT_NUMBER, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_BANK_NUMBER, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_AGENCY_NUMBER, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_TELEPHONE, 0, vendorId, null) }),
-      cedCsmarketplaceVendorVarchar.find({ where: entity(null, CNPJ, 0, vendorId, null) })
+      customerEntityDatetime.find({ where: entity([ENTITY_CUSTOMER, DATE_OF_BIRTH, null, customerId]) }),
+      customerEntityVarchar.find({ where: entity([ENTITY_CUSTOMER, PERSONAL_DOCUMENT, null, customerId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_NAME, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, PHONE, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, NAME, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, FANTASY_NAME, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, EMAIL, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_ADDRESS, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_INTERNAL_POSTAL_CODE, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_CATEGORY, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_HOLDER_NAME, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_DOCUMENT, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_ACCOUNT_NUMBER, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_BANK_NUMBER, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_AGENCY_NUMBER, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_TYPE_OF_ACCOUNT, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_TELEPHONE, 0, vendorId]) }),
+      cedCsmarketplaceVendorVarchar.find({ where: entity([, CNPJ, 0, vendorId]) })
     ]).then(([
       date_of_birth,
       personal_document,
@@ -768,7 +768,7 @@ function getMarketplaceVendor (data, vendorId, customerId) {
   })
 }
 
-function entity (entity_type_id = ENTITY_CS_VENDOR, attribute_id, store_id, entity_id, value) {
+function entity ([entity_type_id = ENTITY_CS_VENDOR, attribute_id, store_id, entity_id, value]) {
   const result = {}
 
   if (notNullNorUndef(entity_type_id)) result.entity_type_id = entity_type_id
