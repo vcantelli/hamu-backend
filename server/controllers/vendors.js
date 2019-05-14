@@ -85,8 +85,8 @@ module.exports = {
       return magento.customer.create({
         customerData: {
           email: body.email,
-          firstname: body.firstname,
-          lastname: body.firstname.substr(body.firstname.indexOf(' ') + 1),
+          firstname: body.name.split(' ')[0],
+          lastname: body.name.substr(body.name.indexOf(' ')).trim(),
           password: body.password,
           website_id: 1,
           store_id: 1,
@@ -127,8 +127,8 @@ module.exports = {
         customerId: decoded.customerId,
         customerData: {
           email: body.email,
-          firstname: body.firstname,
-          lastname: body.firstname.substr(body.firstname.indexOf(' ') + 1),
+          firstname: body.name.split(' ')[0],
+          lastname: body.name.substr(body.name.indexOf(' ')).trim(),
           password: body.password,
           website_id: 1,
           store_id: 1,
@@ -596,7 +596,7 @@ function checkPasswordHash (password, stored) {
 function customerDataIsIncomplete (data) {
   return (
     !data.email ||
-    !data.firstname ||
+    !data.name ||
     !data.password ||
     !data.fantasy_name ||
     !data.company_name ||
