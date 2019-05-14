@@ -18,6 +18,7 @@ const {
 } = require('../models')
 const magento = new MagentoAPI(require('../config/magento'))
 
+const ENTITY_CUSTOMER = 1
 const ENTITY_CS_MARKETPLACE_VENDOR = 9
 const VENDOR_SINCE = 133
 const CUSTOMER_ID = 132
@@ -94,13 +95,13 @@ module.exports = {
       })
     }).then(customerInfo => {
       body.date_of_birth && customerEntityDatetime.create({
-        entity_type_id: 1,
+        entity_type_id: ENTITY_CUSTOMER,
         attribute_id: DATE_OF_BIRTH,
         entity_id: customerInfo,
         value: body.date_of_birth
       })
       body.personal_document && customerEntityVarchar.create({
-        entity_type_id: 1,
+        entity_type_id: ENTITY_CUSTOMER,
         attribute_id: PERSONAL_DOCUMENT,
         entity_id: customerInfo,
         value: body.personal_document
@@ -141,7 +142,7 @@ module.exports = {
         },
         {
           where: {
-            entity_type_id: 1,
+            entity_type_id: ENTITY_CUSTOMER,
             attribute_id: DATE_OF_BIRTH,
             entity_id: customerInfo
           }
@@ -154,7 +155,7 @@ module.exports = {
         },
         {
           where: {
-            entity_type_id: 1,
+            entity_type_id: ENTITY_CUSTOMER,
             attribute_id: PERSONAL_DOCUMENT,
             entity_id: customerInfo
           }
@@ -732,14 +733,14 @@ function getMarketplaceVendor (data, vendorId, customerId) {
     return Promise.all([
       customerEntityDatetime.find({
         where: {
-          entity_type_id: 1,
+          entity_type_id: ENTITY_CUSTOMER,
           attribute_id: DATE_OF_BIRTH,
           entity_id: customerId
         }
       }),
       customerEntityVarchar.find({
         where: {
-          entity_type_id: 1,
+          entity_type_id: ENTITY_CUSTOMER,
           attribute_id: PERSONAL_DOCUMENT,
           entity_id: customerId
         }
