@@ -793,13 +793,17 @@ function getMarketplaceVendor (data, vendorId, customerId) {
 function entity (entity_type_id = ENTITY_CS_VENDOR, attribute_id, store_id, entity_id, value) {
   const result = {}
 
-  if (entity_type_id) result.entity_type_id = entity_type_id
-  if (attribute_id) result.attribute_id = attribute_id
-  if (store_id) result.store_id = store_id
-  if (entity_id) result.entity_id = entity_id
-  if (value) result.value = value
+  if (notNullNorUndef(entity_type_id)) result.entity_type_id = entity_type_id
+  if (notNullNorUndef(attribute_id)) result.attribute_id = attribute_id
+  if (notNullNorUndef(store_id)) result.store_id = store_id
+  if (notNullNorUndef(entity_id)) result.entity_id = entity_id
+  if (notNullNorUndef(value)) result.value = value
 
   return result
+}
+
+function notNullNorUndef (value) {
+  return value !== null && value !== undefined
 }
 
 function createProductImage (content, name, productId, position, magento) {
