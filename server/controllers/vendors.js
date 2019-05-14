@@ -94,18 +94,6 @@ module.exports = {
         }
       })
     }).then(customerInfo => {
-      body.date_of_birth && customerEntityDatetime.create({
-        entity_type_id: ENTITY_CUSTOMER,
-        attribute_id: DATE_OF_BIRTH,
-        entity_id: customerInfo,
-        value: body.date_of_birth
-      })
-      body.personal_document && customerEntityVarchar.create({
-        entity_type_id: ENTITY_CUSTOMER,
-        attribute_id: PERSONAL_DOCUMENT,
-        entity_id: customerInfo,
-        value: body.personal_document
-      })
       return createMarketplaceVendor(body, customerInfo)
     }).then(() => {
       return recoverMarketplaceVendor(customerInfo, body.email)
@@ -700,6 +688,8 @@ function createMarketplaceVendor (data, customerInfo) {
         cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_TELEPHONE, 0, vendor.null, data.company_telephone)),
         cedCsmarketplaceVendorVarchar.create(entity(null, HAS_ACCEPTED_TERMS, 0, vendor.null, 1)),
         cedCsmarketplaceVendorVarchar.create(entity(null, CNPJ, 0, vendor.null, data.company_cnpj)),
+        data.date_of_birth ? customerEntityDatetime.create(entity(ENTITY_CUSTOMER, DATE_OF_BIRTH, null, customerInfo, data.date_of_birth)) : Promise.resolve(),
+        data.personal_document ? customerEntityVarchar.create(entity(ENTITY_CUSTOMER, PERSONAL_DOCUMENT, null, customerInfo, data.personal_document)) : Promise.resolve(),
         data.facebookId ? cedCsmarketplaceVendorVarchar.create(entity(null, FACEBOOK_ID, 0, vendor.null, data.facebookId)) : Promise.resolve()
       ])
     }).then(function ([vendorId]) { resolve(vendorId) }).catch(reject)
