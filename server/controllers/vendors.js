@@ -720,32 +720,49 @@ function getMarketplaceVendor (data, vendorId, customerId) {
       cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null) }),
       cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_TELEPHONE, 0, vendorId, null) }),
       cedCsmarketplaceVendorVarchar.find({ where: entity(null, CNPJ, 0, vendorId, null) })
-    ]).then(([date_of_birth, personal_document, companyName, phone, name, fantasyName, email, companyAddress, companyInternalPostalCode, companyCategory, companyHolderName, companyDocument, companyAccountNumber, companyBankNumber, companyAgencyNumber, companyTypeOfAccount, companyTelephone, cnpj]) => {
-      resolve({
-        ...data,
-        date_of_birth: date_of_birth && date_of_birth.value.toLocaleDateString('en-US') || '',
-        personal_document: personal_document && personal_document.value || '',
-        company_name: companyName && companyName.value || '',
-        telephone: phone && phone.value || '',
-        firstname: name && name.value || '',
-        fantasy_name: fantasyName && fantasyName.value || '',
-        personal_email: email && email.value || '',
-        company_address: companyAddress && companyAddress.value || '',
-        company_address_number: '',
-        company_adj: '',
-        company_neighborhood: '',
-        company_postal_code: companyInternalPostalCode && companyInternalPostalCode.value || '',
-        company_category: companyCategory && companyCategory.value || '',
-        company_holder_name: companyHolderName && companyHolderName.value || '',
-        company_document: companyDocument && companyDocument.value || '',
-        company_account_number: companyAccountNumber && companyAccountNumber.value || '',
-        company_bank_number: companyBankNumber && companyBankNumber.value || '',
-        company_agency_number: companyAgencyNumber && companyAgencyNumber.value || '',
-        company_type_of_account: companyTypeOfAccount && companyTypeOfAccount.value || '',
-        company_telephone: companyTelephone && companyTelephone.value || '',
-        company_cnpj: cnpj && cnpj.value || ''
-      })
-    }).catch(reject)
+    ]).then(([
+      date_of_birth,
+      personal_document,
+      companyName,
+      phone,
+      name,
+      fantasyName,
+      email,
+      companyAddress,
+      companyInternalPostalCode,
+      companyCategory,
+      companyHolderName,
+      companyDocument,
+      companyAccountNumber,
+      companyBankNumber,
+      companyAgencyNumber,
+      companyTypeOfAccount,
+      companyTelephone,
+      cnpj
+    ]) => resolve({
+      ...data,
+      date_of_birth: date_of_birth && date_of_birth.value.toLocaleDateString('en-US') || '',
+      personal_document: personal_document && personal_document.value || '',
+      company_name: companyName && companyName.value || '',
+      telephone: phone && phone.value || '',
+      firstname: name && name.value || '',
+      fantasy_name: fantasyName && fantasyName.value || '',
+      personal_email: email && email.value || '',
+      company_address: companyAddress && companyAddress.value || '',
+      company_address_number: '',
+      company_adj: '',
+      company_neighborhood: '',
+      company_postal_code: companyInternalPostalCode && companyInternalPostalCode.value || '',
+      company_category: companyCategory && companyCategory.value || '',
+      company_holder_name: companyHolderName && companyHolderName.value || '',
+      company_document: companyDocument && companyDocument.value || '',
+      company_account_number: companyAccountNumber && companyAccountNumber.value || '',
+      company_bank_number: companyBankNumber && companyBankNumber.value || '',
+      company_agency_number: companyAgencyNumber && companyAgencyNumber.value || '',
+      company_type_of_account: companyTypeOfAccount && companyTypeOfAccount.value || '',
+      company_telephone: companyTelephone && companyTelephone.value || '',
+      company_cnpj: cnpj && cnpj.value || ''
+    })).catch(reject)
   })
 }
 
