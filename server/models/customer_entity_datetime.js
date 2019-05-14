@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function (sequelize, DataTypes) {
-  var customerEntityDateTime = sequelize.define(
+  var customerEntityDatetime = sequelize.define(
     'customer_entity_datetime',
     {
       value_id: {
@@ -18,5 +18,5 @@ module.exports = function (sequelize, DataTypes) {
     }
   )
 
-  return customerEntityDateTime
+  return customerEntityDatetime
 }
