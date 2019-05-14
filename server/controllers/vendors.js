@@ -124,32 +124,7 @@ module.exports = {
         }
       })
     }).then(customerInfo => {
-      body.date_of_birth && customerEntityDatetime.update(
-        {
-          value: body.date_of_birth
-        },
-        {
-          where: {
-            entity_type_id: ENTITY_CUSTOMER,
-            attribute_id: DATE_OF_BIRTH,
-            entity_id: customerInfo
-          }
-        }
-      )
-
-      body.personal_document && customerEntityVarchar.update(
-        {
-          value: body.personal_document
-        },
-        {
-          where: {
-            entity_type_id: ENTITY_CUSTOMER,
-            attribute_id: PERSONAL_DOCUMENT,
-            entity_id: customerInfo
-          }
-        }
-      )
-      return updateMarketplaceVendor(body, decoded.id)
+      return updateMarketplaceVendor(body, decoded.id, customerInfo)
     }).then(() => {
       return recoverMarketplaceVendor(customerInfo, body.email)
     }).then(vendor => {
@@ -696,7 +671,7 @@ function createMarketplaceVendor (data, customerInfo) {
   })
 }
 
-function updateMarketplaceVendor (data, vendorId) {
+function updateMarketplaceVendor (data, vendorId, customerId) {
   return new Promise(function (resolve, reject) {
     return Promise.all([
       cedCsmarketplaceVendorVarchar.update({ value: data.company_name }, { where: entity(null, COMPANY_NAME, 0, vendorId, null) }),
@@ -717,6 +692,8 @@ function updateMarketplaceVendor (data, vendorId) {
       cedCsmarketplaceVendorVarchar.update({ value: data.company_type_of_account }, { where: entity(null, COMPANY_TYPE_OF_ACCOUNT, 0, vendorId, null) }),
       cedCsmarketplaceVendorVarchar.update({ value: data.company_cnpj }, { where: entity(null, CNPJ, 0, vendorId, null) }),
       cedCsmarketplaceVendorVarchar.update({ value: data.company_telephone }, { where: entity(null, COMPANY_TELEPHONE, 0, vendorId, null) }),
+      data.date_of_birth ? customerEntityDatetime.update({ value: data.date_of_birth }, { where: entity(ENTITY_CUSTOMER, DATE_OF_BIRTH, null, customerId, null) }) : Promise.resolve(),
+      data.personal_document ? customerEntityVarchar.update({ value: data.personal_document }, { where: entity(ENTITY_CUSTOMER, PERSONAL_DOCUMENT, null, customerId, null) }) : Promise.resolve(),
       data.facebookId ? cedCsmarketplaceVendorVarchar.update({ value: data.facebookId }, { where: entity(null, FACEBOOK_ID, 0, vendorId, null) }) : Promise.resolve()
     ]).then(() => { resolve(vendorId) }).catch(reject)
   })
