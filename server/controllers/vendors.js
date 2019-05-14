@@ -19,7 +19,7 @@ const {
 const magento = new MagentoAPI(require('../config/magento'))
 
 const ENTITY_CUSTOMER = 1
-const ENTITY_CS_MARKETPLACE_VENDOR = 9
+const ENTITY_CS_VENDOR = 9
 const VENDOR_SINCE = 133
 const CUSTOMER_ID = 132
 const GENDER = 140
@@ -497,7 +497,7 @@ module.exports = {
     cedCsmarketplaceVendorVarchar.find({
       where: {
         attribute_id: FACEBOOK_ID,
-        entity_type_id: ENTITY_CS_MARKETPLACE_VENDOR,
+        entity_type_id: ENTITY_CS_VENDOR,
         store_id: 0,
         value: query.facebookId
       }
@@ -657,7 +657,7 @@ function createMarketplaceVendor (data, customerInfo) {
   return new Promise(function (resolve, reject) {
     const now = new Date()
     cedCsmarketplaceVendor.create({
-      entity_type_id: ENTITY_CS_MARKETPLACE_VENDOR,
+      entity_type_id: ENTITY_CS_VENDOR,
       attribute_set_id: 0,
       increment_id: '',
       store_id: 0,
@@ -792,7 +792,7 @@ function getMarketplaceVendor (data, vendorId, customerId) {
 
 function generateEntity (attribute_id, store_id, entity_id, value) {
   var result = {
-    entity_type_id: ENTITY_CS_MARKETPLACE_VENDOR
+    entity_type_id: ENTITY_CS_VENDOR
   }
 
   if (attribute_id) result.attribute_id = attribute_id
