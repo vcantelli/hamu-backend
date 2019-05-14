@@ -701,21 +701,9 @@ function updateMarketplaceVendor (data, vendorId, customerId) {
 
 function getMarketplaceVendor (data, vendorId, customerId) {
   return new Promise(function (resolve, reject) {
-    return Promise.all([
-      customerEntityDatetime.find({
-        where: {
-          entity_type_id: ENTITY_CUSTOMER,
-          attribute_id: DATE_OF_BIRTH,
-          entity_id: customerId
-        }
-      }),
-      customerEntityVarchar.find({
-        where: {
-          entity_type_id: ENTITY_CUSTOMER,
-          attribute_id: PERSONAL_DOCUMENT,
-          entity_id: customerId
-        }
-      }),
+    Promise.all([
+      customerEntityDatetime.find({ where: entity(ENTITY_CUSTOMER, DATE_OF_BIRTH, null, customerId) }),
+      customerEntityVarchar.find({ where: entity(ENTITY_CUSTOMER, PERSONAL_DOCUMENT, null, customerId) }),
       cedCsmarketplaceVendorVarchar.find({ where: entity(null, COMPANY_NAME, 0, vendorId, null) }),
       cedCsmarketplaceVendorVarchar.find({ where: entity(null, PHONE, 0, vendorId, null) }),
       cedCsmarketplaceVendorVarchar.find({ where: entity(null, NAME, 0, vendorId, null) }),
