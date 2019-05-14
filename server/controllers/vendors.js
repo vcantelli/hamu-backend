@@ -502,16 +502,9 @@ module.exports = {
   },
 
   getTermsHtml (_request, response) {
-    response.status(200).send({
-      terms: `
-        <p>Teste dos termos</p>
-        </br>
-        <strong>Vamos ver se funciona isso aqui</strong>
-        <b>OU ISSO</b>
-        <h1> Teste H1 </h1>
-        <h2> Teste H2 </h2>
-        <h3> Teste H3 </h3>
-    `})
+    response.status(200).json({
+      terms: require('../config/terms')
+    })
   },
 
   addImage ({ body, params }, response) {
