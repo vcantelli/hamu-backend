@@ -681,10 +681,14 @@ function createMarketplaceVendor (data, customerInfo) {
         cedCsmarketplaceVendorVarchar.create(entity(null, EMAIL, 0, vendor.null, data.personal_email)),
         cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_ADDRESS, 0, vendor.null, `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}`)),
         cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_ADDRESS, 0, vendor.null, `${data.company_address} ${data.company_address_number}, ${data.company_adj} - ${data.company_neighborhood}`)),
+        // TODO: Descomentar esse cara quando estivermos recebendo o campo de cidade
         // cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_CITY, 0, vendor.null, data.company_city)),
+        // TODO: Remover esse cara quando estivermos recebendo o campo de cidade
         cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_CITY, 0, vendor.null, 'Santo André')),
         cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_POSTAL_CODE, 0, vendor.null, data.company_postal_code)),
+        // TODO: Descomentar esse cara quando estivermos recebendo o campo de estado
         // cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_STATE, 0, vendor.null, data.company_state)),
+        // TODO: Remover esse cara quando estivermos recebendo o campo de estado
         cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_INTERNAL_STATE, 0, vendor.null, 'São Paulo')),
         cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_CATEGORY, 0, vendor.null, data.company_category)),
         cedCsmarketplaceVendorVarchar.create(entity(null, COMPANY_HOLDER_NAME, 0, vendor.null, data.company_holder_name)),
