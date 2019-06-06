@@ -161,6 +161,7 @@ module.exports = {
       })
     }).then(products => {
       return Promise.all(products.map(({ dataValues }) => {
+        // TODO: Arrumar o preço para aparecer formatado no front, mas submeter o valor numérico
         return new Promise(resolve => {
           magento.catalogProductAttributeMedia.list({
             product: dataValues.product_id
@@ -244,6 +245,8 @@ module.exports = {
   createProduct ({ body, decoded }, response) {
     let productId
     let sku = generateSKU(body.name)
+    // TODO: Corrigir submit do preço no app e remover essa merda
+    if (isNaN(body.price)) body.price = body.price.replace(/\./g, '').replace(',', '.')
 
     magento.login().then(() => {
       return magento.catalogProduct.create({
@@ -347,6 +350,9 @@ module.exports = {
   },
 
   editProduct ({ body, params }, response) {
+    // TODO: Corrigir submit do preço no app e remover essa merda
+    if (isNaN(body.price)) body.price = body.price.replace(/\./g, '').replace(',', '.')
+
     magento.login().then(() => {
       return Promise.all([
         magento.catalogProduct.update({
