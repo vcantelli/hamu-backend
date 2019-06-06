@@ -587,6 +587,7 @@ function recoverMarketplaceVendor (customerId, email) {
         value: Number(customerId)
       }
     }).then((value) => {
+      if (!value) throw 403
       return Promise.all([
         Promise.resolve(value.entity_id),
         cedCsmarketplaceVendorVarchar.find({ where: entity([, NAME, 0, value.entity_id]) }),
