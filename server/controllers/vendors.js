@@ -118,17 +118,19 @@ module.exports = {
     }
 
     magento.login().then(() => {
+      const customerData = {
+        email: body.email,
+        firstname: body.name.split(' ')[0],
+        lastname: body.name.substr(body.name.indexOf(' ')).trim(),
+        website_id: 1,
+        store_id: 1,
+        group_id: 1
+      }
+      if (body.password) customerData.password = body.password
+
       return magento.customer.update({
         customerId: decoded.customerId,
-        customerData: {
-          email: body.email,
-          firstname: body.name.split(' ')[0],
-          lastname: body.name.substr(body.name.indexOf(' ')).trim(),
-          password: body.password,
-          website_id: 1,
-          store_id: 1,
-          group_id: 1
-        }
+        customerData
       })
     }).then(customerInfo => {
       return updateMarketplaceVendor(body, decoded.id, customerInfo)
@@ -562,11 +564,11 @@ function checkPasswordHash (password, stored) {
   return (hash === md5(salt + password))
 }
 
-function customerDataIsIncomplete (data) {
+function customerDataIsIncomplete (data, edit = false) {
   return (
     !data.email ||
     !data.name ||
-    !data.password ||
+    (!data.password && !edit) ||
     !data.fantasy_name ||
     !data.company_name ||
     !data.company_address ||
