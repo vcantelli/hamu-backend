@@ -586,18 +586,18 @@ function recoverMarketplaceVendor (customerId, email) {
         attribute_id: CUSTOMER_ID,
         value: Number(customerId)
       }
-    }).then(({ entity_id }) => {
+    }).then((value) => {
       return Promise.all([
-        Promise.resolve(entity_id),
-        cedCsmarketplaceVendorVarchar.find({ where: entity([, NAME, 0, entity_id]) }),
+        Promise.resolve(value.entity_id),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, NAME, 0, value.entity_id]) }),
         Promise.resolve(email),
-        // cedCsmarketplaceVendorVarchar.find({ where: entity([, EMAIL, 0, entity_id]) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity([, PHONE, 0, entity_id]) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity([, CNPJ, 0, entity_id]) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_NAME, 0, entity_id]) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity([, FANTASY_NAME, 0, entity_id]) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_ADDRESS, 0, entity_id]) }),
-        cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_CATEGORY, 0, entity_id]) }),
+        // cedCsmarketplaceVendorVarchar.find({ where: entity([, EMAIL, 0, value.entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, PHONE, 0, value.entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, CNPJ, 0, value.entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_NAME, 0, value.entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, FANTASY_NAME, 0, value.entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_ADDRESS, 0, value.entity_id]) }),
+        cedCsmarketplaceVendorVarchar.find({ where: entity([, COMPANY_CATEGORY, 0, value.entity_id]) }),
       ])
     }).then(([id, name, email, phone, cnpj, companyName, fantasyName, companyAddress, companyCategory]) => {
       resolve({
