@@ -55,6 +55,7 @@ magento.login = promisify(magento.login).bind(magento)
 
 magento.customer.create = promisify(magento.customer.create).bind(magento.customer)
 magento.customer.info = promisify(magento.customer.info).bind(magento.customer)
+magento.customer.update = promisify(magento.customer.update).bind(magento.customer)
 
 magento.catalogCategory.tree = promisify(magento.catalogCategory.tree).bind(magento.catalogCategory)
 
