@@ -113,7 +113,7 @@ module.exports = {
   update ({ body, decoded }, response) {
     body.name = body.firstname // TODO: Remover essa jumentisse tambem
 
-    if (customerDataIsIncomplete(body)) {
+    if (customerDataIsIncomplete(body, true)) {
       return response.status(400).send({ name: 'Missing fields', message: 'There are mandatory fields missing' })
     }
 
