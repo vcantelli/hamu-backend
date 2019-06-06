@@ -132,10 +132,10 @@ module.exports = {
         customerId: decoded.customerId,
         customerData
       })
-    }).then(customerInfo => {
-      return updateMarketplaceVendor(body, decoded.id, customerInfo)
     }).then(() => {
-      return recoverMarketplaceVendor(customerInfo, body.email)
+      return updateMarketplaceVendor(body, decoded.id, decoded.customerId)
+    }).then(() => {
+      return recoverMarketplaceVendor(decoded.customerId, body.email)
     }).then(vendor => {
       const token = jwt.sign(vendor, secret, config)
       return response.status(200).send({ vendor, token })
