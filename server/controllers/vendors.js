@@ -77,6 +77,8 @@ module.exports = {
   },
 
   create ({ body }, response) {
+    body.name = body.firstname // TODO: Remover essa jumentisse
+
     if (customerDataIsIncomplete(body)) {
       return response.status(400).send({ name: 'Missing fields', message: 'There are mandatory fields missing' })
     }
@@ -108,6 +110,8 @@ module.exports = {
   },
 
   update ({ body, decoded }, response) {
+    body.name = body.firstname // TODO: Remover essa jumentisse tambem
+
     if (customerDataIsIncomplete(body)) {
       return response.status(400).send({ name: 'Missing fields', message: 'There are mandatory fields missing' })
     }
