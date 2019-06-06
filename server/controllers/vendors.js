@@ -664,6 +664,7 @@ function createMarketplaceVendor (data, customerInfo) {
         cedCsmarketplaceVendorVarchar.create(entity([, COMPANY_TELEPHONE, 0, vendor.null, data.company_telephone])),
         cedCsmarketplaceVendorVarchar.create(entity([, HAS_ACCEPTED_TERMS, 0, vendor.null, 1])),
         cedCsmarketplaceVendorVarchar.create(entity([, CNPJ, 0, vendor.null, data.company_cnpj])),
+        // TODO: Corrigir gravação da data de aniversário
         data.date_of_birth ? customerEntityDatetime.create(entity([ENTITY_CUSTOMER, DATE_OF_BIRTH, null, customerInfo, data.date_of_birth])) : Promise.resolve(),
         data.personal_document ? customerEntityVarchar.create(entity([ENTITY_CUSTOMER, PERSONAL_DOCUMENT, null, customerInfo, data.personal_document])) : Promise.resolve(),
         data.facebookId ? cedCsmarketplaceVendorVarchar.create(entity([, FACEBOOK_ID, 0, vendor.null, data.facebookId])) : Promise.resolve()
