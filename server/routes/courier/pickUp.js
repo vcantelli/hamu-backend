@@ -53,8 +53,8 @@ routes.route('/:orderNumber/problem')
 
 routes.route('/problem/reasons')
   .all(auth)
-  .post((request, response) => {
-    courier.pickUp.getProblemReasons(request.body, request.decoded)
+  .get((_, response) => {
+    courier.pickUp.getProblemReasons()
       .then(success(response))
       .catch(fail(response))
   })
