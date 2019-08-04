@@ -14,7 +14,7 @@ routes.route('/new-request')
 routes.route('/:orderNumber')
   .all(auth)
   .get((request, response) => {
-    courier.pickUp.getPickupInfo(request.body, request.decoded)
+    courier.pickUp.getPickupInfo(request.params.orderNumber, request.decoded)
       .then(success(response))
       .catch(fail(response))
   })
