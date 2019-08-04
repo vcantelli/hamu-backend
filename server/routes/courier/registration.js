@@ -4,7 +4,7 @@ const { auth, courier } = require('../../controllers')
 const { success, fail } = require('../../helpers/router')
 
 routes.route('/terms')
-  .get((request, response) => {
+  .get((_, response) => {
     courier.registration.getTermsHtml()
       .then(success(response))
       .catch(fail(response))
@@ -22,21 +22,21 @@ routes.route('/')
       .then(success(response))
       .catch(fail(response))
   })
-  .get((request, response) => {
+  .get((_, response) => {
     courier.registration.get()
       .then(success(response))
       .catch(fail(response))
   })
 
 routes.route('/bank/codes')
-  .get((request, response) => {
+  .get((_, response) => {
     courier.registration.getBankCodes()
       .then(success(response))
       .catch(fail(response))
   })
 
 routes.route('/register-options')
-  .get((request, response) => {
+  .get((_, response) => {
     courier.registration.getRegisterOptions()
       .then(success(response))
       .catch(fail(response))
