@@ -5,24 +5,24 @@ const { success, fail } = require('../../helpers/router')
 
 routes.route('/:orderNumber/route')
   .all(auth)
-  .get((request, response) => {
-    courier.delivery.getRoute(request.decoded)
+  .get(({params, decoded}, response) => {
+    courier.delivery.getRoute(params.orderNumber, decoded)
       .then(success(response))
       .catch(fail(response))
   })
 
 routes.route('/:orderNumber/success')
   .all(auth)
-  .post((request, response) => {
-    courier.delivery.success(request.body, request.decoded)
+  .post(({params, body, decoded}, response) => {
+    courier.delivery.success(params.orderNumber, body, decoded)
       .then(success(response))
       .catch(fail(response))
   })
 
 routes.route('/:orderNumber/problem')
   .all(auth)
-  .post((request, response) => {
-    courier.delivery.problem(request.body, request.decoded)
+  .post(({params, body, decoded}, response) => {
+    courier.delivery.problem(params.orderNumber, body, decoded)
       .then(success(response))
       .catch(fail(response))
   })
