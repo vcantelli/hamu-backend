@@ -12,7 +12,7 @@ routes.route('/terms')
 
 routes.route('/')
   .post((request, response) => {
-    courier.registration.create(request.body, request.decoded)
+    courier.registration.create(request.body)
       .then(success(response))
       .catch(fail(response))
   })
