@@ -29,8 +29,8 @@ routes.route('/:orderNumber/problem')
 
 routes.route('/problem/reasons')
   .all(auth)
-  .post((request, response) => {
-    courier.delivery.getProblemReasons(request.body, request.decoded)
+  .get((_, response) => {
+    courier.delivery.getProblemReasons()
       .then(success(response))
       .catch(fail(response))
   })
