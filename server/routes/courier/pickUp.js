@@ -13,40 +13,40 @@ routes.route('/new-request')
 
 routes.route('/:orderNumber')
   .all(auth)
-  .get((request, response) => {
-    courier.pickUp.getPickupInfo(request.params.orderNumber, request.decoded)
+  .get(({params, decoded}, response) => {
+    courier.pickUp.getPickupInfo(params.orderNumber, decoded)
       .then(success(response))
       .catch(fail(response))
   })
 
 routes.route('/:orderNumber/refuse')
   .all(auth)
-  .post((request, response) => {
-    courier.pickUp.refuse(request.params.orderNumber, request.body, request.decoded)
+  .post(({params, body, decoded}, response) => {
+    courier.pickUp.refuse(params.orderNumber, body, decoded)
       .then(success(response))
       .catch(fail(response))
   })
 
 routes.route('/:orderNumber/accept')
   .all(auth)
-  .post((request, response) => {
-    courier.pickUp.accept(request.params.orderNumber, request.body, request.decoded)
+  .post(({params, body, decoded}, response) => {
+    courier.pickUp.accept(params.orderNumber, body, decoded)
       .then(success(response))
       .catch(fail(response))
   })
 
 routes.route('/:orderNumber/success')
   .all(auth)
-  .post((request, response) => {
-    courier.pickUp.success(request.params.orderNumber, request.body, request.decoded)
+  .post(({params, body, decoded}, response) => {
+    courier.pickUp.success(params.orderNumber, body, decoded)
       .then(success(response))
       .catch(fail(response))
   })
 
 routes.route('/:orderNumber/problem')
   .all(auth)
-  .post((request, response) => {
-    courier.pickUp.problem(request.params.orderNumber, request.body, request.decoded)
+  .post(({params, body, decoded}, response) => {
+    courier.pickUp.problem(params.orderNumber, body, decoded)
       .then(success(response))
       .catch(fail(response))
   })
