@@ -5,41 +5,53 @@ const { success, fail } = require('../../helpers/router')
 
 routes.route('/terms')
   .get((_, response) => {
-    courier.registration.getTermsHtml()
-      .then(success(response))
-      .catch(fail(response))
+    try {
+      courier.registration.getTermsHtml()
+        .then(success(response))
+        .catch(fail(response))
+    } catch (e) {fail(response)(e)}
   })
 
 routes.route('/')
   .post((request, response) => {
-    courier.registration.create(request.body)
-      .then(success(response))
-      .catch(fail(response))
+    try {
+      courier.registration.create(request.body)
+        .then(success(response))
+        .catch(fail(response))
+    } catch (e) {fail(response)(e)}
   })
   .all(auth)
   .put((request, response) => {
-    courier.registration.update(request.body, request.decoded)
-      .then(success(response))
-      .catch(fail(response))
+    try {
+      courier.registration.update(request.body, request.decoded)
+        .then(success(response))
+        .catch(fail(response))
+    } catch (e) {fail(response)(e)}
   })
   .get((_, response) => {
-    courier.registration.get()
-      .then(success(response))
-      .catch(fail(response))
+    try {
+      courier.registration.get()
+        .then(success(response))
+        .catch(fail(response))
+    } catch (e) {fail(response)(e)}
   })
 
 routes.route('/bank/codes')
   .get((_, response) => {
-    courier.registration.getBankCodes()
-      .then(success(response))
-      .catch(fail(response))
+    try {
+      courier.registration.getBankCodes()
+        .then(success(response))
+        .catch(fail(response))
+    } catch (e) {fail(response)(e)}
   })
 
 routes.route('/register-options')
   .get((_, response) => {
-    courier.registration.getRegisterOptions()
-      .then(success(response))
-      .catch(fail(response))
+    try {
+      courier.registration.getRegisterOptions()
+        .then(success(response))
+        .catch(fail(response))
+    } catch (e) {fail(response)(e)}
   })
 
 //? Precisa desta rota aqui?
