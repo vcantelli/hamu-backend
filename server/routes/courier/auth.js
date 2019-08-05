@@ -5,9 +5,11 @@ const { success, fail } = require('../../helpers/router')
 
 routes.route('/login')
   .post((request, response) => {
-    courier.auth.login(request.body)
-      .then(success(response))
-      .catch(fail(response))
+    try {
+      courier.auth.login(request.body)
+        .then(success(response))
+        .catch(fail(response))
+    } catch (e) {fail(response)(e)}
   })
 
   // ? Que isso aqui?
