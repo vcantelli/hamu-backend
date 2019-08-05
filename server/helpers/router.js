@@ -28,6 +28,6 @@ function fail (httpResponse, status) {
       errors: errors.errors
     }
     console.error((new Date()).toISOString(), errors)
-    httpResponse.status(status || 500).json(response)
+    httpResponse.status(status || errors.status || 500).json(response)
   }
 }
