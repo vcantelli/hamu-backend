@@ -2,8 +2,13 @@ function getTermsHtml () {
   return Promise.resolve({terms: require('../../config/terms')})
 }
 
-function create () {
+function create (creationData) {
+  validateData(creationData)
   return Promise.resolve('create')
+
+  function validateData (creationData) {
+    if (!creationData) throw {message: `Invalid data`}
+  }
 }
 
 function update () {
