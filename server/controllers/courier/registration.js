@@ -1,3 +1,5 @@
+const codigoBancos = require('../../models/codigo_bancos')
+
 module.exports = {
   getTermsHtml,
   create,
@@ -54,7 +56,7 @@ function get () {
 }
 
 function getBankCodes () {
-  return Promise.resolve('getBankCodes')
+  return Promise.resolve(codigoBancos)
 }
 
 function getRegisterOptions () {
