@@ -1,3 +1,13 @@
+module.exports = {
+  getTermsHtml,
+  create,
+  update,
+  get,
+  getBankCodes,
+  getRegisterOptions,
+  destroy
+}
+
 function getTermsHtml () {
   return Promise.resolve({terms: require('../../config/terms')})
 }
@@ -29,15 +39,4 @@ function getRegisterOptions () {
 
 function destroy () {
   return Promise.resolve('destroy')
-}
-
-
-module.exports = {
-  getTermsHtml,
-  create,
-  update,
-  get,
-  getBankCodes,
-  getRegisterOptions,
-  destroy
 }
