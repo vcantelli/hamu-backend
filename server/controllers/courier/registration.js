@@ -1,5 +1,5 @@
 function getTermsHtml () {
-  return Promise.resolve('getTermsHtml')
+  return Promise.resolve({terms: require('../../config/terms')})
 }
 
 function create () {
