@@ -10,7 +10,8 @@ function hasNewRequest (userId) {
   }
 
   function searchDatabaseForNewRequest (userId) {
-    return Promise.resolve('FULL DATA')
+    const openRequests = ['FULL DATA', 'FULL DATA']
+    return Promise.resolve(openRequests[0])
   }
 
   function filterData (data) {
