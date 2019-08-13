@@ -103,7 +103,7 @@ function getRegisterOptions () {
     cities: ['batatais', 'São Páôlo'],
     brands: ['volquisvaguem'],
     models: ['uno'],
-    banks: [codigoBancos.map(codigo => `${codigo} - ${nome}`)]
+    banks: codigoBancos
   })
 }
 
