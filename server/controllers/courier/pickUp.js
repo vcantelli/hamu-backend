@@ -15,7 +15,9 @@ function hasNewRequest (userId) {
 
   function checkIfUserAlreadyIsOnADelivery (userId) {
     const userAlreadyIsOnADelivery = false
+    const doesNotHaveNewRequest = false
     if (userAlreadyIsOnADelivery) throw { status: 400, message: 'Você não pode aceitar pois já está em outra entrega', code: 'USER_ALREADY_ON_DELIVERING' }
+    if (doesNotHaveNewRequest) throw { status: 404, message: 'Você não pode aceitar pois já está em outra entrega', code: 'USER_ALREADY_ON_DELIVERING' }
     Promise.resolve(userId)
   }
 
