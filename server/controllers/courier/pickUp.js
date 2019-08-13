@@ -51,8 +51,24 @@ function refuse (orderNumber, userId) {
   }
 }
 
-function accept () {
-  return Promise.resolve('accept')
+function accept (orderNumber, userId) {
+  return checkIfSomeoneElseAccepted(orderNumber)
+    .then(() => changeOrderStatus(orderNumber, userId))
+    .then(filterRenspose)
+
+  function checkIfSomeoneElseAccepted (orderNumber) {
+    const someoneAlreadyOnIt = false
+    if (someoneAlreadyOnIt) throw { code: `SOMEONE_ELSE_HAS_ACCEPTED`, message: `Alguém já aceitou esta entrega`, status: 404}
+    return Promise.resolve(orderNumber)
+  }
+
+  function changeOrderStatus (orderNumber, userId) {
+    return Promise.resolve(orderNumber, userId)
+  }
+
+  function filterRenspose (data) {
+    return Promise.resolve('ACCEPTED')
+  }
 }
 
 function success () {
