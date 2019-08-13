@@ -125,5 +125,8 @@ function problem (orderProblem) {
 }
 
 function getProblemReasons () {
-  return Promise.resolve('getProblemReasons')
+  return Promise.resolve([
+    { code: 'ADDRESS_NOT_FOUND', description: 'Não encontro o endereço'},
+    { code: 'NOT_READY', description: 'Ninguém para receber a entrega'}
+  ])
 }
