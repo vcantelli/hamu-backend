@@ -1,3 +1,13 @@
+module.exports = {
+  hasNewRequest,
+  getPickupInfo,
+  refuse,
+  accept,
+  success,
+  problem,
+  getProblemReasons
+}
+
 function hasNewRequest (userId) {
   return Promise.resolve(checkIfUserAlreadyIsOnADelivery(userId))
     .then(() => searchDatabaseForNewRequest(userId))
@@ -89,15 +99,4 @@ function problem () {
 
 function getProblemReasons () {
   return Promise.resolve('getProblemReasons')
-}
-
-
-module.exports = {
-  hasNewRequest,
-  getPickupInfo,
-  refuse,
-  accept,
-  success,
-  problem,
-  getProblemReasons
 }
