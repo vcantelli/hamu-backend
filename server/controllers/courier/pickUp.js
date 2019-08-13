@@ -21,7 +21,6 @@ function getPickupInfo (orderNumber) {
   return getPickupInfoOnMagento(orderNumber)
     .then(filterData)
 
-
   function getPickupInfoOnMagento(orderNumber) {
     return Promise.resolve({orderNumber})
   }
@@ -37,8 +36,19 @@ function getPickupInfo (orderNumber) {
   }
 }
 
-function refuse () {
-  return Promise.resolve('refuse')
+function refuse (orderNumber, userId) {
+  return saveRefusalOnDatabase(orderNumber, userId)
+  .then(() => null)
+
+  function saveRefusalOnDatabase (orderNumber, userId) {
+    // Salvar no banco que o fulano de tal recusou o pedido no dia X horário Y
+    // Vitão pensou em colocar um vetor no pedido com os caras que recusaram
+    return Promise.resolve({
+      orderNumber,
+      userId,
+      refusalTime: new Date()
+    })
+  }
 }
 
 function accept () {
