@@ -23,7 +23,6 @@ function success (httpResponse, options) {
 function fail (httpResponse, status) {
   return function (errors) {
     const response = {
-      success: false,
       message: errors.message,
       errors: errors.errors
     }
