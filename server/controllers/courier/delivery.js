@@ -49,10 +49,26 @@ function success (orderNumber) {
   }
 }
 
-function problem () {
-  return Promise.resolve('problem')
+function problem (orderProblem) {
+  return validateData(orderProblem)
+    .then(saveProblemOnMagento)
+    .then(() => 'SUCCESS')
+
+  function validateData (orderProblem) {
+    if (!orderProblem.reason || !orderProblem.description)
+      throw { error: 400, message: `Você precisa informar o motivo e uma descrição`, code: `MISSING_DATA` }
+    return Promise.resolve(orderProblem)
+  }
+
+  function saveProblemOnMagento (orderProblem) {
+    return Promise.resolve()
+  }
 }
 
+
 function getProblemReasons () {
-  return Promise.resolve('getProblemReasons')
+  return Promise.resolve([
+    { code: 'ADDRESS_NOT_FOUND', description: 'Não encontro o endereço' },
+    { code: 'CUSTOMER_NOT_FOUND', description: 'Ninguém para receber a entrega' }
+  ])
 }
