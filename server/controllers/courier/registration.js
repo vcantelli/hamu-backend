@@ -53,8 +53,44 @@ function update (id, updateData) {
     .then(() => get(id))
 }
 
-function get () {
-  return Promise.resolve('get')
+function get (id) {
+  return getOnMagento(id)
+    .then(filterForResponse)
+  function filterForResponse (data) {
+    return {
+      email: 'eu@neryuuk.com',
+      name: 'Nelson Antunes',
+      date_of_birth: '1989-04-04',
+      personal_document: '19189940059',
+      personal_email: 'eu@neryuuk.com',
+      telephone: '+5511976535350',
+      driver_license_number: '20145027507',
+      driver_license_expiry_date: '2020-05-05',
+      preference_city: 'São Paulo',
+      vehicle_type: 'motorcycle; car; van',
+      vehicle_brand: 'Chevrolet',
+      vehicle_model: 'Celta',
+      vehicle_plate: 'LOL-1234',
+      vehicle_model_year: '1990',
+      vehicle_fabrication_year: '1990',
+      vehicle_identification_number: '9BWZZZ377VT004251',
+      vehicle_national_registration_number: '77956074780',
+      vehicle_document: '7188170879',
+      vehicle_last_licence_year: '2019',
+      vehicle_ownership: 'OWNER',
+      bank_holder_name: 'Nelson Antunes',
+      bank_holder_document: 'meu cpfzin',
+      bank_company_document: 'Nelson Antunes',
+      bank_number: '341',
+      bank_agency_number: '8884',
+      bank_type_of_account: 'Corrente; Poupança',
+      company_name: 'Batatais - EIRELI',
+      company_cnpj: '37215080000102',
+      images_user: [],
+      images_vehicle: [],
+      images_driver_license: []
+    }
+  }
 }
 
 function getBankCodes () {
