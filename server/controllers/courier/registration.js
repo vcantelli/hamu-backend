@@ -98,7 +98,13 @@ function getBankCodes () {
 }
 
 function getRegisterOptions () {
-  return Promise.resolve('getRegisterOptions')
+  const nome = 'batataaa'
+  return Promise.resolve({
+    cities: ['batatais', 'São Páôlo'],
+    brands: ['volquisvaguem'],
+    models: ['uno'],
+    banks: [codigoBancos.map(codigo => `${codigo} - ${nome}`)]
+  })
 }
 
 function destroy (id) {
