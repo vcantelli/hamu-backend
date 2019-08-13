@@ -1,6 +1,13 @@
 function hasNewRequest (userId) {
-  return Promise.resolve(searchDatabaseForNewRequest(userId))
+  return Promise.resolve(checkIfUserAlreadyIsOnADelivery(userId))
+    .then(() => searchDatabaseForNewRequest(userId))
     .then(filterData)
+
+  function checkIfUserAlreadyIsOnADelivery (userId) {
+    const userAlreadyIsOnADelivery = false
+    if (userAlreadyIsOnADelivery) throw { status: 400, message: 'Você não pode aceitar pois já está em outra entrega', code: 'USER_ALREADY_ON_DELIVERING' }
+    Promise.resolve(userId)
+  }
 
   function searchDatabaseForNewRequest (userId) {
     return Promise.resolve('FULL DATA')
