@@ -98,7 +98,6 @@ function getBankCodes () {
 }
 
 function getRegisterOptions () {
-  const nome = 'batataaa'
   return Promise.resolve({
     cities: ['batatais', 'São Páôlo'],
     brands: ['volquisvaguem'],
