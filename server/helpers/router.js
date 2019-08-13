@@ -6,7 +6,7 @@ module.exports = {
 
 function success (httpResponse, options) {
   return function (data) {
-    const response = { success: true, data }
+    const response = data
 
     if (options && options.csv) {
       const fileExtension = options.fileExtension || 'csv'
