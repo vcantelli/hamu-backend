@@ -47,8 +47,10 @@ function create (creationData) {
   }
 }
 
-function update () {
-  return Promise.resolve('update')
+function update (id, updateData) {
+  return validateData(updateData)
+    .then(updateOnMagento)
+    .then(() => get(id))
 }
 
 function get () {
