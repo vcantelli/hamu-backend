@@ -17,8 +17,24 @@ function hasNewRequest (userId) {
   }
 }
 
-function getPickupInfo () {
-  return Promise.resolve('getPickupInfo')
+function getPickupInfo (orderNumber) {
+  return getPickupInfoOnMagento(orderNumber)
+    .then(filterData)
+
+
+  function getPickupInfoOnMagento(orderNumber) {
+    return Promise.resolve({orderNumber})
+  }
+
+  function filterData(data) {
+    return Promise.resolve({
+      store: 'Arco Íris',
+      store_address: 'Av das Nações, 1916, Parque Oratório, Santo André - SP, 09270-400',
+      telephone: '1144011755',
+      order_number: data.orderNumber,
+      vehicle_type: 'motorcycle'
+    })
+  }
 }
 
 function refuse () {
