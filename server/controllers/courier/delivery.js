@@ -1,3 +1,9 @@
+module.exports = {
+  getRoute,
+  success,
+  problem,
+  getProblemReasons
+}
 
 function getRoute () {
   return Promise.resolve('getRoute')
@@ -13,12 +19,4 @@ function problem () {
 
 function getProblemReasons () {
   return Promise.resolve('getProblemReasons')
-}
-
-
-module.exports = {
-  getRoute,
-  success,
-  problem,
-  getProblemReasons
 }
