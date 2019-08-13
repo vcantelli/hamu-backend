@@ -1,9 +1,9 @@
 function login (authInfo) {
-  if (!(authInfo && authInfo.email && authInfo.password)) throw {message: `User and password are required`, status: 400}
+  if (!(authInfo && authInfo.email && authInfo.password)) throw { message: `User and password are required`, status: 400 }
   const { email, password } = authInfo
   const courier = {}
   const token = `897009782540985342`
-  return Promise.resolve({courier, token})
+  return Promise.resolve({ courier, token })
 
   // magento.login().then(() => {
   //   return customerEntity.find({ where: { email } })
