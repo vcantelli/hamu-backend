@@ -7,8 +7,7 @@ const deliveryRoutes = require('./delivery')
 const reportRoutes = require('./report')
 
 
-routes.use('/', registrationRoutes)
-routes.use('/', authRoutes)
+routes.use('/', authRoutes, registrationRoutes)
 routes.use('/pick-up', pickUpRoutes)
 routes.use('/delivery', deliveryRoutes)
 routes.use('/report', reportRoutes)
