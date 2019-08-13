@@ -6,7 +6,6 @@ const pickUpRoutes = require('./pickUp')
 const deliveryRoutes = require('./delivery')
 const reportRoutes = require('./report')
 
-
 routes.use('/', authRoutes, registrationRoutes)
 routes.use('/pick-up', pickUpRoutes)
 routes.use('/delivery', deliveryRoutes)
