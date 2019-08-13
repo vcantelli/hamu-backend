@@ -30,8 +30,23 @@ function getRoute (orderNumber, userId) {
   }
 }
 
-function success () {
-  return Promise.resolve('success')
+function success (orderNumber) {
+  return changeOrderStatusToDelivered(orderNumber)
+    .then(() => `SUCCESS`)
+
+  async function changeOrderStatusToDelivered (orderNumber) {
+    const myOrder = await getOrderOnMagento(orderNumber)
+    myOrder.changeStatus('DELIVERED') // TODO: colocar estes estados em um lugar no modelo
+    return updateOnMagento(myOrder)
+  }
+
+  function getOrderOnMagento (orderNumber) {
+    return Promise.resolve({ ordenzinha: 'ordenzinha', status: 'TO_PICKUP', changeStatus: (newStatus) => { console.log(`Order status changed to ${newStatus}`) } })
+  }
+
+  function updateOnMagento (order) {
+    return Promise.resolve()
+  }
 }
 
 function problem () {
