@@ -101,6 +101,9 @@ function getRegisterOptions () {
   return Promise.resolve('getRegisterOptions')
 }
 
-function destroy () {
-  return Promise.resolve('destroy')
+function destroy (id) {
+  return deleteOnMagento(id)
+  function deleteOnMagento(id) {
+    return Promise.resolve('DELETED')
+  }
 }
