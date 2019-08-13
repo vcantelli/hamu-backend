@@ -89,8 +89,23 @@ function accept (orderNumber, userId) {
   }
 }
 
-function success () {
-  return Promise.resolve('success')
+function success (orderNumber) {
+  return changeOrderStatusToPickedUp(orderNumber)
+    .then(() => 'SUCCESS')
+  async function changeOrderStatusToPickedUp (orderNumber) {
+    const myOrder = await getOrderOnMagento(orderNumber)
+    myOrder.changeStatus('PICKED_UP') // TODO: colocar estes estados em um lugar no modelo
+    return updateOnMagento(myOrder)
+  }
+
+  // TODO: Muito dessas merdas vão estar em un controlador próprio do pedido, essas coisas já existem em hamu.com.br. Pegar na API do magento todas as ordens
+  function getOrderOnMagento (orderNumber) {
+    return Promise.resolve({ordenzinha: 'ordenzinha', status: 'TO_PICKUP', changeStatus: (newStatus) => {console.log(`Order status changed to ${newStatus}`)}})
+  }
+
+  function updateOnMagento (order) {
+    return Promise.resolve()
+  }
 }
 
 function problem () {
