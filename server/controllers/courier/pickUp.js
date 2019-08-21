@@ -1,3 +1,6 @@
+const PickUpModel = require('../../models/courier/PickUp')
+const DeliveryModel = require('../../models/courier/Delivery')
+
 module.exports = {
   hasNewRequest,
   getPickupInfo,
@@ -13,116 +16,77 @@ function hasNewRequest (userId) {
     .then(() => searchDatabaseForNewRequest(userId))
     .then(filterData)
 
-  function checkIfUserAlreadyIsOnADelivery (userId) {
-    const userAlreadyIsOnADelivery = false
-    const doesNotHaveNewRequest = false
+  async function checkIfUserAlreadyIsOnADelivery (userId) {
+    const userAlreadyIsOnADelivery = await PickUpModel.userAlreadyIsOnADelivery(userId)
     if (userAlreadyIsOnADelivery) throw { status: 400, message: 'Você não pode aceitar pois já está em outra entrega', code: 'USER_ALREADY_ON_DELIVERING' }
-    if (doesNotHaveNewRequest) throw { status: 404, message: 'Você não pode aceitar pois já está em outra entrega', code: 'USER_ALREADY_ON_DELIVERING' }
-    Promise.resolve(userId)
+    return userId
   }
 
   function searchDatabaseForNewRequest (userId) {
-    const openRequests = ['FULL DATA', 'FULL DATA']
-    return Promise.resolve(openRequests[0])
+    return PickUpModel.openRequests(userId)
+      .then(data => data && data.length && data[0])
   }
 
   function filterData (data) {
     return Promise.resolve({
-      store: 'Arco Íris',
-      store_address: 'Av das Nações, 1916, Parque Oratório, Santo André - SP, 09270-400',
-      telephone: '1144011755',
-      order_number: '853291',
-      vehicle_type: 'motorcycle'
+      store: data && data.store, // 'Arco Íris',
+      store_address: data && data.store_address, // 'Av das Nações, 1916, Parque Oratório, Santo André - SP, 09270-400',
+      telephone: data && data.telephone, // '1144011755',
+      order_number: data && data.order_number, // '853291',
+      vehicle_type: data && data.vehicle_type, // 'motorcycle'
     })
   }
 }
 
 function getPickupInfo (orderNumber) {
-  return getPickupInfoOnMagento(orderNumber)
+  // ?: Não sei se rola buscar no modelo de fornecedor os fornecedores do pedido, na tabela de pedido as infos de entrega e na tabela de delivery as infos do amigo
+  return PickUpModel.getPickupInfo(orderNumber)
     .then(filterData)
 
-  function getPickupInfoOnMagento(orderNumber) {
-    return Promise.resolve({orderNumber})
-  }
-
   function filterData(data) {
-    return Promise.resolve({
-      store: 'Arco Íris',
-      store_address: 'Av das Nações, 1916, Parque Oratório, Santo André - SP, 09270-400',
-      telephone: '1144011755',
-      order_number: data.orderNumber,
-      vehicle_type: 'motorcycle'
-    })
+    if (!data) throw { status: 404, message: 'Dados para entrega não encontrado para este pedido', code: 'PICKUP_DATA_NOT_FOUND' }
+    return Promise.resolve(data)
   }
 }
 
 function refuse (orderNumber, userId) {
-  return saveRefusalOnDatabase(orderNumber, userId)
+  return PickUpModel.refusePickUp(orderNumber, userId)
   .then(() => null)
-
-  function saveRefusalOnDatabase (orderNumber, userId) {
-    // Salvar no banco que o fulano de tal recusou o pedido no dia X horário Y
-    // Vitão pensou em colocar um vetor no pedido com os caras que recusaram
-    return Promise.resolve({
-      orderNumber,
-      userId,
-      refusalTime: new Date()
-    })
-  }
 }
 
 function accept (orderNumber, userId) {
-  return checkIfSomeoneElseAccepted(orderNumber)
-    .then(() => changeOrderStatus(orderNumber, userId))
+  return checkIfSomeoneElseAccepted(orderNumber, userId)
+    .then(() => PickUpModel.acceptRequest(orderNumber, userId))
     .then(filterRenspose)
 
-  function checkIfSomeoneElseAccepted (orderNumber) {
-    const someoneAlreadyOnIt = false
+  async function checkIfSomeoneElseAccepted (orderNumber, userId) {
+    const deliveryRequest = await DeliveryModel.getDeliveryInfoByOrderNumber(orderNumber)
+    if (!deliveryRequest) throw { code: `PICKUP_DATA_NOT_FOUND`, message: `Não encontramos os dados para entrega deste pedido`, status: 404 }
+
+    const someoneAlreadyOnIt = DeliveryModel.someoneElseAccepted(deliveryRequest, userId)
     if (someoneAlreadyOnIt) throw { code: `SOMEONE_ELSE_HAS_ACCEPTED`, message: `Alguém já aceitou esta entrega`, status: 404}
     return Promise.resolve(orderNumber)
   }
 
-  function changeOrderStatus (orderNumber, userId) {
-    return Promise.resolve(orderNumber, userId)
-  }
-
-  function filterRenspose (data) {
+  function filterRenspose () {
     return Promise.resolve('ACCEPTED')
   }
 }
 
 function success (orderNumber) {
-  return changeOrderStatusToPickedUp(orderNumber)
+  return PickUpModel.success(orderNumber)
     .then(() => 'SUCCESS')
-  async function changeOrderStatusToPickedUp (orderNumber) {
-    const myOrder = await getOrderOnMagento(orderNumber)
-    myOrder.changeStatus('PICKED_UP') // TODO: colocar estes estados em um lugar no modelo
-    return updateOnMagento(myOrder)
-  }
-
-  // TODO: Muito dessas merdas vão estar em un controlador próprio do pedido, essas coisas já existem em hamu.com.br. Pegar na API do magento todas as ordens
-  function getOrderOnMagento (orderNumber) {
-    return Promise.resolve({ordenzinha: 'ordenzinha', status: 'TO_PICKUP', changeStatus: (newStatus) => {console.log(`Order status changed to ${newStatus}`)}})
-  }
-
-  function updateOnMagento (order) {
-    return Promise.resolve()
-  }
 }
 
-function problem (orderProblem) {
+function problem (orderNumber, orderProblem) {
   return validateData(orderProblem)
-    .then(saveProblemOnMagento)
+    .then(() => PickUpModel.saveProblem(orderProblem.reason, orderProblem.description, orderNumber))
     .then(() => 'SUCCESS')
 
   function validateData (orderProblem) {
     if (!orderProblem.reason || !orderProblem.description)
       throw {error: 400, message: `Você precisa informar o motivo e uma descrição`, code: `MISSING_DATA`}
     return Promise.resolve(orderProblem)
-  }
-
-  function saveProblemOnMagento (orderProblem) {
-    return Promise.resolve()
   }
 }
 
