@@ -16,6 +16,15 @@ function userAlreadyIsOnADelivery (userId) {
   // Verifica se tem algum pedido com status em andamento deste usuário
   // se tiver retornar true
   return Promise.resolve(false)
+  // TODO: Validar com victão isso aqui também
+  // return DeliveryDAO.findAll({
+  //   where: {
+  //     status: {
+  //       [Op.or]: ['PICKING_UP', 'DELIVERING']
+  //     },
+  //     courier_id: userId
+  //   }
+  // }).then(results => results && results.length > 0)
 }
 
 
@@ -37,6 +46,12 @@ function openRequests (userId) {
       "order_number": "3242342",
       "vehicle_type": "motorcycle"
     }])
+  // TODO: Validar com victão isso aqui também
+  // return DeliveryDAO.findAll({
+  //   where: {
+  //     status: 'OPEN'
+  //   }
+  // })
 }
 
 function getPickupInfo (orderNumber) {
@@ -82,6 +97,12 @@ function acceptRequest (orderNumber, userId) {
   // Mudar a data de pick up
   // Associar o usuário ao pedido de entrega
   return Promise.resolve({ orderNumber })
+  // TODO: VALIDAR ESTA AQUI TAMBÉM
+  return DeliveryDAO.update({
+    status: "PICKING_UP",
+    accepted_at: new Date(),
+    courier_id: userId,
+  }, { where: { order_number: orderNumber } })
 }
 
 /**
@@ -105,6 +126,12 @@ function success (orderNumber) {
   function updateOnMagento (order) {
     return Promise.resolve()
   }
+
+  // TODO: VALIDAR ESTA AQUI TAMBÉM
+  return DeliveryDAO.update({
+    status: "DELIVERING",
+    picked_up_at: new Date(),
+  }, {where: {order_number: orderNumber}})
 }
 
 
