@@ -1,3 +1,5 @@
+const RefusalDAO = require('./DAO/pickUpRefusal')
+
 module.exports = {
   userAlreadyIsOnADelivery,
   openRequests,
@@ -60,6 +62,12 @@ function refusePickUp (orderNumber, userId) {
     userId,
     refusalTime: new Date()
   })
+
+  // TODO: Validar a forma como fiz a parte que recusa
+  // return RefusalDAO.create({
+  //   delivery_id: orderNumber,
+  //   courier_id: userId
+  // })
 }
 
 
