@@ -116,4 +116,11 @@ function saveProblem (reason, description, orderNumber) {
   // pick_up_problem_description => description
   // pick_up_problem_at => NOW()
   return Promise.resolve()
+  // TODO: Validar esta merda com Victão também
+  // return DeliveryDAO.update({
+  //   pick_up_problem: reason,
+  //   pick_up_problem_description: description,
+  //   pick_up_problem_at: new Date(),
+  // }, { where: {order_number: orderNumber}})
+
 }
