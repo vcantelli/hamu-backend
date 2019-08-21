@@ -1,7 +1,8 @@
 const MagentoAPI = require('magento-api')
-const Magento = new MagentoAPI(require('../../config/magento'))
+const magentoConfiguration = require('../../../config/magento')
+const Magento = new MagentoAPI(magentoConfiguration)
 const MagentoAttributes = require('./attributes')
-const codigoBancos = require('../../models/codigo_bancos')
+const codigoBancos = require('../../../models/codigo_bancos')
 
 module.exports = {
   getTermsHtml,
