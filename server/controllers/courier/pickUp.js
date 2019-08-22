@@ -1,5 +1,6 @@
 const PickUpModel = require('../../models/courier/PickUp')
 const DeliveryModel = require('../../models/courier/Delivery')
+const NOTHING = {}
 
 module.exports = {
   hasNewRequest,
@@ -51,7 +52,7 @@ function getPickupInfo (orderNumber) {
 
 function refuse (orderNumber, userId) {
   return PickUpModel.refusePickUp(orderNumber, userId)
-  .then(() => null)
+    .then(() => NOTHING)
 }
 
 function accept (orderNumber, userId) {
@@ -75,13 +76,13 @@ function accept (orderNumber, userId) {
 
 function success (orderNumber) {
   return PickUpModel.success(orderNumber)
-    .then(() => 'SUCCESS')
+    .then(() => NOTHING)
 }
 
 function problem (orderNumber, orderProblem) {
   return validateData(orderProblem)
     .then(() => PickUpModel.saveProblem(orderProblem.reason, orderProblem.description, orderNumber))
-    .then(() => 'SUCCESS')
+    .then(() => NOTHING)
 
   function validateData (orderProblem) {
     if (!orderProblem.reason || !orderProblem.description)

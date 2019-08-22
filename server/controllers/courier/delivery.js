@@ -1,3 +1,4 @@
+const NOTHING = {}
 module.exports = {
   getRoute,
   success,
@@ -23,9 +24,11 @@ function getRoute (orderNumber, userId) {
     return Promise.resolve({
       delivery_price: 800,
       customer: "Estevão Trabalhos",
-      address: "Waverley Street, 2101, Old Palo Alto, Palo Alto - CA 94301",
+      address: "Parque Capuava, Santo André - SP, 09270-260, Brasil",
       telephone: "11999999999",
-      order_number: `${data.orderNumber}`
+      order_number: `${data.orderNumber}`,
+      latitude: -23.6454471,
+      longitude: -46.4944687
     })
   }
 }
@@ -33,7 +36,7 @@ function getRoute (orderNumber, userId) {
 function success (orderNumber, verificationCode) {
   return checkVerificationCode(verificationCode)
     .then(() => changeOrderStatusToDelivered(orderNumber))
-    .then(() => `SUCCESS`)
+    .then(() => NOTHING)
 
   function checkVerificationCode (verificationCode) {
     return Promise.resolve(true)
@@ -57,7 +60,7 @@ function success (orderNumber, verificationCode) {
 function problem (orderProblem) {
   return validateData(orderProblem)
     .then(saveProblemOnMagento)
-    .then(() => 'SUCCESS')
+    .then(() => NOTHING)
 
   function validateData (orderProblem) {
     if (!orderProblem.reason || !orderProblem.description)
