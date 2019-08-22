@@ -1,4 +1,4 @@
-const RefusalDAO = require('./DAO/pickUpRefusal')
+// const RefusalDAO = require('./DAO/pickUpRefusal')
 
 module.exports = {
   userAlreadyIsOnADelivery,
