@@ -36,9 +36,11 @@ function create (data) {
 }
 
 function getById (courier_id) {
-  return CourierDAO.find({ where: { courier_id: courier_id, status: 'ACTIVE'}})
+  return CourierDAO.find({ where: { courier_id, status: 'ACTIVE'}})
+    .then(data => data && data.dataValues)
 }
 
 function getByMagentoId (customer_id) {
-  return CourierDAO.find({ where: { customer_id: customer_id, status: 'ACTIVE'}})
+  return CourierDAO.find({ where: { customer_id, status: 'ACTIVE'}})
+    .then(data => data && data.dataValues)
 }
