@@ -30,9 +30,14 @@ function getRoute (orderNumber, userId) {
   }
 }
 
-function success (orderNumber) {
-  return changeOrderStatusToDelivered(orderNumber)
+function success (orderNumber, verificationCode) {
+  return checkVerificationCode(verificationCode)
+    .then(() => changeOrderStatusToDelivered(orderNumber))
     .then(() => `SUCCESS`)
+
+  function checkVerificationCode (verificationCode) {
+    return Promise.resolve(true)
+  }
 
   async function changeOrderStatusToDelivered (orderNumber) {
     const myOrder = await getOrderOnMagento(orderNumber)
