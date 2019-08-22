@@ -1,6 +1,7 @@
 const { courierUser } = require('../')
 const CourierDAO = courierUser
 const MagentoAPI = require('magento-api')
+const moment = require('moment')
 const magentoConfig = require('../../config/magento')
 const { promisify } = require('util')
 const Magento = new MagentoAPI(magentoConfig)
@@ -76,13 +77,13 @@ function getByMagentoId (customer_id) {
 
 
 function convertDatesToDatabase (data) {
-  data.date_of_birth = data.date_of_birth
-  data.driver_license_expiry_date = data.driver_license_expiry_date
+  data.date_of_birth = moment(data.date_of_birth, 'DD/MM/YYYY').format('YYYY-MM-DD')
+  data.driver_license_expiry_date = moment(data.driver_license_expiry_date, 'DD/MM/YYYY').format('YYYY-MM-DD')
   return data
 }
 
 function convertDatesToSystem (data) {
-  data.date_of_birth = data.date_of_birth
-  data.driver_license_expiry_date = data.driver_license_expiry_date
+  data.date_of_birth = moment(data.date_of_birth).format('DD/MM/YYYY')
+  data.driver_license_expiry_date = moment(data.driver_license_expiry_date).format('DD/MM/YYYY')
   return data
 }
