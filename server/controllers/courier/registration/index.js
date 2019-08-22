@@ -3,6 +3,7 @@ const magentoConfiguration = require('../../../config/magento')
 const Magento = new MagentoAPI(magentoConfiguration)
 const MagentoAttributes = require('./attributes')
 const codigoBancos = require('../../../models/codigo_bancos')
+const CourierModel = require('../../../models/courier/Courier')
 
 module.exports = {
   getTermsHtml,
@@ -24,10 +25,11 @@ function create (creationData) {
     .then(filterForResponse)
 
   async function createAndSaveOnMagento (creationData) {
-    await Magento.login()
-    const user = await createMagentoUser(creationData)
-    await createCourier(user, creationData)
-    return Promise.resolve(creationData)
+    // await Magento.login()
+    // const user = await createMagentoUser(creationData)
+    // await createCourier(user, creationData)
+    // return Promise.resolve(creationData)
+    return CourierModel.create(creationData)
   }
 
   function createMagentoUser (creationData) {
