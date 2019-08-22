@@ -38,8 +38,9 @@ function openRequests (userId) {
       "telephone": "1144011755",
       "order_number": "853291",
       "vehicle_type": "motorcycle",
-      "latitude": -23.6402014,
-      "longitude": -46.5406174
+      // "latitude": -23.6402014,
+      "latitude": -23.6411251,
+      "longitude": -46.5430957
     },
     {
       "store": "Arco Íris",
@@ -47,8 +48,9 @@ function openRequests (userId) {
       "telephone": "1144011755",
       "order_number": "3242342",
       "vehicle_type": "motorcycle",
-      "latitude": -23.6402014,
-      "longitude": -46.5406174
+      // "latitude": -23.6402014,
+      "latitude": -23.6411251,
+      "longitude": -46.5430957
     }])
   // TODO: Validar com victão isso aqui também
   // return DeliveryDAO.findAll({
@@ -69,8 +71,9 @@ function getPickupInfo (orderNumber) {
     telephone: '1144011755',
     order_number: orderNumber,
     vehicle_type: 'motorcycle',
-    latitude: -23.6402014,
-    longitude: -46.5406174
+    // latitude: -23.6402014,
+    latitude: -23.6411251,
+    longitude: -46.5430957
   })
 }
 
