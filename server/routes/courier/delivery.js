@@ -17,7 +17,7 @@ routes.route('/:orderNumber/success')
   .all(auth)
   .post(({params, body, decoded}, response) => {
     try {
-      courier.delivery.success(params.orderNumber, body, decoded)
+      courier.delivery.success(params.orderNumber, body.customer_delivery_code, body, decoded)
       .then(success(response))
       .catch(fail(response))
     } catch(e) {fail(response)(e)}
