@@ -23,7 +23,7 @@ routes.route('/')
   .all(auth)
   .put((request, response) => {
     try {
-      courier.registration.update(request.body, request.decoded)
+      courier.registration.update(request.decoded.customer_id, request.body)
         .then(success(response))
         .catch(fail(response))
     } catch (e) {fail(response)(e)}
