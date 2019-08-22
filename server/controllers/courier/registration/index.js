@@ -62,6 +62,7 @@ function get (id) {
   return CourierModel.getById(id)
     .then(filterForResponse)
   function filterForResponse (data) {
+    if (!data) throw {status: 404, message: `User not found`}
     return data
   }
 }
