@@ -75,13 +75,13 @@ function accept (orderNumber, userId) {
 
 function success (orderNumber) {
   return PickUpModel.success(orderNumber)
-    .then(() => 'SUCCESS')
+    .then(() => null)
 }
 
 function problem (orderNumber, orderProblem) {
   return validateData(orderProblem)
     .then(() => PickUpModel.saveProblem(orderProblem.reason, orderProblem.description, orderNumber))
-    .then(() => 'SUCCESS')
+    .then(() => null)
 
   function validateData (orderProblem) {
     if (!orderProblem.reason || !orderProblem.description)

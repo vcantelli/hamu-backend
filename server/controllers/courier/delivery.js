@@ -33,7 +33,7 @@ function getRoute (orderNumber, userId) {
 function success (orderNumber, verificationCode) {
   return checkVerificationCode(verificationCode)
     .then(() => changeOrderStatusToDelivered(orderNumber))
-    .then(() => `SUCCESS`)
+    .then(() => null)
 
   function checkVerificationCode (verificationCode) {
     return Promise.resolve(true)
@@ -57,7 +57,7 @@ function success (orderNumber, verificationCode) {
 function problem (orderProblem) {
   return validateData(orderProblem)
     .then(saveProblemOnMagento)
-    .then(() => 'SUCCESS')
+    .then(() => null)
 
   function validateData (orderProblem) {
     if (!orderProblem.reason || !orderProblem.description)
