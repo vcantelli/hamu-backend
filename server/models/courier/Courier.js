@@ -27,9 +27,9 @@ function create (data) {
     })
   }).then(customerId => {
     data.customer_id = Number(customerId)
-    data.images_user = data.images_user || ''
-    data.images_vehicle = data.images_vehicle || ''
-    data.images_driver_license = data.images_driver_license || ''
+    data.images_user = '' // data.images_user || ''
+    data.images_vehicle = '' // data.images_vehicle || ''
+    data.images_driver_license = '' // data.images_driver_license || ''
     return CourierDAO.create(data)
   })
 }
