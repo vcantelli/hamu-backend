@@ -9,7 +9,8 @@ Magento.customer.create = promisify(Magento.customer.create).bind(Magento.custom
 
 module.exports = {
   create,
-  getById
+  getById,
+  getByMagentoId
 }
 
 function create (data) {
@@ -35,5 +36,9 @@ function create (data) {
 }
 
 function getById (courier_id) {
-  return CourierDAO.find({where: {courier_id, status: 'ACTIVE'}})
+  return CourierDAO.find({ where: { courier_id: courier_id, status: 'ACTIVE'}})
+}
+
+function getByMagentoId (customer_id) {
+  return CourierDAO.find({ where: { customer_id: customer_id, status: 'ACTIVE'}})
 }
