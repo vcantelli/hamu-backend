@@ -25,24 +25,7 @@ function create (creationData) {
     .then(filterForResponse)
 
   async function createAndSaveOnMagento (creationData) {
-    // await Magento.login()
-    // const user = await createMagentoUser(creationData)
-    // await createCourier(user, creationData)
-    // return Promise.resolve(creationData)
     return CourierModel.create(creationData)
-  }
-
-  function createMagentoUser (creationData) {
-    return Magento.customerId.create(creationData)
-  }
-
-  function createCourier (user, creationData) {
-    /**
-     * - pré requisito: para cada atributo criar no banco, criar a constante e utilizar ela aqui
-     * - Para cada atributo no creationData => salvar na tabela do atributo
-     *  - Passa sempore o id do customer e o id daquele tipo
-    */
-    return Promise.resolve()
   }
 
   function validateData (creationData) {
