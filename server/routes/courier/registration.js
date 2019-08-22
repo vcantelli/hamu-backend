@@ -28,9 +28,9 @@ routes.route('/')
         .catch(fail(response))
     } catch (e) {fail(response)(e)}
   })
-  .get((_, response) => {
+  .get((request, response) => {
     try {
-      courier.registration.get()
+      courier.registration.get(request.decoded.courier_id)
         .then(success(response))
         .catch(fail(response))
     } catch (e) {fail(response)(e)}
