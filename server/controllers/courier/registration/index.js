@@ -52,10 +52,14 @@ function create (creationData) {
   }
 }
 
-function update (id, updateData) {
+function update (magentoId, updateData) {
   return validateData(updateData)
-    .then(updateOnMagento)
-    .then(() => get(id))
+    .then(() => CourierModel.update(magentoId, updateData))
+    .then(() => 'SUCCESS')
+  function validateData (updateData) {
+    if (!updateData) throw { message: `Invalid data`, status: 400 }
+    return Promise.resolve(updateData)
+  }
 }
 
 function get (id) {
