@@ -23,9 +23,11 @@ function getRoute (orderNumber, userId) {
     return Promise.resolve({
       delivery_price: 800,
       customer: "Estevão Trabalhos",
-      address: "Waverley Street, 2101, Old Palo Alto, Palo Alto - CA 94301",
+      address: "Parque Capuava, Santo André - SP, 09270-260, Brasil",
       telephone: "11999999999",
-      order_number: `${data.orderNumber}`
+      order_number: `${data.orderNumber}`,
+      latitude: -23.6454471,
+      longitude: -46.4944687
     })
   }
 }
