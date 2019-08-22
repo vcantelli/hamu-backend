@@ -33,4 +33,5 @@ CREATE TABLE `cyezaqab_HCbD`.`courier_user` (
   `images_user` VARCHAR(255) NULL,
   `images_vehicle` VARCHAR(255) NULL,
   `images_driver_license` VARCHAR(255) NULL,
+  `status` VARCHAR(45) NULL DEFAULT 'ACTIVE'
   PRIMARY KEY (`courier_id`));
