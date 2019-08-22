@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const moment = require('moment')
 const MagentoAPI = require('magento-api')
 const md5 = require('md5')
 const { promisify } = require('util')
@@ -752,7 +753,10 @@ function getMarketplaceVendor (data, vendorId, customerId) {
       cnpj
     ]) => resolve({
       ...data,
-      date_of_birth: date_of_birth && date_of_birth.value.toLocaleDateString('en-US') || '',
+      created_at: data.created_at && new Date(data.created_at).toISOString(),
+      updated_at: data.updated_at && new Date(data.updated_at).toISOString(),
+      dob: data.dob && moment(data.dob).format('DD/MM/YYYY'),
+      date_of_birth: date_of_birth && moment(date_of_birth.value).format('DD/MM/YYYY') || '',
       personal_document: personal_document && personal_document.value || '',
       company_name: companyName && companyName.value || '',
       telephone: phone && phone.value || '',
