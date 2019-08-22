@@ -1,3 +1,4 @@
+const NOTHING = {}
 module.exports = {
   getRoute,
   success,
@@ -35,7 +36,7 @@ function getRoute (orderNumber, userId) {
 function success (orderNumber, verificationCode) {
   return checkVerificationCode(verificationCode)
     .then(() => changeOrderStatusToDelivered(orderNumber))
-    .then(() => null)
+    .then(() => NOTHING)
 
   function checkVerificationCode (verificationCode) {
     return Promise.resolve(true)
@@ -59,7 +60,7 @@ function success (orderNumber, verificationCode) {
 function problem (orderProblem) {
   return validateData(orderProblem)
     .then(saveProblemOnMagento)
-    .then(() => null)
+    .then(() => NOTHING)
 
   function validateData (orderProblem) {
     if (!orderProblem.reason || !orderProblem.description)

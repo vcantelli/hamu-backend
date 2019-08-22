@@ -1,4 +1,5 @@
 // const RefusalDAO = require('./DAO/pickUpRefusal')
+const NOTHING = {}
 
 module.exports = {
   userAlreadyIsOnADelivery,
@@ -120,7 +121,7 @@ function acceptRequest (orderNumber, userId) {
  */
 function success (orderNumber) {
   return changeOrderStatusToPickedUp(orderNumber)
-    .then(() => null)
+    .then(() => NOTHING)
   async function changeOrderStatusToPickedUp (orderNumber) {
     const myOrder = await getOrderOnMagento(orderNumber)
     myOrder.changeStatus('PICKED_UP') // TODO: colocar estes estados em um lugar no modelo
