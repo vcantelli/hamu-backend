@@ -8,7 +8,8 @@ Magento.login = promisify(Magento.login).bind(Magento)
 Magento.customer.create = promisify(Magento.customer.create).bind(Magento.customer)
 
 module.exports = {
-  create
+  create,
+  getById
 }
 
 function create (data) {
@@ -31,4 +32,8 @@ function create (data) {
     data.images_driver_license = data.images_driver_license || ''
     return CourierDAO.create(data)
   })
+}
+
+function getById (courier_id) {
+  return CourierDAO.find({where: {courier_id, status: 'ACTIVE'}})
 }
