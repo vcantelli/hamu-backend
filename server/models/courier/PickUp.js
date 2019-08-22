@@ -37,14 +37,18 @@ function openRequests (userId) {
       "store_address": "Av das Nações, 1916, Parque Oratório, Santo André - SP, 09270-400",
       "telephone": "1144011755",
       "order_number": "853291",
-      "vehicle_type": "motorcycle"
+      "vehicle_type": "motorcycle",
+      "latitude": -23.6402014,
+      "longitude": -46.5406174
     },
     {
       "store": "Arco Íris",
       "store_address": "Av das Nações, 1916, Parque Oratório, Santo André - SP, 09270-400",
       "telephone": "1144011755",
       "order_number": "3242342",
-      "vehicle_type": "motorcycle"
+      "vehicle_type": "motorcycle",
+      "latitude": -23.6402014,
+      "longitude": -46.5406174
     }])
   // TODO: Validar com victão isso aqui também
   // return DeliveryDAO.findAll({
