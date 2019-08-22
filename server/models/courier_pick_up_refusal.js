@@ -1,8 +1,8 @@
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    'pick_up_refusal',
+    'courier_pick_up_refusal',
     {
-      delivery_id: {
+      order_id: {
         type: DataTypes.INTEGER,
         primaryKey: true
       },
