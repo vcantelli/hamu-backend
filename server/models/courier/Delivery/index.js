@@ -16,8 +16,9 @@ function getDeliveryInfoByOrderNumber (orderNumber) {
  * @returns {boolean}
  */
 function someoneElseAccepted (deliveryRequest, userId) {
-  return (
-    !!deliveryRequest.courier_id
-    && deliveryRequest.courier_id !== userId
-  )
+  return false
+  // return (
+  //   !!deliveryRequest.courier_id
+  //   && deliveryRequest.courier_id !== userId
+  // )
 }
