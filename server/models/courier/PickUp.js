@@ -98,11 +98,11 @@ function acceptRequest (orderNumber, userId) {
   // Associar o usuário ao pedido de entrega
   return Promise.resolve({ orderNumber })
   // TODO: VALIDAR ESTA AQUI TAMBÉM
-  return DeliveryDAO.update({
-    status: "PICKING_UP",
-    accepted_at: new Date(),
-    courier_id: userId,
-  }, { where: { order_number: orderNumber } })
+  // return DeliveryDAO.update({
+  //   status: "PICKING_UP",
+  //   accepted_at: new Date(),
+  //   courier_id: userId,
+  // }, { where: { order_number: orderNumber } })
 }
 
 /**
@@ -128,10 +128,10 @@ function success (orderNumber) {
   }
 
   // TODO: VALIDAR ESTA AQUI TAMBÉM
-  return DeliveryDAO.update({
-    status: "DELIVERING",
-    picked_up_at: new Date(),
-  }, {where: {order_number: orderNumber}})
+  // return DeliveryDAO.update({
+  //   status: "DELIVERING",
+  //   picked_up_at: new Date(),
+  // }, {where: {order_number: orderNumber}})
 }
 
 
