@@ -37,7 +37,8 @@ module.exports = function (sequelize, DataTypes) {
       company_cnpj: DataTypes.STRING,
       images_user: DataTypes.STRING,
       images_vehicle: DataTypes.STRING,
-      images_driver_license: DataTypes.STRING
+      images_driver_license: DataTypes.STRING,
+      status: DataTypes.STRING
     }, {
       timestamps: false,
       freezeTableName: true
