@@ -3,7 +3,7 @@
     "username": "cyezaqab_vcant",
     "password": "Y@y94rywvx",
     "database": "cyezaqab_HCbD",
-    "host": "209.133.198.218",
+    "host": "hamu.com.br",
     "dialect": "mysql"
   },
   "test": {
@@ -17,7 +17,7 @@
     "username": "cyezaqab_vcant",
     "password": "Y@y94rywvx",
     "database": "cyezaqab_HCbD",
-    "host": "209.133.198.218",
+    "host": "hamu.com.br",
     "dialect": "mysql"
   }
 }
