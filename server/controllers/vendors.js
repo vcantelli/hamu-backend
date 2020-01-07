@@ -505,7 +505,13 @@ module.exports = {
       return magento.catalogCategory.tree({ parentId: 8 })
     }).then(categories => {
       response.status(200).send({
-        categories: categories.children.filter(category => category.is_active === '1')
+        categoris: categories.children.filter(category => category.is_active === '1').reduce((lista, categoria) => {
+          lista.push(categoria)
+          if(categoria.children.filter(category => category.is_active === '1').lenght > 0) {
+            lista.push(categoria.children.filter(category => category.is_active === '1'))
+          }
+          return lista
+        }, [])
       })
     }).catch(error => {
       if (error === 403) response.status(403).send('0')
@@ -518,9 +524,10 @@ module.exports = {
   },
 
   getSizes ({ params }, response) {
-    if(params.id === '161') {
-      response.status(200).send(['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44'])
-    } else if(params.id === 180) {
+    // if(params.id === '161') {
+    //   response.status(200).send(['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44'])
+    // }
+    if(params.id === 104 || params.id === '104' || params.id === 163 || params.id === '163' || params.id === 164 || params.id === '164' || params.id === 165 ||params.id === '165') {
       response.status(200).send(['EP', 'P', 'M', 'G', 'GG', 'XG'])
     } else {
       response.status(200).send([])
