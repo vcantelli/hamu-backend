@@ -493,7 +493,7 @@ module.exports = {
       return magento.catalogCategory.tree({ parentId: 8 })
     }).then(categories => {
       response.status(200).send({
-        categoris: categories.children.filter(category => category.is_active === '1').reduce((lista, categoria) => {
+        categories: categories.children.filter(category => category.is_active === '1').reduce((lista, categoria) => {
           lista.push(categoria)
           if(categoria.children.filter(category => category.is_active === '1').lenght > 0) {
             lista.push(categoria.children.filter(category => category.is_active === '1'))
