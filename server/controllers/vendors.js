@@ -495,8 +495,8 @@ module.exports = {
       response.status(200).send({
         categories: categories.children.filter(category => category.is_active === '1').reduce((lista, categoria) => {
           lista.push(categoria)
-          if(categoria.children.filter(category => category.is_active === '1').lenght > 0) {
-            lista.push(categoria.children.filter(category => category.is_active === '1'))
+          if(categoria.children.filter(category => category.is_active === '1').length > 0) {
+            lista = lista.concat(categoria.children.filter(category => category.is_active === '1'))
           }
           return lista
         }, [])
