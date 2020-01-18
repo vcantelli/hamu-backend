@@ -494,9 +494,122 @@ module.exports = {
     }).then(categories => {
       response.status(200).send({
         categories: categories.children.filter(category => category.is_active === '1').reduce((lista, categoria) => {
-          lista.push(categoria)
-          if(categoria.children.filter(category => category.is_active === '1').length > 0) {
-            lista = lista.concat(categoria.children.filter(category => category.is_active === '1'))
+          if(categoria.category_id === '104' || categoria.category_id === 104) {
+            lista = lista.concat([
+              {
+                category_id: "168",
+                parent_id: "163",
+                name: "Moda Feminina - Bolsa e Acessórios",
+                is_active: "1",
+                position: "1",
+                level: "5",
+                children: []
+              },
+              {
+                category_id: "167",
+                parent_id: "163",
+                name: "Moda Feminina - Calçados",
+                is_active: "1",
+                position: "2",
+                level: "5",
+                children: []
+              },
+              {
+                category_id: "166",
+                parent_id: "163",
+                name: "Moda Feminina - Roupas",
+                is_active: "1",
+                position: "3",
+                level: "5",
+                children: []
+              },
+              {
+                category_id: "169",
+                parent_id: "164",
+                name: "Moda Masculina - Acessórios",
+                is_active: "1",
+                position: "1",
+                level: "5",
+                children: []
+              },
+              {
+                category_id: "170",
+                parent_id: "164",
+                name: "Moda Masculina - Calçados",
+                is_active: "1",
+                position: "2",
+                level: "5",
+                children: []
+              },
+              {
+                category_id: "171",
+                parent_id: "164",
+                name: "Moda Masculina - Roupas",
+                is_active: "1",
+                position: "3",
+                level: "5",
+                children: []
+              },
+              {
+                category_id: "172",
+                parent_id: "175",
+                name: "Moda Infantil Meninas - Acessórios",
+                is_active: "1",
+                position: "1",
+                level: "6",
+                children: []
+              },
+              {
+                category_id: "173",
+                parent_id: "175",
+                name: "Moda Infantil Meninas - Calçados",
+                is_active: "1",
+                position: "2",
+                level: "6",
+                children: []
+              },
+              {
+                category_id: "174",
+                parent_id: "175",
+                name: "Moda Infantil Meninas - Roupas",
+                is_active: "1",
+                position: "3",
+                level: "6",
+                children: []
+              },
+              {
+                category_id: "177",
+                parent_id: "176",
+                name: "Moda Infantil Meninos - Acessórios",
+                is_active: "1",
+                position: "1",
+                level: "6",
+                children: []
+              },
+              {
+                category_id: "178",
+                parent_id: "176",
+                name: "Moda Infantil Meninos - Calçados",
+                is_active: "1",
+                position: "2",
+                level: "6",
+                children: []
+              },
+              {
+                category_id: "179",
+                parent_id: "176",
+                name: "Moda Infantil Meninos - Roupas",
+                is_active: "1",
+                position: "3",
+                level: "6",
+                children: []
+              }
+            ])
+          } else {
+            lista.push(categoria)
+            if(categoria.children.filter(category => category.is_active === '1').length > 0) {
+              lista = lista.concat(categoria.children.filter(category => category.is_active === '1'))
+            }
           }
           return lista
         }, [])
@@ -512,12 +625,39 @@ module.exports = {
   },
 
   getSizes ({ params }, response) {
-    // if(params.id === '161') {
-    //   response.status(200).send(['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44'])
-    // }
-    if(params.id === 104 || params.id === '104' || params.id === 163 || params.id === '163' || params.id === 164 || params.id === '164' || params.id === 165 ||params.id === '165') {
-      response.status(200).send(['EP', 'P', 'M', 'G', 'GG', 'XG'])
-    } else {
+    // Moda Feminina Roupas
+    if(params.id === '166' || params.id === 166) {
+      response.status(200).send(['PP', 'P', 'M', 'G', 'GG', 'XL', '32', '34', '36', '38', '40', '42', '44', '46', '48'])
+    }
+    // Moda Masculina Roupas
+    else if(params.id === '171' || params.id === 171) {
+      response.status(200).send(['PP', 'P', 'M', 'G', 'GG', 'XL', '02', '03', '04', '05', '06', '07', '08', '36', '38', '40', '42', '44', '46', '48', '50'])
+    }
+    // Moda Infantil Meninas Roupas
+    else if(params.id === '174' || params.id === 174) {
+      response.status(200).send(['PP', 'P', 'M', 'G', 'GG', '01', '02', '03', '04', '06', '10', '12', '14'])
+    }
+    // Moda Infantil Meninos Roupas
+    else if(params.id === '179' || params.id === 179) {
+      response.status(200).send(['PP', 'P', 'M', 'G', 'GG', '01', '02', '03', '04', '06', '10', '12', '14'])
+    }
+    // Moda Feminina Calçados
+    else if(params.id === '167' || params.id === 167) {
+      response.status(200).send(['33', '34', '35', '36', '37', '38', '39', '40', '41'])
+    }
+    // Moda Masculina Calçados
+    else if(params.id === '170' || params.id === 170) {
+      response.status(200).send(['37', '38', '39', '40', '41', '42', '43', '44'])
+    }
+    // Moda Infantil Meninas Calçados
+    else if(params.id === '173' || params.id === 173) {
+      response.status(200).send(['01', '02', '03', '04', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36'])
+    }
+    // Moda Infantil Meninos Calçados
+    else if(params.id === '178' || params.id === 178) {
+      response.status(200).send(['01', '02', '03', '04', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36'])
+    }
+    else {
       response.status(200).send([])
     }
   },
