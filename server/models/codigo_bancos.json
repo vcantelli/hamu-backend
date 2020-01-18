@@ -1,7 +1,35 @@
 [
   {
+    "code": "341",
+    "bank": "Itaú Unibanco  S.A."
+  },
+  {
     "code": "001",
     "bank": "Banco do Brasil S.A."
+  },
+  {
+    "code": "237",
+    "bank": "Banco Bradesco S.A."
+  },
+  {
+    "code": "104",
+    "bank": "Caixa Econômica Federal"
+  },
+  {
+    "code": "033",
+    "bank": "Banco Santander (Brasil) S. A."
+  },
+  {
+    "code": "077",
+    "bank": "Banco Inter S.A."
+  },
+  {
+    "code": "212",
+    "bank": "Banco Original S.A."
+  },
+  {
+    "code": "260",
+    "bank": "Nu Pagamentos S.A."
   },
   {
     "code": "003",
@@ -62,10 +90,6 @@
   {
     "code": "029",
     "bank": "Banco Itaú Consignado S.A."
-  },
-  {
-    "code": "033",
-    "bank": "Banco Santander (Brasil) S. A."
   },
   {
     "code": "036",
@@ -130,10 +154,6 @@
   {
     "code": "076",
     "bank": "Banco KDB do Brasil S.A."
-  },
-  {
-    "code": "077",
-    "bank": "Banco Inter S.A."
   },
   {
     "code": "078",
@@ -218,10 +238,6 @@
   {
     "code": "102",
     "bank": "XP Investimentos Corretora de Câmbio Títulos e Valores Mobiliários S.A."
-  },
-  {
-    "code": "104",
-    "bank": "Caixa Econômica Federal"
   },
   {
     "code": "105",
@@ -448,10 +464,6 @@
     "bank": "Banco BTG Pactual S.A."
   },
   {
-    "code": "212",
-    "bank": "Banco Original S.A."
-  },
-  {
     "code": "213",
     "bank": "Banco Arbi S.A."
   },
@@ -474,10 +486,6 @@
   {
     "code": "233",
     "bank": "Banco Cifra S.A."
-  },
-  {
-    "code": "237",
-    "bank": "Banco Bradesco S.A."
   },
   {
     "code": "241",
@@ -506,10 +514,6 @@
   {
     "code": "254",
     "bank": "Parana Banco S. A."
-  },
-  {
-    "code": "260",
-    "bank": "Nu Pagamentos S.A."
   },
   {
     "code": "265",
@@ -542,10 +546,6 @@
   {
     "code": "320",
     "bank": "China Construction Bank (Brasil) Banco Múltiplo S/A"
-  },
-  {
-    "code": "341",
-    "bank": "Itaú Unibanco  S.A."
   },
   {
     "code": "366",
